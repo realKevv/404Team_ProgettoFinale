@@ -1,7 +1,20 @@
+/**
+ * ============================================================================
+ * FILE: src/config/db.js
+ * SCOPO: Gestione della connessione al database MariaDB/MySQL.
+ * COSA FA: 
+ * - Legge in modo sicuro le credenziali dal file .env.
+ * - Crea un "Pool di connessioni" tramite mysql2/promise per gestire richieste 
+ * simultanee in modo efficiente, evitando colli di bottiglia.
+ * - Permette di esportare la connessione per usarla in modo asincrono (async/await)
+ * in tutti i controller del progetto.
+ * ============================================================================
+ */
+
+
 const mysql = require('mysql2/promise');
 require('dotenv').config();
 
-// Creiamo un Pool di connessioni per gestire richieste multiple senza bloccare il server
 const pool = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,

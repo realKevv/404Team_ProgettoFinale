@@ -1,0 +1,82 @@
+/* ==========================================================================
+   Business Travel - Sistema Gestione Trasferte e Note Spese
+   File CSS Globale con Variabili (Custom Properties) in Italiano
+   Stile: Moderno, Professionale, Accessibile
+   ========================================================================== */
+
+:root {
+    /* --- Tavolozza Colori Principale (Tema Modern Corporate) --- */
+    --colore-primario: #1e3a8a;
+    /* Blu Notte - Affidabilità e professionalità */
+    --colore-primario-luce: #3b82f6;
+    /* Blu Brillante - Elementi attivi, bottoni, link */
+    --colore-primario-scuro: #172554;
+    /* Blu Scuro - Testi principali e titoli */
+
+    --colore-secondario: #0d9488;
+    /* Verde Ottanio - Trasferte, viaggi, innovazione */
+    --colore-secondario-luce: #14b8a6;
+    /* Ottanio Chiaro - Hover ed evidenziatori */
+
+    --colore-accento: #f59e0b;
+    /* Ambra/Arancione - Note spese, rimborsi, alert leggeri */
+
+    /* --- Stati e Feedback --- */
+    --colore-successo: #10b981;
+    /* Verde - Approvato, rimborsato */
+    --colore-successo-sfondo: #ecfdf5;
+    /* Verde Chiarissimo - Background notifiche positive */
+
+    --colore-pericolo: #ef4444;
+    /* Rosso - Rifiutato, errore, bloccato */
+    --colore-pericolo-sfondo: #fef2f2;
+    /* Rosso Chiarissimo - Background errori */
+
+    --colore-avviso: #f59e0b;
+    /* Giallo/Arancio - In attesa di approvazione */
+    --colore-avviso-sfondo: #fffbeb;
+    /* Giallo Chiarissimo - Background elementi in coda */
+
+    --colore-info: #06b6d4;
+    /* Cyan - Informazioni di viaggio, dettagli */
+    --colore-info-sfondo: #ecfeff;
+    /* Cyan Chiarissimo - Box info */
+
+    /* --- Toni Neutri (Sfondi, Bordi e Testo) --- */
+    --colore-sfondo-pagina: #f8fafc;
+    /* Grigio ultra-leggero freddo - Sfondo principale */
+    --colore-sfondo-card: #ffffff;
+    /* Bianco puro - Per box, tabelle, schede */
+    --colore-sfondo-alt: #f1f5f9;
+    /* Grigio chiaro - Righe alternate tabelle, sidebar */
+
+    --colore-testo-principale: #334155;
+    /* Grigio scuro/antracite - Alta leggibilità */
+    --colore-testo-secondario: #64748b;
+    /* Grigio medio - Sottotitoli, etichette, placeholder */
+    --colore-testo-mutato: #94a3b8;
+    /* Grigio chiaro - Testo disabilitato, date secondarie */
+
+    --colore-bordo: #e2e8f0;
+    /* Grigio per linee di divisione sottili */
+    --colore-bordo-focus: #93c5fd;
+    /* Blu chiaro per focus accessibilità */
+
+    /* --- Tipografia --- */
+    --font-principale: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --dimensione-testo-base: 16px;
+    --peso-normale: 400;
+    --peso-medio: 500;
+    --peso-semibold: 600;
+    --peso-bold: 700;
+
+
+    --ombra-leggera: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+    --ombra-standard: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+    --ombra-profonda: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+
+    /* --- Animazioni --- */
+    --transizione-rapida: all 0.2s ease-in-out;
+    --transizione-normale: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+}

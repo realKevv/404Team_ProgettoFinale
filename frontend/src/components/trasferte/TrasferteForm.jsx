@@ -3,8 +3,10 @@ import { PlusCircle, Send } from 'lucide-react';
 
 export function TrasferteForm({ onAddTrasferta }) {
     const [form, setForm] = useState({
-        destinazione: '', dataInizio: '', dataFine: '',
-        motivo: '', rimborso: 'Piè di lista'
+        destinazione: '',
+        data_inizio: '',
+        data_fine: '',
+        motivo: ''
     });
 
     const handleChange = (e) => {
@@ -13,13 +15,12 @@ export function TrasferteForm({ onAddTrasferta }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (!form.destinazione || !form.dataInizio || !form.dataFine) return;
+        if (!form.destinazione || !form.data_inizio || !form.data_fine || !form.motivo) return;
         onAddTrasferta(form);
-        setForm({ destinazione: '', dataInizio: '', dataFine: '', motivo: '', rimborso: 'Piè di lista' });
+        setForm({ destinazione: '', data_inizio: '', data_fine: '', motivo: '' });
     };
 
     const inputStile = "w-full p-2.5 border rounded-xl text-sm transition-all duration-200 focus:outline-none focus:ring-2";
-
     const inputStyle = {
         borderColor: "var(--colore-bordo)",
         backgroundColor: "var(--colore-sfondo-pagina)",
@@ -50,11 +51,11 @@ export function TrasferteForm({ onAddTrasferta }) {
                 <div className="form-date-grid grid grid-cols-2 gap-3">
                     <div className="flex flex-col gap-1.5">
                         <label className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--colore-testo-mutato)" }}>Data Inizio</label>
-                        <input type="date" name="dataInizio" value={form.dataInizio} onChange={handleChange} className={inputStile} style={inputStyle} />
+                        <input type="date" name="data_inizio" value={form.data_inizio} onChange={handleChange} className={inputStile} style={inputStyle} />
                     </div>
                     <div className="flex flex-col gap-1.5">
                         <label className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--colore-testo-mutato)" }}>Data Fine</label>
-                        <input type="date" name="dataFine" value={form.dataFine} onChange={handleChange} className={inputStile} style={inputStyle} />
+                        <input type="date" name="data_fine" value={form.data_fine} onChange={handleChange} className={inputStile} style={inputStyle} />
                     </div>
                 </div>
 

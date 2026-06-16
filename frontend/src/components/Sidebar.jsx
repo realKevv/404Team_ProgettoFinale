@@ -1,6 +1,4 @@
 import { NavLink } from "react-router-dom";
-import "../mockData.js"
-
 import {
     LayoutDashboard,
     Plane,
@@ -9,7 +7,9 @@ import {
     ClipboardCheck,
     User,
     LogOut,
-    X
+    X,
+    Users, // 🔥 Aggiunta per i dipendenti
+    Shield // 🔥 Aggiunta per le policy
 } from "lucide-react";
 
 // Componente Sidebar
@@ -87,17 +87,19 @@ export function Sidebar({ utente, onLogout, isOpen, onClose }) {
                             <span>Dashboard</span>
                         </NavLink>
 
-                        {/* USER MENU */}
+                        {/* ==================================
+                            USER MENU (Dipendente)
+                        ================================== */}
                         {utente?.ruolo === "user" && (
                             <>
                                 <NavLink to="/viaggi" className={baseLinkClass} style={renderLinkStyle} onClick={onClose}>
                                     <Plane size={18} />
-                                    <span>Viaggi</span>
+                                    <span>I Miei Viaggi</span>
                                 </NavLink>
 
                                 <NavLink to="/rimborsi" className={baseLinkClass} style={renderLinkStyle} onClick={onClose}>
                                     <Receipt size={18} />
-                                    <span>Rimborsi</span>
+                                    <span>Note Spese</span>
                                 </NavLink>
 
                                 <NavLink to="/viaggi/nuovo" className={baseLinkClass} style={renderLinkStyle} onClick={onClose}>
@@ -107,7 +109,9 @@ export function Sidebar({ utente, onLogout, isOpen, onClose }) {
                             </>
                         )}
 
-                        {/* ADMIN MENU */}
+                        {/* ==================================
+                            ADMIN MENU (Sara Bianchi)
+                        ================================== */}
                         {utente?.ruolo === "admin" && (
                             <>
                                 <NavLink to="/admin/approvazioni" className={baseLinkClass} style={renderLinkStyle} onClick={onClose}>
@@ -118,6 +122,17 @@ export function Sidebar({ utente, onLogout, isOpen, onClose }) {
                                 <NavLink to="/admin/trasferte" className={baseLinkClass} style={renderLinkStyle} onClick={onClose}>
                                     <Plane size={18} />
                                     <span>Tutte le Trasferte</span>
+                                </NavLink>
+
+                                {/* 🔥 NUOVI PULSANTI ADMIN MAPPATI SUL DB! */}
+                                <NavLink to="/admin/dipendenti" className={baseLinkClass} style={renderLinkStyle} onClick={onClose}>
+                                    <Users size={18} />
+                                    <span>Elenco Dipendenti</span>
+                                </NavLink>
+
+                                <NavLink to="/admin/policies" className={baseLinkClass} style={renderLinkStyle} onClick={onClose}>
+                                    <Shield size={18} />
+                                    <span>Travel Policies</span>
                                 </NavLink>
                             </>
                         )}
@@ -131,7 +146,7 @@ export function Sidebar({ utente, onLogout, isOpen, onClose }) {
                     {/* PROFILO */}
                     <NavLink to="/profilo" className={baseLinkClass} style={renderLinkStyle} onClick={onClose}>
                         <User size={18} />
-                        <span>Profilo</span>
+                        <span>Il Mio Profilo</span>
                     </NavLink>
 
                     {/* LOGOUT */}
@@ -159,16 +174,16 @@ export function Sidebar({ utente, onLogout, isOpen, onClose }) {
                         <span>Esci</span>
                     </button>
 
-                    {/* User card */}
+                    {/* 🔥 CORRETTO IL NOME UTENTE: usa "nome_completo" come nel DB! */}
                     <div className="mt-4 p-3 rounded-xl flex items-center gap-3" style={{ backgroundColor: "var(--colore-sfondo-alt)" }}>
-                        <div className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white" style={{ backgroundColor: "var(--colore-primario)" }}>
-                            {utente?.nome?.charAt(0) || "U"}
+                        <div className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white uppercase" style={{ backgroundColor: "var(--colore-primario)" }}>
+                            {utente?.nome_completo?.charAt(0) || "U"}
                         </div>
-                        <div>
-                            <p className="text-sm font-semibold" style={{ color: "var(--colore-testo-principale)" }}>
-                                {utente?.nome || "Utente"}
+                        <div className="overflow-hidden">
+                            <p className="text-sm font-semibold truncate" style={{ color: "var(--colore-testo-principale)" }}>
+                                {utente?.nome_completo || "Utente"}
                             </p>
-                            <p className="text-xs capitalize" style={{ color: "var(--colore-testo-mutato)" }}>
+                            <p className="text-xs capitalize truncate" style={{ color: "var(--colore-testo-mutato)" }}>
                                 {utente?.ruolo || "user"}
                             </p>
                         </div>

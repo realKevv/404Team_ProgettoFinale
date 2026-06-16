@@ -63,25 +63,31 @@ export function TrasferteTable({ trasferte }) {
                                 <TableCell style={{ fontWeight: 600, color: "var(--colore-testo-principale)", padding: "14px 16px", fontSize: "0.875rem" }}>
                                     {row.destinazione}
                                 </TableCell>
+                                {/* Sincronizzato con data_inizio del DB */}
                                 <TableCell style={{ color: "var(--colore-testo-secondario)", padding: "14px 16px", fontSize: "0.875rem" }}>
-                                    {row.dataInizio}
+                                    {row.data_inizio ? row.data_inizio.substring(0, 10) : ''}
                                 </TableCell>
+                                {/* Sincronizzato con data_fine del DB */}
                                 <TableCell style={{ color: "var(--colore-testo-secondario)", padding: "14px 16px", fontSize: "0.875rem" }}>
-                                    {row.dataFine}
+                                    {row.data_fine ? row.data_fine.substring(0, 10) : ''}
                                 </TableCell>
-                                <TableCell style={{ color: "var(--colore-testo-secondario)", padding: "14px 16px", fontSize: "0.875rem" }}>
-                                    {row.rimborso}
+                                {/* Sincronizzato con motivo del DB (sostituisce il rimborso che non esiste nella tabella trasferte) */}
+                                <TableCell style={{ color: "var(--colore-testo-secondario)", padding: "14px 16px", fontSize: "0.875rem", maxWidth: "180px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                                    {row.motivo}
                                 </TableCell>
                                 <TableCell style={{ padding: "14px 16px" }}>
+                                    {/* Gestione degli stati del DB: 'approvata', 'in_attesa', 'rifiutata' */}
                                     <span
-                                        className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold"
+                                        className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold capitalize border"
                                         style={
-                                            row.stato === 'Approvata'
-                                                ? { backgroundColor: "var(--colore-successo-sfondo)", color: "var(--colore-successo)" }
-                                                : { backgroundColor: "var(--colore-avviso-sfondo)", color: "var(--colore-avviso)" }
+                                            row.stato === 'approvata'
+                                                ? { backgroundColor: "var(--colore-successo-sfondo)", color: "var(--colore-successo)", borderColor: "var(--colore-successo)" }
+                                                : row.stato === 'rifiutata'
+                                                    ? { backgroundColor: "var(--colore-pericolo-sfondo)", color: "var(--colore-pericolo)", borderColor: "var(--colore-pericolo)" }
+                                                    : { backgroundColor: "var(--colore-avviso-sfondo)", color: "var(--colore-avviso)", borderColor: "var(--colore-avviso)" }
                                         }
                                     >
-                                        {row.stato}
+                                        {row.stato ? row.stato.replace('_', ' ') : 'in attesa'}
                                     </span>
                                 </TableCell>
                             </TableRow>

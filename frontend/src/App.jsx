@@ -13,9 +13,10 @@ import { Dashboard } from './pages/Dashboard';
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  // Simulazione utente loggato
   const utenteLoggato = {
-    nome: "Kevin",
-    ruolo: "user"
+    nome_completo: "Sara Bianchi",
+    ruolo: "admin"
   };
 
   const handleLogout = () => {
@@ -42,17 +43,33 @@ function App() {
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
       />
+
       <div className="app-main-area">
         <Navbar onMenuClick={() => setSidebarOpen(true)} />
+
         <main className="app-content">
           <Routes>
             <Route path="/dashboard" element={<Dashboard />} />
+            {/* ROTTE USER */}
             <Route path="/viaggi" element={<Dashboard />} />
             <Route path="/rimborsi" element={<Dashboard />} />
             <Route path="/viaggi/nuovo" element={<Dashboard />} />
+            {/* ROTTA PROFILO */}
             <Route path="/profilo" element={<Dashboard />} />
+            {/* ROTTE ADMIN */}
             <Route path="/admin/approvazioni" element={<Dashboard />} />
             <Route path="/admin/trasferte" element={<Dashboard />} />
+            <Route path="/admin/dipendenti" element={
+              <div className="p-8 text-center text-[var(--colore-testo-secondario)]">
+                <h1 className="text-2xl font-bold">👥 Elenco Dipendenti</h1>
+              </div>
+            } />
+            <Route path="/admin/policies" element={
+              <div className="p-8 text-center text-[var(--colore-testo-secondario)]">
+                <h1 className="text-2xl font-bold">🛡️ Travel Policies</h1>
+              </div>
+            } />
+            {/* Fallback */}
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </main>

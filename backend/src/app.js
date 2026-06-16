@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const db = require("./config/db");
+const trasferteRoutes = require("./routes/trasferteRoutes");
 
 const app = express();
 
@@ -18,6 +19,8 @@ db.query("SELECT 1")
 app.get("/", (req, res) => {
   res.json({ message: "API attiva" });
 });
+// Rotta per i viaggi
+app.use("/api/trasferte", trasferteRoutes);
 
 // Middleware globale per la gestione degli errori
 app.use((err, req, res, next) => {

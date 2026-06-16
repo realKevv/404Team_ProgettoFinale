@@ -10,37 +10,49 @@
  * ============================================================================
  */
 
-const express = require("express");
-require("dotenv").config();
-const cookieParser = require("cookie-parser");
-const authRoutes = require("./routes/authRoutes");
-const trasferteRoutes = require("./routes/trasferteRoutes");
+const express = require('express');
+require('dotenv').config();
+const cookieParser = require('cookie-parser');
+
+const authRoutes = require('./routes/authRoutes');
+const trasferteRoutes = require('./routes/trasferteRoutes');
+const speseRoutes = require('./routes/speseRoutes');
+
+const { verifyToken } = require('./middlewares/authMiddleware');
 
 const app = express();
-const { verifyToken } = require("./middlewares/authMiddleware"); // <-- L'import del middleware
-
-// Middleware fondamentale!
+// ==========================================
+// 🚦 REGISTRAZIONE ROTTE PRINCIPALI
+// ==========================================
 app.use(express.json());
 app.use(cookieParser());
 
-// Registrazione rotte
-app.use("/api/auth", authRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/trasferte', trasferteRoutes);
+app.use('/api/spese', speseRoutes);
 
-app.use("/api/trasferte", trasferteRoutes);
 
-// Una GET di prova per vedere se il server è vivo
-app.get("/api/status", (req, res) => {
+// ==========================================
+// 🛠️ ROTTE DI TEST (Per il debug rapido)
+// ==========================================
+// Test 1: Server vivo (Rotta pubblica)
+app.get('/api/status', (req, res) => {
   res.json({ message: "Il server Express è online e pronto a spaccare! 🚀" });
 });
 
-const PORT = process.env.PORT || 5000;
-
-app.get("/api/profilo-segreto", verifyToken, (req, res) => {
+// Test 2: Controllo Token 
+app.get('/api/profilo-segreto', verifyToken, (req, res) => {
   res.json({
     message: "Benvenuto nell'area VIP!",
     datiUtente: req.user,
   });
 });
+
+
+// ==========================================
+// 🚀 AVVIO DEL SERVER
+// ==========================================
+const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log(`🚀 Server Express in ascolto sulla porta ${PORT}`);

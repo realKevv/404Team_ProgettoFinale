@@ -15,7 +15,7 @@ require('dotenv').config();
 const cookieParser = require('cookie-parser');
 
 const authRoutes = require('./routes/authRoutes');
-// const trasferteRoutes = require('./routes/trasferteRoutes');
+const trasferteRoutes = require('./routes/trasferteRoutes');
 const speseRoutes = require('./routes/speseRoutes');
 
 const { verifyToken } = require('./middlewares/authMiddleware');
@@ -28,7 +28,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use('/api/auth', authRoutes);
-// app.use('/api/trasferte', trasferteRoutes);
+app.use('/api/trasferte', trasferteRoutes);
 app.use('/api/spese', speseRoutes);
 
 

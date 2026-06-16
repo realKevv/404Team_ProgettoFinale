@@ -19,7 +19,7 @@ export default function Navbar() {
 
                     {/*Logo e Nome Azienda */}
                     {/* Allinea logo e testo con un piccolo spazio tra loro */}
-                    <div className="flex items-center space-x-2 flex-shrink-0">
+                    <div className="flex items-center space-x-2 flex-shrink-0 mr-16">
                         {/* Logo Azienda */}
                         <img
                             src={logoPng}
@@ -37,7 +37,7 @@ export default function Navbar() {
                     {/* Link per home, gestionale, policy */}
                     {/* Nasconde il blocco sui schermi piccoli, posiziona
                     il blocco al centro  */}
-                    <div className="hidden md:flex items-center space-x-10 absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                    <div className="hidden lg:flex justify-center items-center w-2/4 space-x-10">
                         <a href="#home" className="text-gray-600 hover:text-indigo-600 font-medium transition-colors">
                             Home
                         </a>

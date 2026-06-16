@@ -2,9 +2,9 @@
  * ============================================================================
  * FILE: src/server.js
  * SCOPO: Entry point e cuore pulsante del backend Express.
- * COSA FA: 
+ * COSA FA:
  * - Inizializza il server web e lo mette in ascolto sulla porta designata.
- * - Configura i middleware globali (es. express.json per leggere i body, 
+ * - Configura i middleware globali (es. express.json per leggere i body,
  * cookie-parser per estrarre i JWT sicuri).
  * - Registra e smista le rotte principali (API) per far comunicare Frontend e Database.
  * ============================================================================
@@ -27,7 +27,6 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-
 app.use('/api/auth', authRoutes);
 // app.use('/api/trasferte', trasferteRoutes);
 app.use('/api/spese', speseRoutes);
@@ -45,7 +44,7 @@ app.get('/api/status', (req, res) => {
 app.get('/api/profilo-segreto', verifyToken, (req, res) => {
   res.json({
     message: "Benvenuto nell'area VIP!",
-    datiUtente: req.user
+    datiUtente: req.user,
   });
 });
 

@@ -28,24 +28,44 @@ const getTrasferteById = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
 const createTrasferta = async (req, res) => {
   const { destinazione, data_inizio, data_fine, motivo } = req.body;
   const id_utente = req.user.id;
 
   try {
+    const oggi = new Date().toISOString().split('T')[0];
+
+    if (data_fine < data_inizio) {
+      return res.status(400).json({ error: "La data di fine non può essere precedente a quella di inizio." });
+    }
+    if (data_inizio < oggi) {
+      return res.status(400).json({ error: "Non puoi richiedere trasferte per date già passate." });
+    }
+
+    // 🚨 2. CONTROLLO ANTI-UBIQUITÀ (Sovrapposizione date)
+    // La logica: (InizioNuova <= FineVecchia) AND (FineNuova >= InizioVecchia)
+    const [viaggiSovrapposti] = await db.query(`
+            SELECT id, destinazione FROM trasferte 
+            WHERE id_utente = ? 
+            AND stato != 'rifiutata' 
+            AND data_inizio <= ? 
+            AND data_fine >= ?
+        `, [id_utente, data_fine, data_inizio]);
+
+    if (viaggiSovrapposti.length > 0) {
+      return res.status(400).json({
+        error: `Hai già una trasferta attiva o in approvazione per queste date (${viaggiSovrapposti[0].destinazione}).`
+      });
+    }
+
+    // Se passa tutti i controlli, salviamo nel DB!
     const [result] = await db.query(
       "INSERT INTO trasferte (id_utente, destinazione, data_inizio, data_fine, motivo) VALUES (?, ?, ?, ?, ?)",
-      [id_utente, destinazione, data_inizio, data_fine, motivo],
+      [id_utente, destinazione, data_inizio, data_fine, motivo]
     );
+
     res.status(201).json({
-      id: result.insertId,
-      id_utente,
-      destinazione,
-      data_inizio,
-      data_fine,
-      motivo,
-      stato: 'in_attesa'
+      id: result.insertId, id_utente, destinazione, data_inizio, data_fine, motivo, stato: 'in_attesa'
     });
   } catch (err) {
     res.status(500).json({ error: err.message });

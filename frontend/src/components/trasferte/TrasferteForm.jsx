@@ -9,6 +9,9 @@ export function TrasferteForm({ onAddTrasferta }) {
         motivo: ''
     });
 
+    // 🔥 1. AGGIUNTO: Genera la data di oggi nel formato perfetto (YYYY-MM-DD)
+    const oggi = new Date().toLocaleDateString('sv-SE');
+
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
@@ -51,11 +54,13 @@ export function TrasferteForm({ onAddTrasferta }) {
                 <div className="form-date-grid grid grid-cols-2 gap-3">
                     <div className="flex flex-col gap-1.5">
                         <label className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--colore-testo-mutato)" }}>Data Inizio</label>
-                        <input type="date" name="data_inizio" value={form.data_inizio} onChange={handleChange} className={inputStile} style={inputStyle} />
+                        {/* 🔥 2. AGGIUNTO: min={oggi} blocca le date passate nel calendario */}
+                        <input type="date" name="data_inizio" value={form.data_inizio} min={oggi} onChange={handleChange} className={inputStile} style={inputStyle} />
                     </div>
                     <div className="flex flex-col gap-1.5">
                         <label className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--colore-testo-mutato)" }}>Data Fine</label>
-                        <input type="date" name="data_fine" value={form.data_fine} onChange={handleChange} className={inputStile} style={inputStyle} />
+                        {/* 🔥 3. AGGIUNTO: min={form.data_inizio || oggi} blocca le date precedenti all'inizio */}
+                        <input type="date" name="data_fine" value={form.data_fine} min={form.data_inizio || oggi} onChange={handleChange} className={inputStile} style={inputStyle} />
                     </div>
                 </div>
 

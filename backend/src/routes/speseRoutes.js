@@ -46,4 +46,7 @@ router.get('/scontrini/:nomeFile', verifyToken, speseController.getScontrinoFisi
 // poi ci penserà il controller a fare la seconda sbarrata controllando se il ruolo è 'admin'!
 router.put('/valuta/:idSpesa', verifyToken, speseController.valutaSpesa);
 
+router.delete('/:idSpesa', verifyToken, speseController.deleteSpesa);
+
+
 module.exports = router;

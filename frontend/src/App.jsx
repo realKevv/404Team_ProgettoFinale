@@ -12,6 +12,10 @@ import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import { Dashboard } from './pages/Dashboard';
 import { DipendentiPage } from './pages/DipendentiPage';
+import { NoteSpesePage } from './pages/NoteSpesePage';
+
+
+
 
 // Helper: legge in sicurezza dal localStorage
 function readToken() {
@@ -86,14 +90,24 @@ function App() {
             {/* 🔥 La pagina Status Team/Dipendenti è ora per tutti */}
             <Route path="/dipendenti" element={<DipendentiPage />} />
 
-            {/* Rotte User */}
+            {/* ==================================== */}
+            {/* 👤 ROTTE USER (Dipendente)           */}
+            {/* ==================================== */}
             <Route path="/viaggi" element={<Dashboard />} />
-            <Route path="/rimborsi" element={<Dashboard />} />
+
+            {/* 🔥 QUI COLLEGIAMO LE NOTE SPESE UTENTE */}
+            <Route path="/rimborsi" element={<NoteSpesePage />} />
+
             <Route path="/viaggi/nuovo" element={<Dashboard />} />
             <Route path="/profilo" element={<Dashboard />} />
 
-            {/* Rotte Admin */}
-            <Route path="/admin/approvazioni" element={<Dashboard />} />
+            {/* ==================================== */}
+            {/* 👑 ROTTE ADMIN (Sara Bianchi)        */}
+            {/* ==================================== */}
+
+            {/* 🔥 QUI COLLEGIAMO LE APPROVAZIONI ADMIN (Usa la stessa pagina intelligente!) */}
+            <Route path="/admin/approvazioni" element={<NoteSpesePage />} />
+
             <Route path="/admin/trasferte" element={<Dashboard />} />
             <Route path="/admin/policies" element={
               <div className="p-8 text-center">
@@ -102,7 +116,6 @@ function App() {
                 </h1>
               </div>
             } />
-
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </main>

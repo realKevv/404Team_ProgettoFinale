@@ -11,42 +11,33 @@
         sul ruolo per consentire l'approvazione/rimborso solo agli Admin.
    ========================================================================== */
 
-
 const express = require('express');
 const router = express.Router();
 const speseController = require('../controllers/speseController');
 const { verifyToken } = require('../middlewares/authMiddleware');
 
-// Multer prende i file inviati dagli utenti (es. foto o PDF) e li salva sul Node.js.
+// 🔥 LA MAGIA: Multer ora tiene i file nella RAM (buffer) invece di scriverli subito sul disco.
+// In questo modo il nostro controller può passarli a Sharp per spremerli!
 const multer = require('multer');
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/');
-    },
-    filename: (req, file, cb) => {
-        // Rinomina il file mettendo la data davanti, così non ci sono doppioni!
-        const suffissoUnico = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, suffissoUnico + '-' + file.originalname);
-    }
-});
+const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 // 1. Leggere le spese
 router.get('/trasferta/:idTrasferta', verifyToken, speseController.getSpeseByTrasferta);
 
 // 2. Aggiungere una spesa (con caricamento file singolo chiamato 'scontrino')
-// Guarda la combo: prima entra il buttafuori, poi il multer prende il file, e il controller salva nel DB!
+// Guarda la combo: prima entra il buttafuori, poi il multer prende il file nella RAM, e il controller salva nel DB!
 router.post('/', verifyToken, upload.single('scontrino'), speseController.addSpesa);
 
 // 3. L'URL PROTETTO dello scontrino
-router.get('/scontrini/:nomeFile', verifyToken, speseController.getScontrinoFisico);
+router.get('/scontrini/:nomeFile', speseController.getScontrinoFisico);
 
 // 4. Valutazione spesa da parte dell'Admin 🚀
 // Usiamo verifyToken così req.user viene popolato prima di entrare nel controller,
 // poi ci penserà il controller a fare la seconda sbarrata controllando se il ruolo è 'admin'!
 router.put('/valuta/:idSpesa', verifyToken, speseController.valutaSpesa);
 
+// 5. Eliminazione di una spesa
 router.delete('/:idSpesa', verifyToken, speseController.deleteSpesa);
-
 
 module.exports = router;

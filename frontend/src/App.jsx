@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import './App.css';
 import { useState, useCallback } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
@@ -26,10 +27,16 @@ function readUtente() {
   } catch (_) { }
   return null;
 }
+=======
+import './App.css'
+import { Sidebar } from './components/Sidebar'
+import Navbar from './components/Navbar'
+import HomePage from './pages/HomePage'
+>>>>>>> parent of 3d8d9bf (Merge pull request #10 from realKevv/Prod)
 
 function App() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
+<<<<<<< HEAD
   const [token, setToken] = useState(readToken);
   const [utenteLoggato, setUtenteLoggato] = useState(readUtente);
 
@@ -113,3 +120,15 @@ function App() {
 }
 
 export default App;
+=======
+  return (
+    <>
+      <Navbar />
+      <HomePage />
+      <Sidebar />
+    </>
+  )
+}
+
+export default App
+>>>>>>> parent of 3d8d9bf (Merge pull request #10 from realKevv/Prod)

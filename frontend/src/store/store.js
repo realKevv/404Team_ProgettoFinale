@@ -92,6 +92,48 @@ export const useStore = create((set, get) => ({
         }
     },
 
+    valutaSpesa: async (idSpesa, stato, importoRimborso) => {
+        set({ isLoading: true });
+        try {
+            await axios.put(`${API_URL}/spese/valuta/${idSpesa}`,
+                {
+                    stato_approvazione: stato,
+                    importo_rimborsato: importoRimborso
+                },
+                { headers: getAuthHeaders() }
+            );
+
+            // Aggiorniamo la spesa direttamente nello stato globale per vedere il cambio istantaneo
+            set((state) => ({
+                spese: state.spese.map(s =>
+                    s.id === idSpesa ? { ...s, stato_approvazione: stato, importo_rimborsato: importoRimborso } : s
+                ),
+                isLoading: false
+            }));
+        } catch (error) {
+            console.error("Errore valutazione spesa:", error);
+            set({ error: "Errore durante la valutazione", isLoading: false });
+            throw error;
+        }
+    },
+
+    // ELIMINA UNO SCONTRINO (E aggiorna la UI all'istante)
+    deleteSpesa: async (idSpesa) => {
+        try {
+            await axios.delete(`${API_URL}/spese/${idSpesa}`, {
+                headers: getAuthHeaders()
+            });
+            // Togliamo subito la spesa dall'array visivo senza ricaricare la pagina!
+            set((state) => ({
+                spese: state.spese.filter(s => s.id !== idSpesa)
+            }));
+        } catch (error) {
+            console.error("Errore cancellazione scontrino:", error);
+            throw error;
+        }
+    },
+
+
     // ==========================================
     // 4. AZIONI: TRAVEL POLICIES
     // ==========================================

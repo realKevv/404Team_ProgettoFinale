@@ -4,6 +4,8 @@ import video from '../assets/img/video.mp4';
 
 export default function Homepage() {
     const navigate = useNavigate();
+    const token = localStorage.getItem('token');
+    const isLoggedIn = !!token && token !== 'undefined';
 
     return (
         <div className="relative min-h-screen overflow-hidden font-[var(--font-principale)]">
@@ -29,18 +31,29 @@ export default function Homepage() {
                     <span className="text-white text-lg font-semibold tracking-wide">Business Travel</span>
                 </div>
                 <div className="flex items-center gap-4">
-                    <button
-                        onClick={() => navigate('/dashboard')}
-                        className="hidden sm:block text-white/70 hover:text-white text-sm font-medium transition-colors"
-                    >
-                        Gestionale
-                    </button>
-                    <button
-                        onClick={() => navigate('/dashboard')}
-                        className="px-5 py-2.5 rounded-xl text-sm font-semibold bg-white text-gray-900 hover:bg-white/90 transition-all duration-200 shadow-lg shadow-white/10"
-                    >
-                        Accedi
-                    </button>
+                    {!isLoggedIn ? (
+                        <>
+                            <button
+                                onClick={() => navigate('/dashboard')}
+                                className="hidden sm:block text-white/70 hover:text-white text-sm font-medium transition-colors"
+                            >
+                                Gestionale
+                            </button>
+                            <button
+                                onClick={() => navigate('/dashboard')}
+                                className="px-5 py-2.5 rounded-xl text-sm font-semibold bg-white text-gray-900 hover:bg-white/90 transition-all duration-200 shadow-lg shadow-white/10"
+                            >
+                                Accedi
+                            </button>
+                        </>
+                    ) : (
+                        <button
+                            onClick={() => navigate('/dashboard')}
+                            className="px-5 py-2.5 rounded-xl text-sm font-semibold bg-white text-gray-900 hover:bg-white/90 transition-all duration-200 shadow-lg shadow-white/10"
+                        >
+                            Vai al Gestionale
+                        </button>
+                    )}
                 </div>
             </nav>
 
@@ -72,7 +85,7 @@ export default function Homepage() {
                             onClick={() => navigate('/dashboard')}
                             className="group flex items-center gap-2 px-7 py-3.5 rounded-xl text-sm font-semibold bg-white text-gray-900 hover:bg-white/90 transition-all duration-300 shadow-xl shadow-white/10"
                         >
-                            Vai al Gestionale
+                            {isLoggedIn ? "Vai al Gestionale" : "Vai al Gestionale"}
                             <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                         </button>
                         <button

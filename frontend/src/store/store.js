@@ -114,5 +114,41 @@ export const useStore = create((set, get) => ({
         } catch (error) {
             console.error("Errore caricamento utenti:", error);
         }
+    },
+
+    // ==========================================
+    // 🔐 6. AZIONI: AUTENTICAZIONE (Login / Logout)
+    // ==========================================
+    login: async (email, password) => {
+        set({ isLoading: true, error: null });
+        try {
+            // Chiamata reale al tuo backend!
+            const response = await axios.post(`${API_URL}/auth/login`, { email, password });
+
+            // Il server ci restituisce il token e i dati dell'utente
+            // NOTA: assicurati che il tuo backend restituisca esattamente { token, utente }
+            const { token, utente } = response.data;
+
+            // 🔥 Salviamo il badge nella tasca del browser!
+            localStorage.setItem('token', token);
+            // Salviamo anche i dati dell'utente (nome, ruolo) per usarli nella Sidebar
+            localStorage.setItem('utente', JSON.stringify(utente));
+
+            set({ isLoading: false });
+            return utente; // Restituiamo l'utente per far scattare il redirect nel componente Login
+        } catch (error) {
+            // Estraiamo il messaggio di errore dal backend (es. "Password errata") o usiamo un default
+            const errorMessage = error.response?.data?.error || error.response?.data?.message || "Credenziali non valide.";
+            set({ error: errorMessage, isLoading: false });
+            throw error;
+        }
+    },
+
+    logout: () => {
+        // Quando l'utente esce, stracciamo il badge dal browser
+        localStorage.removeItem('token');
+        localStorage.removeItem('utente');
+        // Svuotiamo i dati sensibili dallo stato globale per sicurezza
+        set({ trasferte: [], spese: [], utenti: [], policies: [], error: null });
     }
 }));

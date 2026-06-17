@@ -2,7 +2,14 @@ const db = require("../config/db");
 
 const getAllTrasferte = async (req, res) => {
   try {
-    const [rows] = await db.query("SELECT * FROM trasferte");
+    const [rows] = await db.query(`
+      SELECT
+        t.*,
+        u.nome_completo AS richiedente
+      FROM trasferte t
+      LEFT JOIN utenti u ON t.id_utente = u.id
+      ORDER BY t.id DESC
+    `);
     res.json(rows);
   } catch (err) {
     res.status(500).json({ error: err.message });

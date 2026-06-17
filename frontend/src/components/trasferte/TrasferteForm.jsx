@@ -65,15 +65,6 @@ export function TrasferteForm({ onAddTrasferta }) {
                         placeholder="Specificare il motivo..." className={`${inputStile} resize-none`} style={inputStyle} />
                 </div>
 
-                <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--colore-testo-mutato)" }}>Tipo di rimborso</label>
-                    <select name="rimborso" value={form.rimborso} onChange={handleChange} className={inputStile} style={inputStyle}>
-                        <option value="Piè di lista">Piè di lista (Scontrini fisici)</option>
-                        <option value="Indennità fissa">Indennità fissa giornaliera</option>
-                        <option value="Misto">Rimborso Misto</option>
-                    </select>
-                </div>
-
                 <button type="submit"
                     className="mt-2 p-3 rounded-xl font-semibold text-sm text-white flex items-center justify-center gap-2 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
                     style={{

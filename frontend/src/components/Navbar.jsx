@@ -31,8 +31,7 @@ export default function Navbar({ onMenuClick }) {
                                            transition-transform duration-200 group-hover:scale-105"
                             />
                             <span
-                                className="navbar-brand-text text-lg font-semibold tracking-wide
-                                           transition-colors duration-200 group-hover:opacity-80"
+                                className="text-2xl font-light uppercase text-gray-900 tracking-widest font-sans"
                                 style={{ color: 'var(--colore-primario-scuro)' }}
                             >
                                 Business Travel

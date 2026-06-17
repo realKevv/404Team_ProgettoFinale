@@ -1,137 +1,157 @@
 import { NavLink } from "react-router-dom";
+import "../mockData.js"
+
 import {
     LayoutDashboard,
     Plane,
     Receipt,
     PlusCircle,
     ClipboardCheck,
-    User,
-    LogOut,
-    X,
     Users,
-    Shield
+    User,
+    LogOut
 } from "lucide-react";
 
-export function Sidebar({ utente, onLogout, isOpen, onClose }) {
+//componente Sidebar
+export function Sidebar({ utente, onLogout }) {
+    //creo stringa di classi Tailwind riutilizzabile
+    //flex metto in orizzontale; item-center centro verticalmente icona e testo
+    //gap 3 (12px) è lo spazio tra l'icona e testo; px-4 (16px) e py-3(12px) sono rispettivamente il padding sx/dx e sopra/sotto
+    //rounded-lg arrotonda gli angoli; transition-all e duration-200 applicano una transizione fluida di 0.2s a tutte le proprietà CSS al passaggio del mouse
+    const baseLinkClass = `
+    flex 
+    items-center
+    gap-3
+    px-4
+    py-3
+    rounded-lg
+    transition-all
+    duration-200`;
 
-    const baseLinkClass = `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-sm font-medium`;
-
+    //funzione che gestisce se un link è attivo o meno
     const renderLinkStyle = ({ isActive }) => ({
-        backgroundColor: isActive ? "var(--colore-primario)" : "transparent",
-        color: isActive ? "#ffffff" : "var(--colore-testo-secondario)",
-        fontWeight: isActive ? "600" : "500",
-        boxShadow: isActive ? "0 4px 12px rgba(30, 58, 138, 0.25)" : "none"
+        backgroundColor: isActive
+            ? "var(--colore-sfondo-alt)"
+            : "transparent",
+
+        color: isActive
+            ? "var(--colore-primario)"
+            : "var(--colore-testo-principale)",
+
+        fontWeight: isActive ? "600" : "400"
+
     });
 
     return (
-        <>
-            <div className={`sidebar-overlay ${isOpen ? 'active' : ''}`} onClick={onClose} />
+        <aside
+            //w-64:la sidebar ha larghezza fissa di 256px; min-h-screen:la sidebar occupa tutta l'altezza dello schermo;
+            //flex-col:dispongo gli elementi in verticale;p-4(16px):spazio interno su tutti i lati;
+            //border-r:aggiungo un bordo sinistro per separarla dal contenuto;
+            //shrink-0:impedisce che la sidebar si ridimensioni;
+            className="
+                w-64
+                min-h-screen
+                flex
+                flex-col
+                justify-between
+                p-4
+                border-r
+                shrink-0
+            "
+            style={{
+                backgroundColor: "var(--colore-sfondo-card)",
+                borderColor: "var(--colore-bordo)"
+            }}
+        >
+            {/* menù principale */}
+            {/* attivo flexbox, li metto in colonna, gap di 8 px(spazio tra gli elementi) */}
+            <nav className="flex flex-col gap-2">
 
-            <aside className={`sidebar w-64 min-h-screen flex flex-col justify-between p-5 border-r shrink-0 ${isOpen ? 'sidebar-open' : ''}`}
-                style={{ backgroundColor: "var(--colore-sfondo-card)", borderColor: "var(--colore-bordo)" }}>
+                {/* DASHBOARD */}
+                <NavLink to="/dashboard" className={baseLinkClass} style={renderLinkStyle}>
+                    <LayoutDashboard size={20} style={{ color: "var(--colore-primario-luce)" }} />
+                    <span>Dashboard</span>
+                </NavLink>
 
-                <div>
-                    <div className="flex items-center justify-between mb-8 px-2">
-                        <div>
-                            <h2 className="text-lg font-bold" style={{ color: "var(--colore-primario-scuro)" }}>Business Travel</h2>
-                            <p className="text-xs mt-0.5" style={{ color: "var(--colore-testo-mutato)" }}>Gestionale Trasferte</p>
-                        </div>
-                        <button onClick={onClose} className="md:hidden p-1 rounded-lg hover:bg-gray-100 transition-colors">
-                            <X size={20} style={{ color: "var(--colore-testo-mutato)" }} />
-                        </button>
-                    </div>
+                {/* USER MENU */}
 
-                    <p className="text-[10px] uppercase tracking-widest font-semibold px-4 mb-3" style={{ color: "var(--colore-testo-mutato)" }}>Menu Principale</p>
-
-                    <nav className="flex flex-col gap-1">
-                        {/* ==================================
-                            ROTTE CONDIVISE (Tutti le vedono)
-                        ================================== */}
-                        <NavLink to="/dashboard" className={baseLinkClass} style={renderLinkStyle} onClick={onClose}>
-                            <LayoutDashboard size={18} />
-                            <span>Dashboard</span>
+                {utente?.ruolo === "user" && (
+                    <>
+                        <NavLink to="/viaggi" className={baseLinkClass} style={renderLinkStyle}>
+                            {/* size{20}: width e height 20px */}
+                            <Plane size={20} style={{ color: "var(--colore-secondario)" }} />
+                            <span>Viaggi</span>
                         </NavLink>
 
-                        {/* 🔥 SPOSTATO QUI: Ora tutti vedono chi c'è in ufficio! */}
-                        <NavLink to="/dipendenti" className={baseLinkClass} style={renderLinkStyle} onClick={onClose}>
-                            <Users size={18} />
-                            <span>Status Team</span>
+                        <NavLink to="/rimborsi" className={baseLinkClass} style={renderLinkStyle}>
+                            <Receipt size={20} style={{ color: "var(--colore-accento)" }} />
+                            <span>Rimborsi</span>
                         </NavLink>
 
-                        {/* ==================================
-                            USER MENU (Dipendente)
-                        ================================== */}
-                        {utente?.ruolo === "user" && (
-                            <>
-                                <NavLink to="/viaggi" className={baseLinkClass} style={renderLinkStyle} onClick={onClose}>
-                                    <Plane size={18} />
-                                    <span>I Miei Viaggi</span>
-                                </NavLink>
-                                <NavLink to="/rimborsi" className={baseLinkClass} style={renderLinkStyle} onClick={onClose}>
-                                    <Receipt size={18} />
-                                    <span>Note Spese</span>
-                                </NavLink>
-                                <NavLink to="/viaggi/nuovo" className={baseLinkClass} style={renderLinkStyle} onClick={onClose}>
-                                    <PlusCircle size={18} />
-                                    <span>Nuova Trasferta</span>
-                                </NavLink>
-                            </>
-                        )}
+                        <NavLink to="/viaggi/nuovo" className={baseLinkClass} style={renderLinkStyle}>
+                            <PlusCircle size={20} style={{ color: "var(--colore-successo)" }} />
+                            <span>Nuova Trasferta</span>
+                        </NavLink>
 
-                        {/* ==================================
-                            ADMIN MENU (Sara Bianchi)
-                        ================================== */}
-                        {utente?.ruolo === "admin" && (
-                            <>
-                                <NavLink to="/admin/approvazioni" className={baseLinkClass} style={renderLinkStyle} onClick={onClose}>
-                                    <ClipboardCheck size={18} />
-                                    <span>Approvazioni</span>
-                                </NavLink>
-                                <NavLink to="/admin/trasferte" className={baseLinkClass} style={renderLinkStyle} onClick={onClose}>
-                                    <Plane size={18} />
-                                    <span>Tutte le Trasferte</span>
-                                </NavLink>
-                                <NavLink to="/admin/policies" className={baseLinkClass} style={renderLinkStyle} onClick={onClose}>
-                                    <Shield size={18} />
-                                    <span>Travel Policies</span>
-                                </NavLink>
-                            </>
-                        )}
-                    </nav>
-                </div>
+                    </>
+                )}
 
-                {/* Sezione bassa */}
-                <div>
-                    <div className="my-4" style={{ borderTop: "1px solid var(--colore-bordo)" }} />
-                    <NavLink to="/profilo" className={baseLinkClass} style={renderLinkStyle} onClick={onClose}>
-                        <User size={18} />
-                        <span>Il Mio Profilo</span>
-                    </NavLink>
-                    <button onClick={() => { onLogout(); if (onClose) onClose(); }}
-                        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-sm font-medium mt-1"
-                        style={{ color: "var(--colore-pericolo)" }}
-                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "var(--colore-pericolo-sfondo)"}
-                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
-                    >
-                        <LogOut size={18} />
-                        <span>Esci</span>
-                    </button>
+                {/* ADMIN MENU */}
 
-                    <div className="mt-4 p-3 rounded-xl flex items-center gap-3" style={{ backgroundColor: "var(--colore-sfondo-alt)" }}>
-                        <div className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white uppercase" style={{ backgroundColor: "var(--colore-primario)" }}>
-                            {utente?.nome_completo?.charAt(0) || "U"}
-                        </div>
-                        <div className="overflow-hidden">
-                            <p className="text-sm font-semibold truncate" style={{ color: "var(--colore-testo-principale)" }}>
-                                {utente?.nome_completo || "Utente"}
-                            </p>
-                            <p className="text-xs capitalize truncate" style={{ color: "var(--colore-testo-mutato)" }}>
-                                {utente?.ruolo || "user"}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </aside>
-        </>
+                {utente?.ruolo === "admin" && (
+                    <>
+                        <NavLink to="/admin/approvazioni" className={baseLinkClass} style={renderLinkStyle}>
+                            <ClipboardCheck size={20} style={{ color: "var(--colore-info)" }} />
+                            <span>Approvazioni</span>
+                        </NavLink>
+
+                        <NavLink to="/admin/trasferte" className={baseLinkClass} style={renderLinkStyle}>
+                            <Plane size={20} style={{ color: "var(--colore-secondario)" }} />
+                            <span>Tutte le Trasferte</span>
+                        </NavLink>
+                    </>
+                )}
+
+            </nav>
+
+
+            {/* sezione sotto */}
+            <div>
+                {/* SEPARATORE */}
+                {/* my-4:Margine superiore e inferiore di 16px. */}
+                <div className="my-4" style={{ borderTop: "1px solid var(--colore-bordo)" }} />
+
+                {/* PROFILO */}
+                <NavLink to="/profilo" className={baseLinkClass} style={renderLinkStyle}>
+                    <User size={20} style={{ color: "var(--colore-testo-secondario)" }} />
+                    <span>Profilo</span>
+                </NavLink>
+
+                {/* LOGOUT */}
+                <button
+                    // quando clicco il bottone esco
+                    onClick={onLogout}
+                    className="
+                        w-full
+                        flex
+                        items-center
+                        gap-3
+                        px-4
+                        py-3
+                        rounded-lg
+                        transition-all
+                        hover:bg-red-50
+                    "
+                >
+                    <LogOut size={20} style={{ color: "var(--colore-pericolo)" }} />
+                    <span style={{ color: "var(--colore-pericolo)" }}>
+                        Esci
+                    </span>
+                </button>
+
+            </div>
+
+
+        </aside>
     )
 }

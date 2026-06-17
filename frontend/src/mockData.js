@@ -32,7 +32,7 @@ export const mockTrasferte = [
     {
         id: 1,
         id_utente: 1,
-        nome_utente: "Mario Rossi",
+        nome_utente: "Mario Rossi", // Aggiunto per comodità del frontend (evita di fare filtri manuali)
         destinazione: "Milano (Sede Centrale)",
         data_inizio: "2026-06-20",
         data_fine: "2026-06-23",

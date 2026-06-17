@@ -33,7 +33,7 @@ export default function Homepage() {
                         L'ecosistema intelligente per la gestione delle trasferte aziendali e delle note spese.
                     </p>
                     {/* Linea indaco */}
-                    <div className="h-1 w-100 bg-indigo-600 rounded-full"></div>
+                    <div className="h-1 w-full bg-indigo-600 rounded-full"></div>
                 </div>
 
                 {/* Video a destra */}

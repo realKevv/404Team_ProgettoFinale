@@ -1,20 +1,23 @@
+<<<<<<< Updated upstream
 import './App.css';
 import { useState, useCallback } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+=======
+import Navbar from './components/Navbar'
+import './App.css'
+>>>>>>> Stashed changes
 
 // Componenti
 import { Sidebar } from './components/Sidebar';
 import Navbar from './components/Navbar';
 import Login from './pages/Login';
+import Footer from './components/Footer';
 
+<<<<<<< Updated upstream
 // Pagine
 import HomePage from './pages/HomePage';
 import { Dashboard } from './pages/Dashboard';
 import { DipendentiPage } from './pages/DipendentiPage';
-import { NoteSpesePage } from './pages/NoteSpesePage';
-
-
-
 
 // Helper: legge in sicurezza dal localStorage
 function readToken() {
@@ -89,24 +92,14 @@ function App() {
             {/* 🔥 La pagina Status Team/Dipendenti è ora per tutti */}
             <Route path="/dipendenti" element={<DipendentiPage />} />
 
-            {/* ==================================== */}
-            {/* 👤 ROTTE USER (Dipendente)           */}
-            {/* ==================================== */}
+            {/* Rotte User */}
             <Route path="/viaggi" element={<Dashboard />} />
-
-            {/* 🔥 QUI COLLEGIAMO LE NOTE SPESE UTENTE */}
-            <Route path="/rimborsi" element={<NoteSpesePage />} />
-
+            <Route path="/rimborsi" element={<Dashboard />} />
             <Route path="/viaggi/nuovo" element={<Dashboard />} />
             <Route path="/profilo" element={<Dashboard />} />
 
-            {/* ==================================== */}
-            {/* 👑 ROTTE ADMIN (Sara Bianchi)        */}
-            {/* ==================================== */}
-
-            {/* 🔥 QUI COLLEGIAMO LE APPROVAZIONI ADMIN (Usa la stessa pagina intelligente!) */}
-            <Route path="/admin/approvazioni" element={<NoteSpesePage />} />
-
+            {/* Rotte Admin */}
+            <Route path="/admin/approvazioni" element={<Dashboard />} />
             <Route path="/admin/trasferte" element={<Dashboard />} />
             <Route path="/admin/policies" element={
               <div className="p-8 text-center">
@@ -115,12 +108,24 @@ function App() {
                 </h1>
               </div>
             } />
+
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </main>
+        <Footer />
       </div>
     </div>
   );
 }
 
 export default App;
+=======
+  return (
+    <>
+      <Navbar />
+    </>
+  )
+}
+
+export default App;
+>>>>>>> Stashed changes

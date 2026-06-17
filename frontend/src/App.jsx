@@ -1,6 +1,11 @@
+<<<<<<< Updated upstream
 import './App.css';
 import { useState, useCallback } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+=======
+import Navbar from './components/Navbar'
+import './App.css'
+>>>>>>> Stashed changes
 
 // Componenti
 import { Sidebar } from './components/Sidebar';
@@ -8,6 +13,7 @@ import Navbar from './components/Navbar';
 import Login from './pages/Login';
 import Footer from './components/Footer';
 
+<<<<<<< Updated upstream
 // Pagine
 import HomePage from './pages/HomePage';
 import { Dashboard } from './pages/Dashboard';
@@ -126,3 +132,13 @@ function App() {
 }
 
 export default App;
+=======
+  return (
+    <>
+      <Navbar />
+    </>
+  )
+}
+
+export default App;
+>>>>>>> Stashed changes

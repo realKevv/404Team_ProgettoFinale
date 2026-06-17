@@ -1,11 +1,6 @@
-<<<<<<< Updated upstream
 import './App.css';
 import { useState, useCallback } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-=======
-import Navbar from './components/Navbar'
-import './App.css'
->>>>>>> Stashed changes
 
 // Componenti
 import { Sidebar } from './components/Sidebar';
@@ -13,11 +8,13 @@ import Navbar from './components/Navbar';
 import Login from './pages/Login';
 import Footer from './components/Footer';
 
-<<<<<<< Updated upstream
 // Pagine
 import HomePage from './pages/HomePage';
 import { Dashboard } from './pages/Dashboard';
 import { DipendentiPage } from './pages/DipendentiPage';
+import { NoteSpesePage } from './pages/NoteSpesePage';
+import { ProfiloUtente } from './pages/ProfiloUtente';
+import { ListaViaggi } from './pages/ListaViaggi';
 
 // Helper: legge in sicurezza dal localStorage
 function readToken() {
@@ -89,18 +86,20 @@ function App() {
           <Routes>
             <Route path="/dashboard" element={<Dashboard />} />
 
-            {/* 🔥 La pagina Status Team/Dipendenti è ora per tutti */}
+            {/* La pagina Status Team/Dipendenti è ora per tutti */}
             <Route path="/dipendenti" element={<DipendentiPage />} />
 
             {/* Rotte User */}
             <Route path="/viaggi" element={<Dashboard />} />
-            <Route path="/rimborsi" element={<Dashboard />} />
+            <Route path="/rimborsi" element={<NoteSpesePage />} />
             <Route path="/viaggi/nuovo" element={<Dashboard />} />
-            <Route path="/profilo" element={<Dashboard />} />
+
+            {/* 🔥 MODIFICATA QUESTA RIGA: Ora punta al componente corretto */}
+            <Route path="/profilo" element={<ProfiloUtente />} />
 
             {/* Rotte Admin */}
             <Route path="/admin/approvazioni" element={<Dashboard />} />
-            <Route path="/admin/trasferte" element={<Dashboard />} />
+            <Route path="/admin/trasferte" element={<ListaViaggi />} />
             <Route path="/admin/policies" element={
               <div className="p-8 text-center">
                 <h1 className="text-2xl font-bold" style={{ color: 'var(--colore-testo-principale)' }}>
@@ -119,13 +118,3 @@ function App() {
 }
 
 export default App;
-=======
-  return (
-    <>
-      <Navbar />
-    </>
-  )
-}
-
-export default App;
->>>>>>> Stashed changes

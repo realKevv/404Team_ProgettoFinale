@@ -16,7 +16,10 @@ const statCardsBase = [
 export function Dashboard() {
     const { trasferte, utenti, isLoading, error, fetchTrasferte, fetchUtenti, addTrasferta } = useStore();
 
-    // 🔥 STATO PER LA TRASFERTA CLICCATA NELLA TABELLA
+    // 🔑 Leggiamo l'utente loggato per filtrare i dati
+    const utenteCorrente = JSON.parse(localStorage.getItem('utente') || '{}');
+    const isAdmin = utenteCorrente?.ruolo === 'admin';
+
     const [selectedTrasferta, setSelectedTrasferta] = useState(null);
 
     useEffect(() => {
@@ -32,10 +35,15 @@ export function Dashboard() {
         }
     };
 
+    // Filtriamo le trasferte in base al ruolo: Admin vede tutto, Utente normale vede solo le sue
+    const trasferteFiltrate = isAdmin 
+        ? trasferte 
+        : trasferte.filter(t => t.id_utente === utenteCorrente.id);
+
     const statsDinamiche = [
-        { ...statCardsBase[0], value: trasferte.length.toString() },
-        { ...statCardsBase[1], value: trasferte.filter(t => t.stato === 'in_attesa').length.toString() },
-        { ...statCardsBase[2], value: trasferte.filter(t => t.stato === 'approvata').length.toString() },
+        { ...statCardsBase[0], value: trasferteFiltrate.length.toString() },
+        { ...statCardsBase[1], value: trasferteFiltrate.filter(t => t.stato === 'in_attesa').length.toString() },
+        { ...statCardsBase[2], value: trasferteFiltrate.filter(t => t.stato === 'approvata').length.toString() },
         { ...statCardsBase[3], value: "€..." }
     ];
 
@@ -77,7 +85,7 @@ export function Dashboard() {
                 {/* SINISTRA: TABELLA */}
                 <div className="xl:col-span-2">
                     <TrasferteTable
-                        trasferte={trasferte}
+                        trasferte={trasferteFiltrate}
                         onRowClick={(row) => setSelectedTrasferta(row)} // 🔥 Passiamo la funzione!
                         selectedId={selectedTrasferta?.id} // 🔥 Passiamo l'ID per l'evidenziazione
                     />

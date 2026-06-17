@@ -87,6 +87,10 @@ export function Sidebar({ utente, onLogout, isOpen, onClose }) {
                                     <ClipboardCheck size={18} />
                                     <span>Approvazioni</span>
                                 </NavLink>
+                                <NavLink to="/rimborsi" className={baseLinkClass} style={renderLinkStyle} onClick={onClose}>
+                                    <Receipt size={18} />
+                                    <span>Approvazione Spese</span>
+                                </NavLink>
                                 <NavLink to="/admin/trasferte" className={baseLinkClass} style={renderLinkStyle} onClick={onClose}>
                                     <Plane size={18} />
                                     <span>Tutte le Trasferte</span>

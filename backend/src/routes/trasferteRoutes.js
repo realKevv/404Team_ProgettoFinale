@@ -8,7 +8,7 @@ const {
   cambiaStatoTrasferta
 } = require("../controllers/trasferteController");
 
-const { verifyToken } = require('../middlewares/authMiddleware');
+
 
 router.get("/", verifyToken, getAllTrasferte);
 router.get("/:id", verifyToken, getTrasferteById);

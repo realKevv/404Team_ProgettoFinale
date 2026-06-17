@@ -42,7 +42,7 @@ exports.addSpesa = async (req, res) => {
         // Se c'è un file allegato, multer ce lo mette in req.file
         let urlScontrino = null;
         if (req.file) {
-            urlScontrino = `/api/spese/scontrini/${req.file.filename}`;
+            urlScontrino = `/uploads/${req.file.filename}`;
         }
 
         const query = `
@@ -63,17 +63,6 @@ exports.addSpesa = async (req, res) => {
     }
 };
 
-
-exports.getScontrinoFisico = (req, res) => {
-    const nomeFile = req.params.nomeFile;
-    const percorsoFile = path.join(__dirname, '../../uploads', nomeFile);
-
-    if (fs.existsSync(percorsoFile)) {
-        res.sendFile(percorsoFile); // file che arriva al frontend
-    } else {
-        res.status(404).json({ message: "Scontrino non trovato." });
-    }
-};
 
 
 exports.valutaSpesa = async (req, res) => {
@@ -113,8 +102,6 @@ exports.valutaSpesa = async (req, res) => {
 exports.deleteSpesa = async (req, res) => {
     try {
         const { idSpesa } = req.params;
-
-        // 1. Troviamo la spesa per recuperare il nome del file
         const [spesa] = await db.query('SELECT url_scontrino FROM spese WHERE id = ?', [idSpesa]);
 
         if (spesa.length === 0) {
@@ -124,7 +111,7 @@ exports.deleteSpesa = async (req, res) => {
         // 2. Se c'è un file allegato, lo cancelliamo fisicamente dal server! 🧹
         if (spesa[0].url_scontrino) {
             const nomeFile = spesa[0].url_scontrino.split('/').pop();
-            const percorsoFile = path.join(__dirname, '../../uploads', nomeFile);
+            const percorsoFile = path.join(__dirname, '../../public/uploads', nomeFile);
             if (fs.existsSync(percorsoFile)) {
                 fs.unlinkSync(percorsoFile);
             }

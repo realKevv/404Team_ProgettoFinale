@@ -21,7 +21,7 @@ const { verifyToken } = require('../middlewares/authMiddleware');
 const multer = require('multer');
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads/');
+        cb(null, 'public/uploads/');
     },
     filename: (req, file, cb) => {
         // Rinomina il file mettendo la data davanti, così non ci sono doppioni!
@@ -38,8 +38,6 @@ router.get('/trasferta/:idTrasferta', verifyToken, speseController.getSpeseByTra
 // Guarda la combo: prima entra il buttafuori, poi il multer prende il file, e il controller salva nel DB!
 router.post('/', verifyToken, upload.single('scontrino'), speseController.addSpesa);
 
-// 3. L'URL PROTETTO dello scontrino
-router.get('/scontrini/:nomeFile', verifyToken, speseController.getScontrinoFisico);
 
 // 4. Valutazione spesa da parte dell'Admin 🚀
 // Usiamo verifyToken così req.user viene popolato prima di entrare nel controller,

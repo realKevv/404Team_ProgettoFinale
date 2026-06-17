@@ -20,7 +20,8 @@ export default function Homepage() {
                     muted
                     playsInline
                 />
-                {/* Overlay gradiente scuro */}
+                {/* Overlay gradiente scuro, abbassa la luminosità
+                e rende visibile il testo */}
                 <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-indigo-950/60" />
             </div>
 
@@ -28,12 +29,12 @@ export default function Homepage() {
             <div className="relative z-10 flex flex-col min-h-screen">
 
                 {/* ===== NAVBAR LANDING ===== */}
+                {/* Se l'utente non è loggato mostra il link gestionale e pulsante Accedi */}
                 <nav className="flex items-center justify-between px-6 sm:px-10 lg:px-16 py-5 animate-fade-in">
                     <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center">
                             <Plane size={20} className="text-white" />
                         </div>
-                        {/* Cambiato text-gray-900 in text-white */}
                         <span className="text-2xl font-light uppercase text-white tracking-widest font-sans">Business Travel</span>
                     </div>
                     <div className="flex items-center gap-4">
@@ -70,6 +71,7 @@ export default function Homepage() {
                     <div className="space-y-8">
                         <div className="animate-fade-in-up stagger-1">
                             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-widest bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 backdrop-blur-sm">
+                                {/* pulse slow -> mostra un pallino simulando sistema attivo */}
                                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" style={{ animation: 'pulse-slow 2s infinite' }} />
                                 Enterprise Solution 2026
                             </span>
@@ -94,56 +96,54 @@ export default function Homepage() {
                                 {isLoggedIn ? "Vai al Gestionale" : "Vai al Gestionale"}
                                 <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                             </button>
-                            <button
-                                className="px-7 py-3.5 rounded-xl text-sm font-semibold text-white border border-white/20 bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all duration-300"
-                            >
-                                Scopri di più
-                            </button>
                         </div>
                     </div>
 
                     {/* Card features a destra */}
                     <div className="flex flex-col gap-4 animate-slide-in-right stagger-3">
-                        {[
-                            { icon: Plane, title: "Gestione Trasferte", desc: "Crea e monitora le trasferte del tuo team in tempo reale.", color: "#2e67c5ff" },
-                            { icon: Receipt, title: "Note Spese Smart", desc: "Upload scontrini, categorizzazione automatica e rimborsi veloci.", color: "#0c8e63ff" },
-                            { icon: Shield, title: "Travel Policy", desc: "Controllo automatico dei massimali per ogni categoria di spesa.", color: "#f59e0b" }
-                        ].map((feature, i) => (
-                            <div
-                                key={i}
-                                // bg-white/30 (più denso per contrasto) + backdrop-blur-3xl (sfocatura massima)
-                                className="group p-5 rounded-2xl border border-white/35 bg-white/30 backdrop-blur-3xl hover:bg-white/40 hover:border-white/50 transition-all duration-300 cursor-pointer shadow-2xl shadow-black/40"
-                                style={{ animationDelay: `${0.4 + i * 0.15}s` }}
-                            >
-                                {/* La forma rimane quella originale: flex items-start e gap-4 */}
-                                <div className="flex items-start gap-4">
-                                    <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 border border-white/20"
-                                        style={{ backgroundColor: `${feature.color}40` }}
-                                    >
-                                        <feature.icon size={20} style={{ color: feature.color }} />
-                                    </div>
-                                    <div>
-                                        {/* drop-shadow-md per staccare le scritte bianche dallo sfondo in movimento */}
-                                        <h3 className="text-white font-bold text-sm mb-1 tracking-wide drop-shadow-sm">
-                                            {feature.title}
-                                        </h3>
-                                        <p className="text-white font-medium text-xs leading-relaxed drop-shadow-sm text-opacity-90">
-                                            {feature.desc}
-                                        </p>
+                        {
+                            [
+                                { icon: Plane, title: "Gestione Trasferte", desc: "Crea e monitora le trasferte del tuo team in tempo reale.", color: "#2e67c5" },
+                                { icon: Receipt, title: "Note Spese Smart", desc: "Upload scontrini, categorizzazione automatica e rimborsi veloci.", color: "#0c8e63" },
+                                { icon: Shield, title: "Travel Policy", desc: "Controllo automatico dei massimali per ogni categoria di spesa.", color: "#f59e0b" }
+                            ].map((feature, i) => (
+                                <div
+                                    key={i}
+                                    // bg-white/30 (più denso per contrasto) + backdrop-blur-3xl (sfocatura massima)
+                                    className="group p-5 rounded-2xl border border-white/35 bg-white/30 backdrop-blur-3xl hover:bg-white/40 hover:border-white/50 transition-all duration-300 cursor-pointer shadow-2xl shadow-black/40"
+                                    // Animazione in entrata delle 3 card laterali
+                                    style={{ animationDelay: `${0.4 + i * 0.15}s` }}
+                                >
+                                    {/* La forma rimane quella originale: flex items-start e gap-4 */}
+                                    <div className="flex items-start gap-4">
+                                        <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 border border-white/20"
+                                            style={{ backgroundColor: `${feature.color}40` }}
+                                        >
+                                            <feature.icon size={20} style={{ color: feature.color }} />
+                                        </div>
+                                        <div>
+                                            {/* prende i titoli e le descrizioni delle tre cardi e aggiunge queste caratteristiche
+                                        drop-shadow-md per staccare le scritte bianche dallo sfondo in movimento */}
+                                            <h3 className="text-white font-bold text-sm mb-1 tracking-wide drop-shadow-sm">
+                                                {feature.title}
+                                            </h3>
+                                            <p className="text-white font-medium text-xs leading-relaxed drop-shadow-sm text-opacity-90">
+                                                {feature.desc}
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))}
                     </div>
                 </div>
 
-                {/* ===== Scroll indicator ===== */}
+                {/* Scroll indicator */}
                 <div className="my-12 flex flex-col items-center gap-2" style={{ animation: 'float 3s ease-in-out infinite' }}>
                     <span className="text-white/30 text-xs uppercase tracking-widest">Scorri</span>
                     <ChevronDown size={18} className="text-white/30" />
                 </div>
 
-                {/* ===== GRIGLIA 3 CARD ===== */}
+                {/*  GRIGLIA 3 CARD  */}
                 <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 pb-24 w-full">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 

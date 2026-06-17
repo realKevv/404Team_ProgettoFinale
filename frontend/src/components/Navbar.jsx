@@ -2,27 +2,35 @@ import { Menu, Bell, Search, Home } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import logoPng from '../assets/img/logo.png';
 
+// Componente accetta prop con onMenuClick
+// Funzione che passa da genitore a e gestisce
+// Apertura menu hamburger
 export default function Navbar({ onMenuClick }) {
     return (
         <nav
+            // Colore bianco semi trasparente, combina con sfocatura dello sfondo
             className="bg-white/80 backdrop-blur-md border-b w-full sticky top-0 z-50"
+            // Colore bordo inferiore
             style={{ borderColor: 'var(--colore-bordo)' }}
         >
             <div className="px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
 
-                    {/* ── Sinistra: Hamburger (mobile) + Logo cliccabile ── */}
+                    {/* Hamburger (mobile) + Logo cliccabile */}
                     <div className="flex items-center gap-3">
                         {/* Hamburger – visibile solo su mobile */}
                         <button
                             onClick={onMenuClick}
                             className="navbar-hamburger p-2 rounded-xl hover:bg-gray-100 transition-colors"
+                            // Hamburger nascosto sugli schermi, si vede solo su schermi piccoli
                             style={{ display: 'none' }}
                         >
                             <Menu className="h-5 w-5" style={{ color: 'var(--colore-testo-principale)' }} />
                         </button>
 
-                        {/* Logo + brand → cliccabile → torna alla Homepage */}
+                        {/* Logo + brand → cliccabile → torna alla Homepage 
+                        group -> attiva le animazioni sui figli */}
+
                         <Link to="/" className="flex items-center gap-3 group" style={{ textDecoration: 'none' }}>
                             <img
                                 src={logoPng}
@@ -40,6 +48,7 @@ export default function Navbar({ onMenuClick }) {
                     </div>
 
                     {/* ── Centro: Search bar (solo desktop) ── */}
+                    {/* solo su schermi grandi -> flex flex-1 max-w-md mx-8 */}
                     <div className="hidden md:flex flex-1 max-w-md mx-8">
                         <div className="relative w-full">
                             <Search
@@ -47,6 +56,7 @@ export default function Navbar({ onMenuClick }) {
                                 className="absolute left-3 top-1/2 -translate-y-1/2"
                                 style={{ color: 'var(--colore-testo-mutato)' }}
                             />
+                            {/* Barra di ricerca */}
                             <input
                                 type="text"
                                 placeholder="Cerca trasferte, rimborsi..."
@@ -57,10 +67,12 @@ export default function Navbar({ onMenuClick }) {
                                     backgroundColor: 'var(--colore-sfondo-alt)',
                                     color: 'var(--colore-testo-principale)',
                                 }}
+                                // onFocus -> il bordo si illumina e lo sfondo diventa bianco
                                 onFocus={(e) => {
                                     e.target.style.borderColor = 'var(--colore-primario-luce)';
                                     e.target.style.backgroundColor = '#fff';
                                 }}
+                                // onBlur -> il bordo torna come prima e lo sfondo diventa grigio
                                 onBlur={(e) => {
                                     e.target.style.borderColor = 'var(--colore-bordo)';
                                     e.target.style.backgroundColor = 'var(--colore-sfondo-alt)';
@@ -81,13 +93,16 @@ export default function Navbar({ onMenuClick }) {
                             style={{ color: 'var(--colore-testo-secondario)', textDecoration: 'none' }}
                         >
                             <Home size={18} />
+                            {/* Nasconde la scritta home su schermi piccoli */}
                             <span className="hidden sm:inline">Home</span>
                         </Link>
 
                         {/* Notifiche */}
+                        {/* Bottone posizionato in modo assoluto */}
                         <button className="relative p-2 rounded-xl hover:bg-gray-100 transition-colors">
                             <Bell size={20} style={{ color: 'var(--colore-testo-secondario)' }} />
                             <span
+                                // Pallino rosso per indicare notifiche
                                 className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full"
                                 style={{ backgroundColor: 'var(--colore-pericolo)' }}
                             />

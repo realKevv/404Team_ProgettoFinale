@@ -12,9 +12,6 @@
  * (furto di token tramite JavaScript malevolo).
  * ============================================================================
  */
-
-
-
 const db = require('../config/db');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -46,8 +43,6 @@ exports.login = async (req, res) => {
 
         // Confronto la password scritta a 
         // mano con l'Hash salvato nel DB
-
-
         console.log("2️⃣ Hash nel DB:", utente.password_hash); //debug
         console.log("Lunghezza Hash nel DB:", utente.password_hash.length); //debug
 
@@ -78,10 +73,11 @@ exports.login = async (req, res) => {
             maxAge: 24 * 60 * 60 * 1000 // 24 ore in millisecondi
         });
 
-        // Rispondiamo al frontend inviando solo i dati "puliti"
+        // Rispondiamo al frontend inviando sia il token sia i dati "puliti" dell'utente
         res.status(200).json({
             message: "Login effettuato con successo!",
-            user: {
+            token,
+            utente: {
                 id: utente.id,
                 nome_completo: utente.nome_completo,
                 email: utente.email,

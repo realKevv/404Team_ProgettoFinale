@@ -109,33 +109,3 @@ exports.valutaSpesa = async (req, res) => {
         res.status(500).json({ message: "Errore durante l'approvazione della spesa." });
     }
 };
-
-exports.deleteSpesa = async (req, res) => {
-    try {
-        const { idSpesa } = req.params;
-
-        // 1. Troviamo la spesa per recuperare il nome del file
-        const [spesa] = await db.query('SELECT url_scontrino FROM spese WHERE id = ?', [idSpesa]);
-
-        if (spesa.length === 0) {
-            return res.status(404).json({ message: "Spesa non trovata." });
-        }
-
-        // 2. Se c'è un file allegato, lo cancelliamo fisicamente dal server! 🧹
-        if (spesa[0].url_scontrino) {
-            const nomeFile = spesa[0].url_scontrino.split('/').pop();
-            const percorsoFile = path.join(__dirname, '../../uploads', nomeFile);
-            if (fs.existsSync(percorsoFile)) {
-                fs.unlinkSync(percorsoFile);
-            }
-        }
-
-        // 3. Cancelliamo il record dal Database
-        await db.query('DELETE FROM spese WHERE id = ?', [idSpesa]);
-
-        res.status(200).json({ message: "Scontrino eliminato con successo!" });
-    } catch (error) {
-        console.error("❌ Errore DELETE spesa:", error);
-        res.status(500).json({ message: "Errore durante l'eliminazione." });
-    }
-};

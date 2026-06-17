@@ -13,27 +13,25 @@
 const jwt = require('jsonwebtoken');
 
 exports.verifyToken = (req, res, next) => {
-    let token = req.cookies.token;
-
-    // Se non c'è nei cookie, prova a leggerlo dall'header Authorization
-    if (!token && req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
-        token = req.headers.authorization.split(' ')[1];
+    // 1. Cerchiamo il token PRIMA nell'header Authorization
+    const authHeader = req.headers['authorization'];
+    let token = authHeader && authHeader.split(' ')[1]; // Prende la parte dopo "Bearer"
+    // 2. Se non c'è, controlliamo i cookie (opzionale)
+    if (!token && req.cookies && req.cookies.token) {
+        token = req.cookies.token;
     }
-
+    // 3. Se non troviamo nulla in nessuno dei due posti...
     if (!token) {
         return res.status(401).json({ message: "Accesso negato. Effettua il login per continuare." });
     }
-
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
+        // Assicurati che process.env.JWT_SECRET sia lo stesso usato nel login
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'TUA_CHIAVE_SEGRETA');
         req.user = decoded;
-
         next();
     } catch (error) {
         return res.status(403).json({ message: "Token non valido o scaduto." });
     }
-
 };
 
 exports.checkRole = (ruoloRichiesto) => {

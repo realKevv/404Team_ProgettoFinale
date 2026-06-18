@@ -28,6 +28,8 @@ export const useStore = create((set, get) => ({
     utenti: [],         // Lista utenti (per l'Admin)
     isLoading: false,
     error: null,        // Conterrà i messaggi specifici (es: "Date sovrapposte!")
+    isNotifOpen: false,
+    setIsNotifOpen: (open) => set({ isNotifOpen: open }),
 
     // ==========================================
     // 2. AZIONI: TRASFERTE

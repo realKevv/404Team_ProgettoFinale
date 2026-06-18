@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { Menu, Bell, Home, X } from 'lucide-react';
+import { Menu, Bell, BellRing, Home, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 // Importiamo lo store globale (Zustand) che gestisce i dati dell'applicazione
 import { useStore } from '../store/store';
@@ -22,7 +22,7 @@ export default function Navbar({ onMenuClick }) {
 
     // La Navbar reagisce solo se cambiano gli elementi interni all'array 'trasferte' 
     const trasferte = useStore((state) => state.trasferte);
-    const utenteAutenticato = useStore((state) => state.utenteAutenticato);
+    const utenteAutenticato = JSON.parse(localStorage.getItem('utente') || '{}');
 
     // useMemo memorizza il risultato del filtro. Viene ricalcolato solo
     // quando cambiano i dati reali nel database (trasferte), l'utente loggato o l'elenco dei letti.
@@ -157,7 +157,11 @@ export default function Navbar({ onMenuClick }) {
                                 onClick={() => setIsNotifOpen(!isNotifOpen)}
                                 className={`relative p-2 rounded-xl hover:bg-gray-100 transition-colors cursor-pointer ${isNotifOpen ? 'bg-gray-100' : ''}`}
                             >
-                                <Bell size={20} style={{ color: 'var(--colore-testo-secondario)' }} />
+                                {mostraPallinoRosso ? (
+                                    <BellRing size={20} style={{ color: 'var(--colore-pericolo)' }} />
+                                ) : (
+                                    <Bell size={20} style={{ color: 'var(--colore-testo-secondario)' }} />
+                                )}
 
                                 {/* Il pallino rosso compare dinamicamente solo se mostraPallinoRosso è vero */}
                                 {mostraPallinoRosso && (

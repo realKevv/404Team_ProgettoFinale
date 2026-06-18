@@ -237,6 +237,29 @@ export const useStore = create((set, get) => ({
         }
     },
 
+    addUtente: async (nuovoUtente) => {
+        set({ isLoading: true, error: null });
+        try {
+            // Invio dei dati al server con i token di autenticazione dell'admin
+            const response = await axios.post(`${API_URL}/utenti`, nuovoUtente, { headers: getAuthHeaders() });
+            
+            // Aggiorniamo lo stato locale aggiungendo il nuovo utente alla lista esistente
+            set((state) => ({
+                utenti: [...state.utenti, response.data],
+                isLoading: false
+            }));
+            
+            return response.data;
+        } catch (error) {
+            // Intercettiamo l'errore del server (es. "Email già registrata")
+            const msg = estraiErroreServer(error, "Impossibile aggiungere il nuovo utente.");
+            set({ error: msg, isLoading: false });
+            
+            // Rilanciamo l'errore per permettere al form di catturarlo nel blocco try/catch
+            throw new Error(msg);
+        }
+    },
+
     // ==========================================
     // 🔐 6. AZIONI: AUTENTICAZIONE (Login / Logout)
     // ==========================================

@@ -3,7 +3,7 @@ import {
     Table, TableBody, TableCell, TableContainer,
     TableHead, TableRow, Paper
 } from '@mui/material';
-import { List, Search, X, Trash2 } from 'lucide-react';
+import { List, Search, X, Trash2, AlertCircle } from 'lucide-react';
 import { useStore } from '../../store/store';
 import { usePaginazione } from '../../hooks/usePaginazione';
 import { ControlliPaginazione } from '../ControlliPaginazione';
@@ -16,17 +16,22 @@ export function TrasferteTable({ trasferte, onRowClick, selectedId }) {
     const isAdmin = utenteCorrente?.ruolo === 'admin';
     const { deleteTrasferta } = useStore();
 
+
+    /*stato del componente */
+    const [serverError, setServerError] = useState(null);
+
+    //  Modifica della funzione handleDelete
     const handleDelete = async (e, id) => {
         e.stopPropagation();
+        setServerError(null); // Resetta errori precedenti
         if (window.confirm("Sei sicuro di voler eliminare questa trasferta?")) {
             try {
                 await deleteTrasferta(id);
             } catch (err) {
-                alert("Errore durante l'eliminazione.");
+                setServerError(err.message); // Salva il messaggio reale dal backend
             }
         }
     };
-
     // ─── Filtri ──────────────────────────────────────────────────────────────
     const [search, setSearch] = useState('');
     const [filtroStato, setFiltroStato] = useState('tutti');
@@ -53,6 +58,15 @@ export function TrasferteTable({ trasferte, onRowClick, selectedId }) {
 
     return (
         <div className="flex flex-col gap-4">
+            {serverError && (
+                <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-xl flex items-center gap-2 text-sm font-medium text-red-800 animate-fade-in">
+                    <AlertCircle size={18} className="text-red-600 shrink-0" />
+                    <span>{serverError}</span>
+                    <button onClick={() => setServerError(null)} className="ml-auto text-red-400 hover:text-red-700">
+                        <X size={16} />
+                    </button>
+                </div>
+            )}
             {/* Header + filtri */}
             <div className="flex items-center justify-between gap-3 flex-wrap">
                 <div className="flex items-center gap-2">

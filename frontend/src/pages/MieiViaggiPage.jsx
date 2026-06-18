@@ -5,7 +5,7 @@ import {
 } from '@mui/material';
 import {
     Plane, Search, X, Filter, CheckCircle, XCircle, Clock,
-    MapPin, Calendar, ChevronUp, ChevronDown, SlidersHorizontal, Trash2
+    MapPin, Calendar, ChevronUp, ChevronDown, SlidersHorizontal, Trash2, AlertCircle // 🔥 Aggiunto AlertCircle
 } from 'lucide-react';
 import { useStore } from '../store/store';
 import { usePaginazione } from '../hooks/usePaginazione';
@@ -44,13 +44,18 @@ export function MieiViaggiPage() {
     const [filtroStato, setFiltroStato] = useState('tutti');
     const [showFiltri, setShowFiltri] = useState(false);
 
+    // 🔥 STATO PER L'ERRORE DI ELIMINAZIONE
+    const [errorDelete, setErrorDelete] = useState(null);
+
     const handleDelete = async (e, id) => {
         e.stopPropagation();
+        setErrorDelete(null);
         if (window.confirm("Sei sicuro di voler eliminare questa trasferta?")) {
             try {
                 await deleteTrasferta(id);
             } catch (err) {
-                alert("Errore durante l'eliminazione.");
+                // Catturiamo l'errore reale
+                setErrorDelete(err.message);
             }
         }
     };
@@ -97,7 +102,7 @@ export function MieiViaggiPage() {
             const cmp = valA?.localeCompare(valB ?? '', 'it', { sensitivity: 'base' });
             return sortDir === 'asc' ? cmp : -cmp;
         });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [leMieTrasferte, search, filtroStato, sortBy, sortDir]);
 
     const { paginaCorrente, totalePagine, elementiPagina, vaiAPagina } = usePaginazione(viaggiFiltrati, 10);
@@ -121,11 +126,9 @@ export function MieiViaggiPage() {
             </div>
         </div>
     );
-    if (error) return (
-        <div className="flex-1 flex items-center justify-center min-h-screen" style={{ background: 'var(--colore-sfondo-pagina)' }}>
-            <p style={{ color: 'var(--colore-pericolo)' }}>❌ {error}</p>
-        </div>
-    );
+
+    // Rimuoviamo questo per evitare che un errore globale uccida la pagina
+    // if (error) return (...)
 
     // ─── Colonne ordinabili ──────────────────────────────────────────────────
     const colonne = [
@@ -157,6 +160,17 @@ export function MieiViaggiPage() {
                     </p>
                 </div>
             </div>
+
+            {/* 🔥 BANNER ERRORE ELIMINAZIONE: Spostato correttamente all'interno del return JSX */}
+            {errorDelete && (
+                <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-xl flex items-center gap-2 text-sm font-medium text-red-800 animate-fade-in">
+                    <AlertCircle size={18} className="text-red-600 shrink-0" />
+                    <span>{errorDelete}</span>
+                    <button onClick={() => setErrorDelete(null)} className="ml-auto text-red-400 hover:text-red-700">
+                        <X size={16} />
+                    </button>
+                </div>
+            )}
 
             {/* ── Stat cards ─────────────────────────────────────────────── */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
@@ -302,6 +316,7 @@ export function MieiViaggiPage() {
                                                     ? `${giorni} ${giorni === 1 ? 'giorno' : 'giorni'}`
                                                     : giorni}
                                             </TableCell>
+                                            {/* Azioni */}
                                             <TableCell style={{ padding: '14px 16px', width: '50px' }}>
                                                 <button onClick={(e) => handleDelete(e, t.id)}
                                                     className="p-1.5 rounded-lg text-red-500 hover:bg-red-50 transition-colors">

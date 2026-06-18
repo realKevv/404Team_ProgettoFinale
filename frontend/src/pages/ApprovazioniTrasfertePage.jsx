@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useStore } from '../store/store';
-import { CheckCircle, XCircle, Calendar, MapPin, User, FileText, Clock, Search, X } from 'lucide-react';
+import { CheckCircle, XCircle, Calendar, MapPin, User, FileText, Clock, Search, X, AlertCircle } from 'lucide-react'; // 🔥 Aggiunto AlertCircle
 import { usePaginazione } from '../hooks/usePaginazione';
 import { ControlliPaginazione } from '../components/ControlliPaginazione';
 
@@ -10,6 +10,9 @@ export function ApprovazioniTrasfertePage() {
     // ─── Filtri ──────────────────────────────────────────────────────────────
     const [search, setSearch] = useState('');
     const [filtroRichiedente, setFiltroRichiedente] = useState('tutti');
+
+    // 🔥 STATO PER L'ERRORE SERVER: cattura i fallimenti durante l'approvazione/rifiuto
+    const [serverError, setServerError] = useState(null);
 
     useEffect(() => {
         fetchTrasferte();
@@ -32,6 +35,17 @@ export function ApprovazioniTrasfertePage() {
     }, [trasferte, utenti, search, filtroRichiedente]);
 
     const { paginaCorrente, totalePagine, elementiPagina, vaiAPagina } = usePaginazione(richiestePendenti, 10);
+
+    // 🔥 NUOVA FUNZIONE: Gestisce il cambio di stato intercettando gli errori del backend
+    const handleApprovazione = async (idTrasferta, stato) => {
+        setServerError(null); // Resetta errori precedenti
+        try {
+            await cambiaStatoTrasferta(idTrasferta, stato);
+        } catch (err) {
+            // Se il server blocca l'approvazione, lo mostriamo all'admin!
+            setServerError(err.message);
+        }
+    };
 
     if (isLoading) return <div className="p-8 text-center text-[var(--colore-testo-mutato)]">Caricamento richieste in corso... ⏳</div>;
 
@@ -77,6 +91,19 @@ export function ApprovazioniTrasfertePage() {
                 </span>
             </div>
 
+            {/* 🔥 BANNER ERRORE SERVER: Appare sopra la lista se fallisce un'approvazione */}
+            {serverError && (
+                <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-xl flex items-start gap-2 animate-fade-in max-w-4xl">
+                    <AlertCircle size={18} className="text-red-600 shrink-0 mt-0.5" />
+                    <p className="text-sm font-medium text-red-800 leading-tight">
+                        {serverError}
+                    </p>
+                    <button onClick={() => setServerError(null)} className="ml-auto text-red-400 hover:text-red-700">
+                        <X size={16} />
+                    </button>
+                </div>
+            )}
+
             <div className="space-y-4 max-w-4xl">
                 {richiestePendenti.length === 0 ? (
                     <div className="p-8 text-center border-2 border-dashed border-[var(--colore-bordo)] rounded-2xl bg-[var(--colore-sfondo-card)] text-[var(--colore-testo-mutato)] italic">
@@ -110,10 +137,11 @@ export function ApprovazioniTrasfertePage() {
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-2 md:self-center self-end">
-                                        <button onClick={() => cambiaStatoTrasferta(trip.id, 'approvata')} className="px-4 py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl text-sm font-bold flex items-center gap-2 shadow-sm transition-colors">
+                                        {/* 🔥 BOTTONI AGGIORNATI CON LA NUOVA FUNZIONE */}
+                                        <button onClick={() => handleApprovazione(trip.id, 'approvata')} className="px-4 py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl text-sm font-bold flex items-center gap-2 shadow-sm transition-colors">
                                             <CheckCircle size={18} /> Approva
                                         </button>
-                                        <button onClick={() => cambiaStatoTrasferta(trip.id, 'rifiutata')} className="px-4 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl text-sm font-bold flex items-center gap-2 shadow-sm transition-colors">
+                                        <button onClick={() => handleApprovazione(trip.id, 'rifiutata')} className="px-4 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl text-sm font-bold flex items-center gap-2 shadow-sm transition-colors">
                                             <XCircle size={18} /> Rifiuta
                                         </button>
                                     </div>

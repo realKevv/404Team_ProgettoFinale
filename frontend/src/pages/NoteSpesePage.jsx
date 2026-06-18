@@ -5,7 +5,7 @@ import {
 } from '@mui/material';
 import {
     Receipt, PlusCircle, FileText, AlertTriangle,
-    Check, Eye, X, ShieldAlert, CheckCircle2, XCircle, Trash2
+    Check, Eye, X, ShieldAlert, CheckCircle2, XCircle, Trash2, AlertCircle
 } from 'lucide-react';
 import { useStore } from '../store/store';
 import { usePaginazione } from '../hooks/usePaginazione';
@@ -25,6 +25,7 @@ export function NoteSpesePage() {
     // Stati locali
     const [selectedTrasfertaId, setSelectedTrasfertaId] = useState('');
     const [selectedSpesa, setSelectedSpesa] = useState(null);
+    const [serverError, setServerError] = useState(null);
     const [categoria, setCategoria] = useState('vitto');
     const [importo, setImporto] = useState('');
     const [fileScontrino, setFileScontrino] = useState(null);
@@ -49,6 +50,7 @@ export function NoteSpesePage() {
     // 📤 INVIO SCONTRINO (Vista Utente)
     const handleUploadSpesa = async (e) => {
         e.preventDefault();
+        setServerError(null);
         if (!selectedTrasfertaId || !importo || !fileScontrino) {
             setMessaggio({ testo: "Compila tutti i campi!", tipo: "error" });
             return;
@@ -67,18 +69,33 @@ export function NoteSpesePage() {
             setFileScontrino(null);
             fetchSpeseByTrasferta(selectedTrasfertaId);
         } catch (err) {
-            setMessaggio({ testo: "Errore durante l'upload.", tipo: "error" });
+            // 🔥 ORA MOSTRA IL MOTIVO REALE
+            setServerError(err.message);
         }
     };
 
     // 👑 VALUTAZIONE SPESA (Vista Admin)
     const handleValutaSpesa = async (idSpesa, stato, importoRimborso) => {
+        setServerError(null);
         try {
             await valutaSpesa(idSpesa, stato, importoRimborso);
             setMessaggio({ testo: `Spesa ${stato} con successo!`, tipo: "success" });
             setSelectedSpesa(null);
         } catch (err) {
-            setMessaggio({ testo: "Errore durante la valutazione.", tipo: "error" });
+            // 🔥 ORA MOSTRA IL MOTIVO REALE
+            setServerError(err.message);
+        }
+    };
+
+    const handleDeleteSpesa = async (e, id) => {
+        e.stopPropagation();
+        setServerError(null);
+        if (window.confirm("Vuoi davvero eliminare questo scontrino?")) {
+            try {
+                await deleteSpesa(id);
+            } catch (err) {
+                setServerError(err.message);
+            }
         }
     };
 
@@ -136,9 +153,19 @@ export function NoteSpesePage() {
             </div>
 
             {selectedTrasfertaId ? (
-                <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 lg:gap-8 items-start">
+                <>
+                    {serverError && (
+                        <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-xl flex items-center gap-2 text-sm font-medium text-red-800 animate-fade-in">
+                            <AlertCircle size={18} className="text-red-600 shrink-0" />
+                            <span>{serverError}</span>
+                            <button onClick={() => setServerError(null)} className="ml-auto text-red-400 hover:text-red-700">
+                                <X size={16} />
+                            </button>
+                        </div>
+                    )}
+                    <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 lg:gap-8 items-start">
 
-                    {/* TABELLA DELLE SPESE (2 Colonne) */}
+                        {/* TABELLA DELLE SPESE (2 Colonne) */}
                     <div className="xl:col-span-2 flex flex-col gap-4">
                         <div className="flex justify-between items-center flex-wrap gap-3">
                             <h2 className="text-lg font-bold text-[var(--colore-testo-principale)]">Ricevute presentate</h2>
@@ -234,12 +261,7 @@ export function NoteSpesePage() {
                                                         ) : <span className="text-gray-400 text-xs">Nessun file</span>}
                                                         {spesa.stato_approvazione !== 'approvata' && (
                                                             <button
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    if (window.confirm('Vuoi davvero eliminare questo scontrino?')) {
-                                                                        deleteSpesa(spesa.id);
-                                                                    }
-                                                                }}
+                                                                onClick={(e) => handleDeleteSpesa(e, spesa.id)}
                                                                 className="text-xs text-red-500 font-semibold hover:text-red-700 flex items-center gap-1 transition-colors">
                                                                 <Trash2 size={14} /> Elimina
                                                             </button>
@@ -358,7 +380,8 @@ export function NoteSpesePage() {
                             </div>
                         )}
                     </div>
-                </div>
+                    </div>
+                </>
             ) : (
                 <div className="p-8 text-center border-2 border-dashed border-[var(--colore-bordo)] rounded-2xl text-[var(--colore-testo-mutato)] bg-[var(--colore-sfondo-card)]">
                     Seleziona una trasferta in alto per sbloccare i dati delle note spese.

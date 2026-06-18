@@ -1,92 +1,117 @@
 import React, { useState, useEffect } from 'react';
-import { ShieldAlert, Euro, Clock, Save, CheckCircle, Loader2 } from 'lucide-react';
+import { Euro, Save, CheckCircle, Loader2, AlertCircle } from 'lucide-react';
 import { useStore } from '../store/store';
 
-// Esportiamo la pagina come Named Export per la gestione delle configurazioni dei massimali di spesa
 export function TravelPoliciesPage() {
-    // Estraiamo lo stato globale e le azioni dal nostro store centralizzato
+    // 1. ESTRAZIONE DELLO STATO GLOBALE
+    // Prendiamo i dati e le funzioni dal nostro nuovo store.js "intelligente"
     const { policies, fetchPolicies, updatePolicy, isLoading } = useStore();
-    // Stato locale temporaneo: evita di inviare una richiesta al database ad ogni singolo carattere digitato dall'utente
+
+    // 2. STATI LOCALI DEL COMPONENTE
+    // tempPolicies: salva le modifiche in memoria finché non premiamo "Salva"
     const [tempPolicies, setTempPolicies] = useState({});
-    // Stato booleano per gestire il caricamento dell'azione di salvataggio (mostra spinner sul pulsante)
+
+    // Gestiscono l'interfaccia utente durante il salvataggio
     const [salvataggioInCorso, setSalvataggioInCorso] = useState(false);
-    // Stato booleano per mostrare il feedback visivo di successo ("Salvato!") dopo un salvataggio andato a buon fine
     const [salvato, setSalvato] = useState(false);
 
-    // Primo useEffect: viene eseguito solo al mount (caricamento) del componente per scaricare le politiche dal server
+    // 🔥 STATO FONDAMENTALE PER GLI ERRORI: Cattura il messaggio esatto inviato dal backend
+    const [serverError, setServerError] = useState(null);
+
+    // 3. CARICAMENTO DATI INIZIALE
+    // Scarica le policy dal database appena si apre la pagina
     useEffect(() => {
         fetchPolicies();
-    }, [fetchPolicies]); // Includiamo fetchPolicies nelle dipendenze per sicurezza, stabilità e buone pratiche di React
-    
-    // Secondo useEffect: intercetta l'arrivo dei dati dallo store globale e popola lo stato locale temporaneo
+    }, [fetchPolicies]);
+
+    // Quando le policy arrivano dal server, le copiamo nello stato temporaneo per poterle modificare
     useEffect(() => {
         if (policies) setTempPolicies(policies);
-    }, [policies]); // Si riattiva ogni volta che l'oggetto "policies" nello store globale cambia o viene scaricato
+    }, [policies]);
 
-    // Funzione asincrona che si occupa di ciclare e salvare le modifiche effettuate dall'utente
+    // ==========================================
+    // 🔥 LA FUNZIONE DI SALVATAGGIO CORRETTA
+    // ==========================================
     const handleSave = async () => {
-        setSalvataggioInCorso(true); // Attiva lo spinner sul pulsante di salvataggio per bloccare click multipli accidentalii
+        setSalvataggioInCorso(true);
+        setServerError(null); // Resetta eventuali errori rossi di un tentativo precedente
+
         try {
-            // Aggiorniamo ogni singola policy nel DB
-            // Trasformiamo l'oggetto tempPolicies in una lista di coppie [categoria, valore]
-            //object.entries(tempPolicies) restituisce un array di array, dove ogni sotto-array contiene la coppia chiave-valore dell'oggetto tempPolicies
+            // Cicla attraverso tutte le categorie modificate (vitto, alloggio, ecc.)
             for (const [cat, val] of Object.entries(tempPolicies)) {
-                // Eseguiamo la chiamata API/Store per aggiornare ogni singola categoria (es. Voli, Hotel) nel database
+                // Invia l'aggiornamento al server per ogni categoria
                 await updatePolicy(cat, val);
             }
-            setSalvato(true); // Attiva il messaggio di successo sul pulsante ("Salvato!")
-            // Facciamo sparire la scritta di successo dopo 3 secondi per riportare il pulsante allo stato iniziale
+
+            // SE ARRIVA QUI: TUTTO È ANDATO A BUON FINE (Niente alert fastidiosi)
+            setSalvato(true);
+            // Dopo 3 secondi, fa tornare il bottone da "Salvato!" a "Salva Configurazione"
             setTimeout(() => setSalvato(false), 3000);
+
         } catch (err) {
-            // Gestione dell'errore elementare: blocca l'esecuzione e avvisa l'amministratore del fallimento di rete
-            alert("Errore durante il salvataggio");
+            // SE IL SERVER RIFIUTA L'AGGIORNAMENTO:
+            // Intercetta l'errore reale ("err.message") dallo store.js e lo salva nello stato
+            setServerError(err.message);
         } finally {
-            setSalvataggioInCorso(false); // Spegne lo spinner sul pulsante, sia in caso di successo che di errore
+            // In ogni caso, ferma la rotellina di caricamento
+            setSalvataggioInCorso(false);
         }
     };
-    // Early Return: Se lo store sta ancora scaricando i dati iniziali, mostra uno spinner di caricamento a tutto schermo
-    if (isLoading) return <div className="flex justify-center p-20"><Loader2 className="animate-spin text-blue-500" /></div>;
-    // Rendering dell'interfaccia principale della pagina una volta che i dati sono pronti
+
+    // 4. SCHERMATA DI CARICAMENTO GLOBALE
+    // Mostra la rotellina se sta ancora scaricando i dati all'avvio
+    if (isLoading && Object.keys(tempPolicies).length === 0) {
+        return <div className="flex justify-center p-20"><Loader2 className="animate-spin text-blue-500" /></div>;
+    }
+
+    // 5. INTERFACCIA GRAFICA (JSX)
     return (
-        //p-8:padding interno di 32px,max-w-4xl: larghezza massima di 1024px, mx-auto: margine orizzontale automatico per centrare il contenitore
         <div className="p-8 max-w-4xl mx-auto">
             <h1 className="text-3xl font-bold mb-6 text-[var(--colore-testo-principale)]">🛡️ Configurazione Policies</h1>
-            {/* Griglia responsive a singola colonna per incolonnare verticalmente i vari moduli delle policy */}
+
+            {/* 🔥 BANNER ERRORE (Appare SOLO se il salvataggio fallisce) */}
+            {serverError && (
+                <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-xl flex items-start gap-2 animate-fade-in">
+                    <AlertCircle size={18} className="text-red-600 shrink-0 mt-0.5" />
+                    <p className="text-sm font-medium text-red-800 leading-tight">
+                        {serverError}
+                    </p>
+                </div>
+            )}
+
+            {/* LISTA DEI MASSIMALI DI SPESA */}
             <div className="grid grid-cols-1 gap-6">
-                {/* Estraiamo le chiavi (i nomi delle categorie) dall'oggetto temporaneo e le cicliamo con .map() */}
                 {Object.keys(tempPolicies).map((categoria) => (
-                    // Card della singola policy: usa il tuo sfondo card bianco e il bordo grigio per linee di divisione sottili
                     <div key={categoria} className="p-4 rounded-xl border border-[var(--colore-bordo)] bg-[var(--colore-sfondo-card)] flex justify-between items-center">
-                        {/* Nome della categoria formattato con la prima lettera maiuscola (capitalize) e testo in semibold */}
-                        <span className="capitalize font-semibold">{categoria}</span>
-                        {/* Gruppo di input allineato a destra che contiene il simbolo dell'euro e la casella di testo */}
+                        <span className="capitalize font-semibold text-[var(--colore-testo-principale)]">{categoria}</span>
                         <div className="flex items-center gap-2">
-                            {/* Icona della valuta Euro posizionata subito prima del campo numerico */}
-                            <Euro size={16} />
-                            {/* Campo di input numerico per modificare il budget massimo consentito della policy */}
+                            <Euro size={16} className="text-[var(--colore-testo-mutato)]" />
                             <input
-                                type="number" // Forza la tastiera numerica su mobile e vieta l'inserimento di lettere
-                                value={tempPolicies[categoria]} // Legge il valore in tempo reale dallo stato temporaneo locale
-                                // All'evento di digitazione (onChange), aggiorna solo la specifica categoria mantenendo intatte le altre (...tempPolicies)
-                                onChange={(e) => setTempPolicies({ ...tempPolicies, [categoria]: e.target.value })}
-                                // Input stilizzato: larghezza fissa fissa (w-24), padding interno e il tuo colore del bordo globale
-                                className="w-24 p-2 rounded-lg border border-[var(--colore-bordo)]"
+                                type="number"
+                                value={tempPolicies[categoria]}
+                                onChange={(e) => {
+                                    // Aggiorna solo la categoria modificata
+                                    setTempPolicies({ ...tempPolicies, [categoria]: e.target.value });
+                                    // Se l'utente corregge il numero, nascondi l'avviso di errore
+                                    if (serverError) setServerError(null);
+                                }}
+                                className="w-24 p-2 rounded-lg border text-[var(--colore-testo-principale)] bg-[var(--colore-sfondo-pagina)] focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                                style={{ borderColor: "var(--colore-bordo)" }}
                             />
                         </div>
                     </div>
                 ))}
             </div>
-                {/* Pulsante di salvataggio globale posizionato in fondo alla lista */}
+
+            {/* BOTTONE DI SALVATAGGIO GLOBALE */}
             <button
-                onClick={handleSave} // Associa la funzione asincrona di salvataggio al click del mouse
-                disabled={salvataggioInCorso} // Disabilita e congela il pulsante durante la chiamata di rete per evitare salvataggi duplicati
-                // Sfrutta il `--colore-primario` (Blu Notte) per lo sfondo, angoli arrotondati ed effetti di transizione opacity sull'hover
-                className="mt-6 w-full py-3 bg-[var(--colore-primario)] text-white rounded-xl font-bold hover:opacity-90 transition-all flex justify-center gap-2"
+                onClick={handleSave}
+                disabled={salvataggioInCorso}
+                className="mt-6 w-full py-3 bg-[var(--colore-primario)] text-white rounded-xl font-bold hover:opacity-90 transition-all flex justify-center items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
             >
-                {/* Operatore ternario per l'icona: se sta salvando mostra lo spinner che gira, altrimenti mostra l'icona del floppy disk */}
-                {salvataggioInCorso ? <Loader2 className="animate-spin" /> : <Save size={20} />}
-                {/* Operatore ternario per il testo: se lo stato salvato è true mostra "Salvato!", altrimenti mostra il testo standard */}
-                {salvato ? "Salvato!" : "Salva Configurazione"}
+                {/* Cambia icona e testo in base allo stato del salvataggio */}
+                {salvataggioInCorso ? <Loader2 className="animate-spin" /> : (salvato ? <CheckCircle size={20} /> : <Save size={20} />)}
+                {salvataggioInCorso ? "Salvataggio..." : (salvato ? "Salvato!" : "Salva Configurazione")}
             </button>
         </div>
     );

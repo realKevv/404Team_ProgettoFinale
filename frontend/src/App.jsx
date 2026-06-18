@@ -19,6 +19,7 @@ import { ApprovazioniTrasfertePage } from './pages/ApprovazioniTrasfertePage';
 import { TravelPoliciesPage } from './pages/TravelPoliciesPage';
 import { StoricoViaggiPage } from './pages/StoricoViaggiPage';
 import { MieiViaggiPage } from './pages/MieiViaggiPage';
+import { ThemeProvider } from './context/ThemeContext';
 
 // Helper: legge in sicurezza dal localStorage
 function readToken() {
@@ -58,25 +59,31 @@ function App() {
   // 1. Utente NON loggato
   if (!token) {
     return (
+      <ThemeProvider>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess} />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
+      </ThemeProvider>
     );
   }
 
   // 2. Utente LOGGATO su "/"
   if (isLandingPage) {
-    return (
+    return (  
+      <ThemeProvider>
       <Routes>
         <Route path="/" element={<HomePage />} />
       </Routes>
+      </ThemeProvider>
     );
   }
 
   // 3. Utente LOGGATO su rotte protette
   return (
+    <ThemeProvider>
+      
     <div className="app-layout">
       <Sidebar
         utente={utenteLoggato}
@@ -112,6 +119,7 @@ function App() {
         <Footer />
       </div>
     </div>
+      </ThemeProvider>   
   );
 }
 

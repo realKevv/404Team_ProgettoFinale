@@ -17,17 +17,17 @@ import {
 import { useStore } from "../store/store";
 
 export function AggiungiUtente() {
-  // 1. EXTRAZIONE AZIONI DALLO STORE GLOBAL
+  // EXTRAZIONE AZIONI DALLO STORE GLOBAL
   // Estraiamo la funzione addUtente che abbiamo appena aggiunto nello store globale
   const { addUtente } = useStore();
   
-  // 2. CONTROLLO DI SICUREZZA LATO CLIENT
+  // CONTROLLO DI SICUREZZA LATO CLIENT
   // Recuperiamo i dati dell'utente loggato dal localStorage per verificare se ha i permessi
   const utenteCorrente = JSON.parse(localStorage.getItem("utente") || "{}");
   // Verifichiamo se il ruolo è esplicitamente "admin"
   const isAdmin = utenteCorrente?.ruolo === "admin";
 
-  // 3. STATI LOCALI DEL COMPONENTE
+  // STATI LOCALI DEL COMPONENTE
   // Stato per raccogliere i dati inseriti nei campi del modulo (form)
   const [formData, setFormData] = useState({
     nome_completo: "",
@@ -41,7 +41,7 @@ export function AggiungiUtente() {
   const [isSubmitting, setIsSubmitting] = useState(false);   // Gestisce lo stato di caricamento durante l'invio
   const [status, setStatus] = useState({ type: null, message: "" }); // Gestisce i messaggi di successo o errore ('success' | 'error')
 
-  // 4. GESTORE UNIVERSALE INPUT (HANDLERS)
+  // GESTORE UNIVERSALE INPUT (HANDLERS)
   // Questa funzione si attiva ogni volta che l'utente scrive in un campo del form
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -49,7 +49,7 @@ export function AggiungiUtente() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // 5. INVIO DEI DATI AL DATABASE (SUBMIT)
+  // INVIO DEI DATI AL DATABASE (SUBMIT)
   // Questa funzione gestisce l'invio del form quando si clicca sul bottone
   const handleSubmit = async (e) => {
     e.preventDefault(); // Impedisce il caricamento predefinito della pagina del browser
@@ -80,6 +80,11 @@ export function AggiungiUtente() {
         password: "",
         ruolo: "user",
       });
+      // setTimeout esegue il codice al suo interno dopo un ritardo specificato in millisecondi (4000ms = 4 secondi)
+      setTimeout(() => {
+        // Riportiamo lo stato al valore iniziale "null", così React toglie il banner dalla pagina
+        setStatus({ type: null, message: "" });
+      }, 4000);
     } catch (err) {
       // Se il server restituisce un errore (es: Email duplicata), lo catturiamo e lo mostriamo
       setStatus({ 
@@ -91,39 +96,50 @@ export function AggiungiUtente() {
     }
   };
 
-  // 6. BLOCCO DI SICUREZZA (GUARDIA)
+  // BLOCCO DI SICUREZZA (GUARDIA)
   // Se l'utente NON è un amministratore, interrompiamo il rendering normale e mostriamo la schermata di Accesso Negato
   if (!isAdmin) {
     return (
+        // flex-1: Fa sì che il div occupi tutto lo spazio rimanente della pagina flex padre.
       <div className="flex-1 p-4 sm:p-6 lg:p-8 min-h-screen flex items-center justify-center bg-[var(--colore-sfondo-pagina)]">
         <div className="max-w-md w-full p-6 text-center rounded-2xl border border-[var(--colore-pericolo)] bg-[var(--colore-pericolo-sfondo)] text-[var(--colore-pericolo)] animate-fade-in">
+          {/* mx-auto: Centra l'icona orizzontalmente (margin-left: auto; margin-right: auto). mb-3: Margine inferiore di 12px */}
           <AlertCircle className="mx-auto mb-3" size={40} />
+          {/* text-xl: Testo grande (20px). font-bold: Grassetto marcato. mb-1: Margine inferiore di 4px */}
           <h2 className="text-xl font-bold mb-1">Accesso Negato</h2>
+          {/* text-sm: Testo piccolo (14px). opacity-90: Trasparenza al 90% */}
           <p className="text-sm opacity-90">Questa sezione è riservata esclusivamente agli amministratori del sistema.</p>
         </div>
       </div>
     );
   }
 
-  // 7. RENDERING DELLA PAGINA PER GLI ADMIN
+  // SCHERMATA PRINCIPALE ADMIN
   return (
     <div className="add-user-page flex-1 p-4 sm:p-6 lg:p-8 min-h-screen font-[var(--font-principale)] bg-[var(--colore-sfondo-pagina)] text-[var(--colore-testo-principale)]">
       
       {/* HEADER DELLA PAGINA (Titolo principale e icona in stile Dashboard) */}
+      {/* flex items-center gap-3: Allinea titolo e icona sulla stessa riga distanziandoli di 12px (gap-3). mb-8: Margine sotto di 32px */}
       <div className="page-header flex items-center gap-3 mb-8">
         {/* Contenitore icona con effetto vetro azzurrato */}
+        {/* w-10 h-10: Dimensione fissa di 40x40px. rounded-xl: Angoli arrotondati (12px). bg-[#1e3a8a15]: Sfondo personalizzato esadecimale con trasparenza */}
         <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-[#1e3a8a15]">
           <UserPlus size={22} className="text-[var(--colore-primario)]" />
         </div>
         <div>
+          {/* text-2xl sm:text-3xl (RESPONSIVE): Su mobile la dimensione del titolo è 24px, ma da tablet in su (sm:) sale a 30px */}
           <h1 className="text-2xl sm:text-3xl font-bold">Gestione Personale</h1>
           <p className="text-sm text-[var(--colore-testo-mutato)]">Crea e registra un nuovo profilo dipendente nel database aziendale</p>
         </div>
       </div>
 
-      {/* CONTENITORE CENTRALE DEL MODULO */}
+      {/* CONTENITORE CENTRALE DEL FORM */}
+      {/* max-w-2xl: Il form non supererà mai i 672px di larghezza. mx-auto: Centra tutto il blocco nella pagina */}
       <div className="max-w-2xl mx-auto">
-        {/* Card con ombra morbida ed effetto di sollevamento al passaggio del mouse (hover) */}
+        {/* Card con ombra morbida ed effetto di sollevamento al passaggio del mouse (hover) 
+        relative: Serve a fare da punto di riferimento per eventuali elementi interni assoluti.
+        group: Permette agli elementi figli di cambiare stile quando l'utente fa un'azione (come l'hover) su questa card padre.
+        hover:shadow-lg: Quando passi il mouse sulla card, l'ombra diventa più grande e marcata.*/}
         <div className="relative group p-6 sm:p-8 rounded-2xl border bg-[var(--colore-sfondo-card)] border-[var(--colore-bordo)] shadow-md hover:shadow-lg transition-all duration-300">
           
           {/* Sotto-intestazione interna della card */}
@@ -134,7 +150,7 @@ export function AggiungiUtente() {
             </h2>
           </div>
 
-          {/* BANNER DINAMICO PER ERRORI O SUCCESSI */}
+          {/* BANNER PER ERRORI O SUCCESSI */}
           {status.type && (
             <div className={`p-4 mb-6 rounded-xl border flex items-start gap-3 animate-fade-in ${
               status.type === "success" 
@@ -142,6 +158,7 @@ export function AggiungiUtente() {
                 : "bg-[var(--colore-pericolo-sfondo)] border-[var(--colore-pericolo)] text-[var(--colore-pericolo)]"
             }`}>
               {/* Mostra l'icona di spunta se successo, o di allerta se errore */}
+              {/* shrink-0: Impedisce all'icona di rimpicciolirsi o deformarsi se il testo del messaggio è molto lungo e spinge di lato */}
               {status.type === "success" ? <CheckCircle size={20} className="shrink-0" /> : <AlertCircle size={20} className="shrink-0" />}
               <p className="text-sm font-medium">{status.message}</p>
             </div>
@@ -152,9 +169,12 @@ export function AggiungiUtente() {
             
             {/* Campo: Nome Completo */}
             <div className="flex flex-col gap-1.5">
+                {/* text-xs: 12px. uppercase: Tutto in maiuscolo. tracking-wide: Aumenta lo spazio tra le lettere  */}
               <label className="text-xs font-bold uppercase tracking-wide text-[var(--colore-testo-mutato)]">Nome e Cognome</label>
               <div className="relative">
                 {/* Icona posizionata all'interno del campo di testo */}
+                {/* absolute: Sgancia l'icona dal flusso normale e la sovrappone all'input. left-3.5: La sposta a 14px dal bordo sinistro.
+                top-1/2 -translate-y-1/2: Centra verticalmente l'icona a prescindere dall'altezza del campo.*/}
                 <User className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--colore-testo-secondario)]" size={18} />
                 <input
                   type="text"
@@ -163,6 +183,9 @@ export function AggiungiUtente() {
                   onChange={handleChange}
                   placeholder="es. Mario Rossi"
                   disabled={isSubmitting}
+                //   pl-11: Padding a sinistra molto ampio (44px) per fare spazio all'icona ed evitare che il testo ci scriva sopra.
+                //pr-4 py-2.5: Padding a destra standard (16px) e padding sopra/sotto medio(10px); focus:outline-none: Rimuove la riga nera che i browser mettono quando clicchi sui campi.
+                //focus:border-...: Quando l'utente clicca (focus), il bordo cambia colore dinamicamente.
                   className="w-full pl-11 pr-4 py-2.5 text-sm bg-[var(--colore-sfondo-card)] border border-[var(--colore-bordo)] rounded-xl focus:outline-none focus:border-[var(--colore-primario-luce)] focus:ring-2 focus:ring-[var(--colore-primario-luce)]/20 transition-all text-[var(--colore-testo-principale)] disabled:opacity-60"
                 />
               </div>
@@ -186,7 +209,7 @@ export function AggiungiUtente() {
               </div>
             </div>
 
-            {/* Griglia a due colonne (affiancate su desktop, incolonnate su smartphone) */}
+            {/* Griglia a due colonne password e ruolo(affiancate su desktop, incolonnate su smartphone) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               
               {/* Campo: Password d'Accesso (Aggiornato: Definitiva decisa dall'admin) */}
@@ -246,6 +269,8 @@ export function AggiungiUtente() {
               <button
                 type="submit"
                 disabled={isSubmitting}
+                // disabled:cursor-not-allowed: Cambia l'icona del mouse in un simbolo di divieto quando il form sta inviando ed il bottone è bloccato.
+                // animate-spin: Applica una rotazione continua a 360° all'icona Loader2 quando il caricamento è attivo.
                 className="w-full py-3 px-4 rounded-xl font-semibold text-sm text-white bg-[var(--colore-primario)] hover:bg-[var(--colore-primario-luce)] shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed group"
               >
                 {/* Mostra lo spinner animato se la richiesta è in corso, altrimenti mostra il testo normale */}

@@ -15,7 +15,7 @@ export function TravelPoliciesPage() {
     const [salvataggioInCorso, setSalvataggioInCorso] = useState(false);
     const [salvato, setSalvato] = useState(false);
 
-    // 🔥 STATO FONDAMENTALE PER GLI ERRORI: Cattura il messaggio esatto inviato dal backend
+    // STATO FONDAMENTALE PER GLI ERRORI: Cattura il messaggio esatto inviato dal backend
     const [serverError, setServerError] = useState(null);
 
     // 3. CARICAMENTO DATI INIZIALE
@@ -29,9 +29,7 @@ export function TravelPoliciesPage() {
         if (policies) setTempPolicies(policies);
     }, [policies]);
 
-    // ==========================================
-    // 🔥 LA FUNZIONE DI SALVATAGGIO CORRETTA
-    // ==========================================
+    // Funzione asincrona che si occupa di ciclare e salvare le modifiche effettuate dall'utente
     const handleSave = async () => {
         setSalvataggioInCorso(true);
         setServerError(null); // Resetta eventuali errori rossi di un tentativo precedente
@@ -69,7 +67,7 @@ export function TravelPoliciesPage() {
         <div className="p-8 max-w-4xl mx-auto">
             <h1 className="text-3xl font-bold mb-6 text-[var(--colore-testo-principale)]">🛡️ Configurazione Policies</h1>
 
-            {/* 🔥 BANNER ERRORE (Appare SOLO se il salvataggio fallisce) */}
+            {/* BANNER ERRORE (Appare SOLO se il salvataggio fallisce) */}
             {serverError && (
                 <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-xl flex items-start gap-2 animate-fade-in">
                     <AlertCircle size={18} className="text-red-600 shrink-0 mt-0.5" />

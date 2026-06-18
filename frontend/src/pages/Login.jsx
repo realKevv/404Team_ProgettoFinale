@@ -10,7 +10,7 @@ function Login({ onLoginSuccess }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    // 🔥 NUOVO STATO LOCALE: Gestisce l'errore in modo isolato, senza sporcare lo store globale
+    // NUOVO STATO LOCALE: Gestisce l'errore in modo isolato, senza sporcare lo store globale
     const [errorLogin, setErrorLogin] = useState(null);
 
     // Tiriamo fuori dal magazzino Zustand solo la funzione login e il caricamento
@@ -38,7 +38,7 @@ function Login({ onLoginSuccess }) {
             // Se il login va a buon fine, ti spara dritto nella dashboard
             navigate("/dashboard");
         } catch (err) {
-            // 🔥 CATTURA L'ERRORE REALE DAL BACKEND ("Utente non trovato", "Password errata", ecc.)
+            // CATTURA L'ERRORE REALE DAL BACKEND ("Utente non trovato", "Password errata", ecc.)
             setErrorLogin(err.message);
         }
     };
@@ -158,7 +158,7 @@ function Login({ onLoginSuccess }) {
                     Inserisci le tue credenziali aziendali
                 </p>
 
-                {/* 🔥 MESSAGGIO DI ERRORE DEL SERVER (Appare solo se si sbaglia credenziali) */}
+                {/* MESSAGGIO DI ERRORE DEL SERVER (Appare solo se si sbaglia credenziali) */}
                 {errorLogin && (
                     <div className="p-3 mb-6 text-sm font-medium text-center rounded-xl bg-red-50 text-red-600 border border-red-200 flex items-center justify-center gap-2 animate-fade-in">
                         <AlertCircle size={18} />

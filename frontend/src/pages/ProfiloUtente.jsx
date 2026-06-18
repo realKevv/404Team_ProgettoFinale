@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { UserCircle, Mail, Shield, MapPin, Plane, Compass, Award } from "lucide-react";
-import { useStore } from "../store/store"; // 🔥 AGGANCIO ALLO STORE REALE
+import { useStore } from "../store/store"; //AGGANCIO ALLO STORE REALE
 
 export function ProfiloUtente() {
     // LEGGiamo l'utente reale loggato nella sessione attuale

@@ -15,9 +15,13 @@ import {
   Milestone,
   ChevronDown,
   ChevronUp,
+  Sun,
+  Moon,
 } from "lucide-react";
 // Importiamo l'hook del global store centralizzato per connettere la pagina ai dati reali dell'applicazione
 import { useStore } from "../store/store";
+// Importiamo l'hook personalizzato del tema per gestire la modalità chiara/scura
+import { useTheme } from "../context/ThemeContext";
 
 // Esportiamo la pagina del Profilo Utente come Named Export per renderla importabile nel Router principale
 export function ProfiloUtente() {
@@ -26,6 +30,9 @@ export function ProfiloUtente() {
 
   // Prendiamo lo stato delle trasferte, la funzione di scaricamento (fetch) e lo stato di caricamento dallo Store globale
   const { trasferte, fetchTrasferte, isLoading } = useStore();
+
+  // Estraiamo lo stato del tema e la funzione per alternarlo dall'hook globale useTheme
+  const { isDark, toggleTema } = useTheme();
 
   // NUOVI STATI LOCALI:
   // Stato di tipo stringa per memorizzare in tempo reale i caratteri digitati dall'utente nella barra di ricerca
@@ -125,6 +132,26 @@ export function ProfiloUtente() {
     >
       {/* CONTAINER CENTRALIZZATO: Limita la larghezza massima a 1280px (max-w-7xl) e distanzia i blocchi di 40px (space-y-10) */}
       <div className="max-w-7xl mx-auto space-y-10">
+        {/* INTERRUTTORE TEMA - Pulsante pulito posizionato in alto a destra */}
+        <div className="flex justify-end">
+          <button
+            onClick={toggleTema}
+            className="flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-xl bg-[var(--colore-sfondo-card)] border border-[var(--colore-bordo)] shadow-sm hover:bg-[var(--colore-sfondo-alt)] hover:border-[var(--colore-primario-luce)]/30 transition-all duration-300 text-[var(--colore-testo-principale)]"
+          >
+            {isDark ? (
+              <>
+                <Sun size={16} className="text-amber-500" />
+                <span>Modalità Chiara</span>
+              </>
+            ) : (
+              <>
+                <Moon size={16} className="text-indigo-500" />
+                <span>Modalità Scura</span>
+              </>
+            )}
+          </button>
+        </div>
+
         {/*CARD UTENTE MAGNETICA*/}
         {/* relative imposta il perimetro per gli effetti di luce assoluti; group permette ai figli di reagire all'hover della card */}
         <div className="relative group max-w-3xl mx-auto sm:mx-0">
@@ -251,7 +278,7 @@ export function ProfiloUtente() {
                 {trasferteUtente[0]?.destinazione || "-"}
               </h3>
             </div>
-            <div className="p-3 bg-[var(--colore-avviso-sfondo)] rounded-xl text-[var(--colore-accento)] group-hover:scale-110 transition-all duration-300">
+            <div className="p-3 bg-[var(--colive-avviso-sfondo)] rounded-xl text-[var(--colore-accento)] group-hover:scale-110 transition-all duration-300">
               <Award size={24} />
             </div>
           </div>
@@ -359,7 +386,7 @@ export function ProfiloUtente() {
             </div>
           ) : (
             // EMPTY STATE: Se i filtri o la ricerca azzerano i risultati, mostra un box tratteggiato di avviso
-            <div className="p-12 text-center bg-[var(--colore-sfondo-card)] rounded-2xl border border-dashed border border-[var(--colore-bordo)] text-[var(--colore-testo-secondario)] text-sm">
+            <div className="p-12 text-center bg-[var(--colore-sfondo-card)] rounded-2xl border border-dashed border-[var(--colore-bordo)] text-[var(--colore-testo-secondario)] text-sm">
               Nessuna meta trovata corrispondente a "{ricerca}"
             </div>
           )}

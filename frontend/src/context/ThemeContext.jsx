@@ -16,11 +16,12 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 // di comunicazione tra il Provider (che fornisce i dati) e i Consumer
 // (i componenti che usano quei dati).
 const ThemeContext = createContext(undefined);
+
 // -----------------------------------------------------------------------
 // 2. PROVIDER DEL TEMA
 // -----------------------------------------------------------------------
 // Questo componente avvolge tutta l'applicazione (vedi main.jsx o App.jsx).
-// Chiunque sia "dentro" ThemeProvider può leggere e modificare il tema.
+// Chiunque sia "dentro" ThemeProvider can leggere e modificare il tema.
 export function ThemeProvider({ children }) {
   // --- Inizializzazione dello stato ---
   // useState accetta una funzione "inizializzatore" (lazy init) che viene
@@ -33,6 +34,7 @@ export function ThemeProvider({ children }) {
     // Se esiste e vale "dark" usa dark, altrimenti "light"
     return temaSalvato === "dark" ? "dark" : "light";
   });
+
   // --- Applicazione del tema al documento ---
   // useEffect si esegue ogni volta che "tema" cambia.
   // Aggiunge o rimuove la classe "dark-mode" sull'elemento <html>
@@ -53,11 +55,12 @@ export function ThemeProvider({ children }) {
   }, [tema]); // <-- dipendenza: riesegui solo quando "tema" cambia
 
   // --- Funzione di toggle ---
-  // Questa funzione alternna tra "light" e "dark" ogni volta che viene chiamata.
+  // Questa funzione alterna tra "light" e "dark" ogni volta che viene chiamata.
   // Usa la forma a funzione di setTema per basarsi sempre sul valore attuale.
   const toggleTema = () => {
     setTema((temaCorrente) => (temaCorrente === "light" ? "dark" : "light"));
   };
+
   // --- Valore esposto ai Consumer ---
   // Qualsiasi componente che usa useTheme() riceverà questo oggetto.
   const valoreContesto = {
@@ -65,6 +68,7 @@ export function ThemeProvider({ children }) {
     toggleTema, // funzione per cambiare tema
     isDark: tema === "dark", // booleano comodo: true se siamo in dark mode
   };
+
   return (
     // Il Provider "distribuisce" il valore a tutti i figli annidati
     <ThemeContext.Provider value={valoreContesto}>
@@ -72,6 +76,7 @@ export function ThemeProvider({ children }) {
     </ThemeContext.Provider>
   );
 }
+
 // -----------------------------------------------------------------------
 // 3. HOOK PERSONALIZZATO: useTheme()
 // -----------------------------------------------------------------------

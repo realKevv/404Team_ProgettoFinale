@@ -10,21 +10,20 @@
  * ============================================================================
  */
 
-const express = require('express');
-const cors = require('cors');
-require('dotenv').config();
-const cookieParser = require('cookie-parser');
-const db = require('./config/db');
+const express = require("express");
+const cors = require("cors");
+require("dotenv").config();
+const cookieParser = require("cookie-parser");
+const db = require("./config/db");
 
 // Importazione delle rotte
-const authRoutes = require('./routes/authRoutes');
-const trasferteRoutes = require('./routes/trasferteRoutes');
-const speseRoutes = require('./routes/speseRoutes');
-const policiesRoutes = require('./routes/policiesRoutes');
-const utentiRoutes = require('./routes/utentiRoutes');
+const authRoutes = require("./routes/authRoutes");
+const trasferteRoutes = require("./routes/trasferteRoutes");
+const speseRoutes = require("./routes/speseRoutes");
+const policiesRoutes = require("./routes/policiesRoutes");
+const utentiRoutes = require("./routes/utentiRoutes");
 
-
-const { verifyToken } = require('./middlewares/authMiddleware');
+const { verifyToken } = require("./middlewares/authMiddleware");
 
 const app = express();
 
@@ -32,10 +31,12 @@ const app = express();
 // ⚙️ MIDDLEWARE GLOBALI
 // ==========================================
 // Il CORS è configurato PERFETTAMENTE per far passare Vite (porta 5173)
-app.use(cors({
-  origin: 'http://localhost:5173',
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: true,
+    credentials: true,
+  }),
+);
 
 app.use(express.json());
 app.use(cookieParser());
@@ -51,24 +52,24 @@ db.query("SELECT 1")
 // ==========================================
 // 🚦 REGISTRAZIONE ROTTE PRINCIPALI
 // ==========================================
-app.use('/api/auth', authRoutes);
-app.use('/api/trasferte', trasferteRoutes);
-app.use('/api/spese', speseRoutes);
-app.use('/api/policies', policiesRoutes);
-app.use('/api/utenti', utentiRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/trasferte", trasferteRoutes);
+app.use("/api/spese", speseRoutes);
+app.use("/api/policies", policiesRoutes);
+app.use("/api/utenti", utentiRoutes);
 
 // ==========================================
 // 🛠️ ROTTE DI TEST E FALLBACK
 // ==========================================
-app.get('/', (req, res) => {
+app.get("/", (req, res) => {
   res.json({ message: "API attiva" });
 });
 
-app.get('/api/status', (req, res) => {
+app.get("/api/status", (req, res) => {
   res.json({ message: "Il server Express è online e pronto a spaccare! 🚀" });
 });
 
-app.get('/api/profilo-segreto', verifyToken, (req, res) => {
+app.get("/api/profilo-segreto", verifyToken, (req, res) => {
   res.json({
     message: "Benvenuto nell'area VIP!",
     datiUtente: req.user,

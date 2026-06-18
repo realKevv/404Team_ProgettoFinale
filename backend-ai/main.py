@@ -1,43 +1,31 @@
-import os
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
 from dotenv import load_dotenv
 
-# Carichiamo le variabili dal file .env
+# Importiamo il router che abbiamo appena creato
+from routes.chat_route import router as chat_router
+
+# 1. Carichiamo le chiavi segrete dal file .env
 load_dotenv()
 
-app = FastAPI(title="Business Travel AI Service", version="1.0")
+# 2. Accendiamo il server FastAPI
+app = FastAPI(title="Business Travel AI API", version="1.0")
 
-# Configurazione CORS per permettere a React (es: localhost:5173) di chiamare questo server
+# 3. Configurazione CORS (FONDAMENTALE)
+# Permette al tuo frontend React (es. localhost:5173) di fare chiamate a questo server
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # In produzione metteremo l'URL specifico del frontend
+    allow_origins=["*"], # In produzione metteremo l'URL vero del sito
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Definiamo la struttura dei dati che ci aspettiamo nella richiesta POST
-class ChatRequest(BaseModel):
-    message: str
-    user_id: int
+# 4. Agganciamo il router della chat. 
+# Tutte le rotte di quel file inizieranno con "/api/ai"
+app.include_router(chat_router, prefix="/api/ai", tags=["Chat IA"])
 
+# 5. Rotta di test per vedere se il server è vivo
 @app.get("/")
-def home():
-    return {"status": "online", "message": "Il server IA è attivo e pronto!"}
-
-@app.post("/api/ai/chat")
-async def chat_endpoint(request: ChatRequest):
-    try:
-        # Per ora facciamo un finto ritorno, giusto per testare che il server risponda
-        user_message = request.message
-        print(f"Ricevuto messaggio da utente {request.user_id}: {user_message}")
-        
-        # Qui nello Step 2 collegheremo il nostro agente LangGraph
-        ai_response = f"Ricevuto! Hai detto: '{user_message}'. Presto ti risponderò usando Mistral e il DB."
-        
-        return {"response": ai_response}
-        
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+def health_check():
+    return {"status": "online", "message": "Il microservizio IA è acceso e pronto!"}

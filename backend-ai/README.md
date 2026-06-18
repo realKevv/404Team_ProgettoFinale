@@ -69,5 +69,6 @@ L'accesso all'IA è basato sul principio che **non ci fidiamo mai del frontend**
 
 ---
 <div align="center">
-  <b>Progetto sviluppato per il Progetto Finale 404Team © 2026</b>
+  <b>Progetto sviluppato per il Progetto Finale 404Team © 2026</b><br>
+  <i>by <a href="https://github.com/realKevv" target="_blank">RealKevv</a></i>
 </div>

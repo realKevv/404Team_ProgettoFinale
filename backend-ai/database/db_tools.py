@@ -103,7 +103,7 @@ def admin_get_da_approvare() -> str:
             SELECT u.nome_completo, t.id, t.destinazione, t.data_inizio, t.data_fine 
             FROM trasferte t
             JOIN utenti u ON t.id_utente = u.id
-            WHERE t.stato = 'in attesa'
+            WHERE t.stato = 'in_attesa'
         """
         cursor.execute(query)
         risultati = cursor.fetchall()

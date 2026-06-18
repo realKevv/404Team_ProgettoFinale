@@ -14,7 +14,7 @@ import { Dashboard } from './pages/Dashboard';
 import { DipendentiPage } from './pages/DipendentiPage';
 import { NoteSpesePage } from './pages/NoteSpesePage';
 import { ProfiloUtente } from './pages/ProfiloUtente';
-import { ListaViaggi } from './pages/Listaviaggi'; // (Assicurati che l'iniziale del file coincida, es: Listaviaggi o ListaViaggi)
+import { ListaViaggi } from './pages/ListaViaggi';
 import { ApprovazioniTrasfertePage } from './pages/ApprovazioniTrasfertePage';
 import { TravelPoliciesPage } from './pages/TravelPoliciesPage';
 import { StoricoViaggiPage } from './pages/StoricoViaggiPage';

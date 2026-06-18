@@ -12,7 +12,7 @@ export function ColleaguesTracker({ trasferte = [], utenti = [] }) {
                 Chi è fuori ufficio?
             </h2>
 
-            <div className="space-y-3">
+            <div className="space-y-3 max-h-[340px] overflow-y-auto pr-1">
                 {activeTrips.length === 0 && (
                     <p className="text-sm text-[var(--colore-testo-mutato)] italic">Tutti in ufficio oggi.</p>
                 )}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Plane, Clock, CheckCircle, Info, X, Calendar, FileText, MapPin } from 'lucide-react';
+import { Plane, Clock, CheckCircle, Info, X, Calendar, FileText, MapPin, Plus } from 'lucide-react';
 import { TrasferteTable } from '../components/trasferte/TrasferteTable';
 import { TrasferteForm } from '../components/trasferte/TrasferteForm';
 import { ColleaguesTracker } from '../components/trasferte/ColleaguesTracker';
@@ -17,6 +17,7 @@ export function Dashboard() {
     const utenteCorrente = JSON.parse(localStorage.getItem('utente') || '{}');
     const isAdmin = utenteCorrente?.ruolo === 'admin';
     const [selectedTrasferta, setSelectedTrasferta] = useState(null);
+    const [showNuovaTrasferta, setShowNuovaTrasferta] = useState(false);
 
     useEffect(() => {
         fetchTrasferte();
@@ -27,6 +28,7 @@ export function Dashboard() {
         // 🔥 Il try/catch se ne occupa TrasferteForm.jsx per poter mostrare 
         // l'errore senza resettare il form. Qui passiamo solo la promessa.
         await addTrasferta(nuoviDati);
+        setShowNuovaTrasferta(false);
     };
 
     const trasferteFiltrate = isAdmin
@@ -133,7 +135,26 @@ export function Dashboard() {
                             </button>
                         </div>
                     ) : (
-                        <TrasferteForm onAddTrasferta={handleFormSubmit} isAdmin={isAdmin} utenti={utenti} />
+                        showNuovaTrasferta ? (
+                            <div className="relative animate-fade-in">
+                                <button 
+                                    onClick={() => setShowNuovaTrasferta(false)} 
+                                    className="absolute top-6 right-6 p-1.5 rounded-lg hover:bg-gray-100 text-[var(--colore-testo-mutato)] transition-colors z-10"
+                                    title="Chiudi form"
+                                >
+                                    <X size={18} />
+                                </button>
+                                <TrasferteForm onAddTrasferta={handleFormSubmit} isAdmin={isAdmin} utenti={utenti} />
+                            </div>
+                        ) : (
+                            <button
+                                onClick={() => setShowNuovaTrasferta(true)}
+                                className="w-full py-3.5 px-4 rounded-xl border border-[var(--colore-bordo)] bg-[var(--colore-sfondo-card)] text-[var(--colore-testo-secondario)] text-sm font-medium flex items-center justify-center gap-2 hover:border-[var(--colore-primario)] hover:text-[var(--colore-primario)] hover:shadow-sm transition-all animate-fade-in"
+                            >
+                                <Plus size={16} />
+                                Nuova Trasferta
+                            </button>
+                        )
                     )}
 
                     <ColleaguesTracker trasferte={trasferte} utenti={utenti} />

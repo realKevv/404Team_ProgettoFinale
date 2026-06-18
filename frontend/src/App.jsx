@@ -19,6 +19,7 @@ import { ApprovazioniTrasfertePage } from './pages/ApprovazioniTrasfertePage';
 import { TravelPoliciesPage } from './pages/TravelPoliciesPage';
 import { StoricoViaggiPage } from './pages/StoricoViaggiPage';
 import { MieiViaggiPage } from './pages/MieiViaggiPage';
+import { AggiungiUtente } from './pages/AggiungiUtente';
 import { ThemeProvider } from './context/ThemeContext';
 
 // Helper: legge in sicurezza dal localStorage
@@ -108,10 +109,10 @@ function App() {
 
                             {/* Rotte Admin */}
                             <Route path="/admin/approvazioni" element={<ApprovazioniTrasfertePage />} />
-
                             <Route path="/admin/trasferte" element={<ListaViaggi />} />
                             <Route path="/viaggi/storico" element={<StoricoViaggiPage />} />
                             <Route path="/admin/policies" element={<TravelPoliciesPage />} />
+                            <Route path="/admin/nuovo-utente" element={<AggiungiUtente />} />
 
                             <Route path="*" element={<Navigate to="/dashboard" replace />} />
                         </Routes>

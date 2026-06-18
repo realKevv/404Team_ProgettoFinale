@@ -10,7 +10,8 @@ import {
     X,
     Users,
     Shield,
-    History
+    History,
+    UserPlus
 } from "lucide-react";
 
 export function Sidebar({ utente, onLogout, isOpen, onClose }) {
@@ -99,6 +100,10 @@ export function Sidebar({ utente, onLogout, isOpen, onClose }) {
                                 <NavLink to="/admin/policies" className={baseLinkClass} style={renderLinkStyle} onClick={onClose}>
                                     <Shield size={18} />
                                     <span>Travel Policies</span>
+                                </NavLink>
+                                <NavLink to="/admin/nuovo-utente" className={baseLinkClass} style={renderLinkStyle} onClick={onClose}>
+                                    <UserPlus size={18} />
+                                    <span>Aggiungi Utente</span>
                                 </NavLink>
                             </>
                         )}

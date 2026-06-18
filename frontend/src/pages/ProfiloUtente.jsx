@@ -43,8 +43,8 @@ export function ProfiloUtente() {
   // Prendo i viaggi dell'utente corrente e li ordino dal più recente al più vecchio. Se l'utente non è loggato, sarà un array vuoto.
   const trasferteUtente = utente
     ? trasferte
-        // Scorro la lista di tutte le trasferte e filtro solo quelle che contengono l'id dell'utente loggato
-        .filter((t) => t.id_utente === utente.id)
+        // Scorro la lista di tutte le trasferte e filtro solo quelle che contengono l'id dell'utente loggato e lo stato approvato
+        .filter((t) => t.id_utente === utente.id && t.stato==="approvata")
         .sort((a, b) => {
           // Controlla se il viaggio ha una data valida, altrimenti assegna una data molto vecchia (new Date(0) = 1970) per posizionarlo in fondo
           const dataA = a.data_inizio ? new Date(a.data_inizio) : new Date(0);

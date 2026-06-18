@@ -48,4 +48,26 @@ const createUtente = async (req, res) => {
     }
 };
 
-module.exports = { getAllUtenti, createUtente };
+const deleteUtente = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Impedisce all'admin di eliminare se stesso
+        if (parseInt(id) === req.user.id) {
+            return res.status(400).json({ message: "Non puoi eliminare il tuo stesso account." });
+        }
+
+        const [existing] = await db.query("SELECT id FROM utenti WHERE id = ?", [id]);
+        if (existing.length === 0) {
+            return res.status(404).json({ message: "Utente non trovato." });
+        }
+
+        await db.query("DELETE FROM utenti WHERE id = ?", [id]);
+        res.json({ message: "Utente eliminato con successo." });
+    } catch (err) {
+        console.error("Errore eliminazione utente:", err);
+        res.status(500).json({ error: "Errore durante l'eliminazione dell'utente." });
+    }
+};
+
+module.exports = { getAllUtenti, createUtente, deleteUtente };

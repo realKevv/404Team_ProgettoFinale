@@ -20,6 +20,7 @@ import { TravelPoliciesPage } from './pages/TravelPoliciesPage';
 import { StoricoViaggiPage } from './pages/StoricoViaggiPage';
 import { MieiViaggiPage } from './pages/MieiViaggiPage';
 import { AggiungiUtente } from './pages/AggiungiUtente';
+import { RimuoviUtente } from './pages/RimuoviUtente';
 import { ThemeProvider } from './context/ThemeContext';
 
 // Helper: legge in sicurezza dal localStorage
@@ -113,6 +114,7 @@ function App() {
                             <Route path="/viaggi/storico" element={<StoricoViaggiPage />} />
                             <Route path="/admin/policies" element={<TravelPoliciesPage />} />
                             <Route path="/admin/nuovo-utente" element={<AggiungiUtente />} />
+                            <Route path="/admin/rimuovi-utente" element={<RimuoviUtente />} />
 
                             <Route path="*" element={<Navigate to="/dashboard" replace />} />
                         </Routes>

@@ -260,6 +260,23 @@ export const useStore = create((set, get) => ({
         }
     },
 
+    deleteUtente: async (id) => {
+        set({ isLoading: true, error: null });
+        try {
+            await axios.delete(`${API_URL}/utenti/${id}`, { headers: getAuthHeaders() });
+
+            // Rimuoviamo l'utente dallo stato locale senza ricaricare dal server
+            set((state) => ({
+                utenti: state.utenti.filter((u) => u.id !== id),
+                isLoading: false
+            }));
+        } catch (error) {
+            const msg = estraiErroreServer(error, "Impossibile eliminare l'utente.");
+            set({ error: msg, isLoading: false });
+            throw new Error(msg);
+        }
+    },
+
     // ==========================================
     // 🔐 6. AZIONI: AUTENTICAZIONE (Login / Logout)
     // ==========================================

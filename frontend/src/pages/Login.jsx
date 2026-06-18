@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Mail, Lock, LogIn } from "lucide-react";
+import { Mail, Lock, LogIn, AlertCircle } from "lucide-react"; // 🔥 Aggiunto AlertCircle
 
 // IMPORTIAMO LO STORE ZUSTAND
 import { useStore } from "../store/store";
@@ -10,16 +10,23 @@ function Login({ onLoginSuccess }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    // Tiriamo fuori dal magazzino Zustand la funzione login e gli stati
-    const { login, isLoading, error } = useStore();
+    // 🔥 NUOVO STATO LOCALE: Gestisce l'errore in modo isolato, senza sporcare lo store globale
+    const [errorLogin, setErrorLogin] = useState(null);
+
+    // Tiriamo fuori dal magazzino Zustand solo la funzione login e il caricamento
+    const { login, isLoading } = useStore();
 
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
+        setErrorLogin(null); // Resetta eventuali errori precedenti
 
-        // Blocco di sicurezza: se mancano i dati non fa nulla
-        if (!email || !password) return;
+        // Blocco di sicurezza locale
+        if (!email || !password) {
+            setErrorLogin("Inserisci email e password per accedere.");
+            return;
+        }
 
         try {
             // Chiamata al backend tramite Zustand
@@ -31,8 +38,8 @@ function Login({ onLoginSuccess }) {
             // Se il login va a buon fine, ti spara dritto nella dashboard
             navigate("/dashboard");
         } catch (err) {
-            console.error("Login fallito");
-            // Non serve fare alert, Zustand ha già valorizzato la variabile 'error'
+            // 🔥 CATTURA L'ERRORE REALE DAL BACKEND ("Utente non trovato", "Password errata", ecc.)
+            setErrorLogin(err.message);
         }
     };
 
@@ -92,7 +99,7 @@ function Login({ onLoginSuccess }) {
             {/* LOGIN CARD */}
 
             <div
-            //w-full:la card occupa tutta la larghezza; lg:max-w-xl su schermi grandi diventa più larga
+                //w-full:la card occupa tutta la larghezza; lg:max-w-xl su schermi grandi diventa più larga
                 //p-10:padding 40px; lg:p-12 su schermi grandi padding 48px; rounded-2xl:bordi molto arotondati
                 //border-2: bordo spesso 2px; transition-all: qualsiasi cambiamento diventa animato
                 //duration-300: durata animazione in ms; hover:scale-[1.02]:ingrandisce la card del 2% quando ci si passa sopra con il mouse
@@ -119,7 +126,7 @@ function Login({ onLoginSuccess }) {
                 {/* mb-6:margine inferiore di 24px serve a separarlo dal titolo del form */}
                 <div className="flex justify-center mb-6">
                     <div
-                     //px-5:padding orizzontale che allarga il badge;py-2:padding verticale
+                        //px-5:padding orizzontale che allarga il badge;py-2:padding verticale
                         //text-sm:testo piccolo
                         className="
                             px-5
@@ -150,15 +157,17 @@ function Login({ onLoginSuccess }) {
                 >
                     Inserisci le tue credenziali aziendali
                 </p>
-                {/* MESSAGGIO DI ERRORE DEL SERVER (Appare solo se si sbaglia password) */}
-                {error && (
-                    <div className="p-3 mb-6 text-sm text-center rounded-lg bg-red-50 text-red-600 border border-red-200">
-                        {error}
+
+                {/* 🔥 MESSAGGIO DI ERRORE DEL SERVER (Appare solo se si sbaglia credenziali) */}
+                {errorLogin && (
+                    <div className="p-3 mb-6 text-sm font-medium text-center rounded-xl bg-red-50 text-red-600 border border-red-200 flex items-center justify-center gap-2 animate-fade-in">
+                        <AlertCircle size={18} />
+                        {errorLogin}
                     </div>
                 )}
 
                 {/* FORM */}
-                 {/* quando premi login, viene eseguita la funzione che collega con il beckend */}
+                {/* quando premi login, viene eseguita la funzione che collega con il beckend */}
                 {/*space-y-5:è una classe di Tailwind che crea uno spazio di 20px tra gli elementi figli del form*/}
                 <form onSubmit={handleLogin} className="space-y-5">
                     {/* EMAIL */}
@@ -166,15 +175,18 @@ function Login({ onLoginSuccess }) {
                     <div className="relative">
                         {/* icona in posizione libera rispetto al relative */}
                         <Mail size={18}
-                        // distanza dal bordo sinistro e dall'alto di circa 12px
+                            // distanza dal bordo sinistro e dall'alto di circa 12px
                             //text-slate-400:colore grigio chiaro, colora l'icona in maniera non troppo invasiva
                             className="absolute left-3 top-3 text-slate-400"
                         />
                         <input type="email"
-                         //collego allo stato email
+                            //collego allo stato email
                             value={email}
-                             //ogni volta che si scrive qualcosa, aggiorna la variabile e-mail
-                            onChange={(e) => setEmail(e.target.value)}
+                            //ogni volta che si scrive qualcosa, aggiorna la variabile e-mail e nasconde l'errore
+                            onChange={(e) => {
+                                setEmail(e.target.value);
+                                if (errorLogin) setErrorLogin(null); // 🔥 Nasconde l'errore se sto correggendo
+                            }}
                             placeholder="Email aziendale"
                             //w-full:la casella occupa tutta la larghezza;
                             //pl-10:padding sinistra di 40px serve a non far toccare l'icona con il testo;
@@ -192,7 +204,9 @@ function Login({ onLoginSuccess }) {
                                 focus:shadow-md
                             "
                             style={{
-                                borderColor: "var(--colore-info)"
+                                borderColor: "var(--colore-info)",
+                                backgroundColor: "var(--colore-sfondo-pagina)",
+                                color: "var(--colore-testo-principale)"
                             }}
                         />
                     </div>
@@ -205,7 +219,10 @@ function Login({ onLoginSuccess }) {
                         <input
                             type="password"
                             value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={(e) => {
+                                setPassword(e.target.value);
+                                if (errorLogin) setErrorLogin(null); // 🔥 Nasconde l'errore se sto correggendo
+                            }}
                             placeholder="Password"
                             className="
                                 w-full
@@ -218,10 +235,13 @@ function Login({ onLoginSuccess }) {
                                 focus:shadow-md
                             "
                             style={{
-                                borderColor: "var(--colore-info)"
+                                borderColor: "var(--colore-info)",
+                                backgroundColor: "var(--colore-sfondo-pagina)",
+                                color: "var(--colore-testo-principale)"
                             }}
                         />
                     </div>
+
                     {/* Bottone */}
                     <button type="submit"
                         disabled={isLoading}
@@ -239,6 +259,7 @@ function Login({ onLoginSuccess }) {
                             hover:scale-[1.02]
                             disabled:opacity-70
                             disabled:cursor-not-allowed
+                            disabled:hover:scale-100
                         "
                         style={{ backgroundColor: "var(--colore-primario)" }}
                     >

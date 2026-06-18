@@ -1,6 +1,7 @@
 import { ArrowRight, Plane, Receipt, Shield, ChevronDown, TrendingUp, Globe, Bot } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import video from '../assets/img/video.mp4';
+import Footer from '../components/Footer';
 
 export default function Homepage() {
     const navigate = useNavigate();
@@ -183,6 +184,7 @@ export default function Homepage() {
                     </div>
                 </div>
             </div>
+            <Footer />
         </div>
     );
 }

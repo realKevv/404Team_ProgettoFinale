@@ -96,6 +96,7 @@ function App() {
                 <div className="app-main-area">
                     <Navbar onMenuClick={() => setSidebarOpen(true)} />
                     <main className="app-content">
+                        <div key={location.key} className="page-transition">
                         <Routes>
                             <Route path="/dashboard" element={<Dashboard />} />
 
@@ -118,6 +119,7 @@ function App() {
 
                             <Route path="*" element={<Navigate to="/dashboard" replace />} />
                         </Routes>
+                        </div>
                     </main>
                     <Footer />
                 </div>

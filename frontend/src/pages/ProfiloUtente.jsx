@@ -1,10 +1,9 @@
 // Importiamo React e gli Hook fondamentali per gestire lo stato locale e i cicli di vita dei componenti
 import React, { useState, useEffect } from "react";
-// Importiamo le icone da Lucide React per rappresentare l'utente, i contatori e i dettagli geometrici delle mete
+// Importiamo le icone da Lucide React (aggiunto TicketsPlane, rimosse le icone geometriche non usate)
 import { 
     UserCircle, Mail, Shield, MapPin, Plane, 
-    Compass, Award, Search, Building2, Globe, 
-    Milestone, ChevronDown, ChevronUp 
+    Compass, Award, Search, TicketsPlane, ChevronDown, ChevronUp 
 } from "lucide-react";
 // Importiamo l'hook del global store centralizzato per connettere la pagina ai dati reali dell'applicazione
 import { useStore } from "../store/store"; 
@@ -86,10 +85,6 @@ export function ProfiloUtente() {
     const LIMITE_INIZIALE = 4;
     // Se lo stato mostraTutti è attivo mostra l'intera lista filtrata, altrimenti taglia l'array estraendo solo i primi 4 elementi
     const regioniVisibili = mostraTutti ? regioniFiltrate : regioniFiltrate.slice(0, LIMITE_INIZIALE);
-
-    // ARRAY DI ICONE PREMIUM:
-    // Sostituiamo le immagini esterne con una collezione di icone geometriche eleganti e stabili che si alterneranno nelle card
-    const iconeMete = [Building2, Globe, Milestone, Compass];
 
     // Early Return: Se lo store sta ancora parlando con il server, blocca il rendering e mostra lo stato di attesa
     if (isLoading) {
@@ -227,10 +222,7 @@ export function ProfiloUtente() {
                     {regioniVisibili.length > 0 ? (
                         // Se ci sono mete da mostrare, attiva la griglia responsive (1 colonna su mobile, 4 su desktop)
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                            {regioniVisibili.map(([nomeLuogo, numeroViaggi], index) => {
-                                // Scegliamo dinamicamente un'icona dall'array usando l'operatore modulo (%) basandoci sull'indice del ciclo
-                                const IconaDinamica = iconeMete[index % iconeMete.length];
-
+                            {regioniVisibili.map(([nomeLuogo, numeroViaggi]) => {
                                 return (
                                     // Card della singola destinazione. Effetto hover avanzato: si solleva (-translate-y-1.5) e aumenta l'ombra
                                     <div key={nomeLuogo} className="group relative bg-[var(--colore-sfondo-card)] rounded-2xl overflow-hidden border border-[var(--colore-bordo)] shadow-md hover:shadow-xl hover:-translate-y-1.5 transition-all duration-500 ease-out">
@@ -240,8 +232,8 @@ export function ProfiloUtente() {
                                             {/* Cerchio di luce astratto sullo sfondo che reagisce quando si passa il mouse sulla card */}
                                             <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-[var(--colore-primario-luce)]/5 rounded-full blur-xl group-hover:bg-[var(--colore-primario-luce)]/10 transition-all duration-500" />
                                             
-                                            {/* L'icona astratta della meta: all'hover diventa nitida, si ingrandisce e ruota di 6 gradi */}
-                                            <IconaDinamica size={44} className="text-[var(--colore-primario)]/30 group-hover:text-[var(--colore-primario)] group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 ease-out" />
+                                            {/* ICONA UNICA: TicketsPlane inserita fissa su tutte le card */}
+                                            <TicketsPlane size={44} className="text-[var(--colore-primario)]/30 group-hover:text-[var(--colore-primario)] group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 ease-out" />
                                             
                                             {/* Badge fisso con l'icona MapPin posizionato in alto a sinistra del box geometrico */}
                                             <div className="absolute top-4 left-4 p-2 bg-[var(--colore-sfondo-card)] rounded-xl text-[var(--colore-secondario)] border border-[var(--colore-bordo)] shadow-sm group-hover:bg-[var(--colore-secondario)] group-hover:text-white group-hover:border-[var(--colore-secondario)] transition-all duration-300">

@@ -4,6 +4,8 @@ import {
     CheckCircle, XCircle, ChevronRight, SlidersHorizontal, X, User
 } from 'lucide-react';
 import { useStore } from '../store/store';
+import { usePaginazione } from '../hooks/usePaginazione';
+import { ControlliPaginazione } from '../components/ControlliPaginazione';
 
 // ─── Badge Stato ───────────────────────────────────────────────────────────
 function BadgeStato({ stato }) {
@@ -219,6 +221,9 @@ export function ListaViaggi() {
     };
     const filtriAttivi = search || filtroStato !== 'tutti' || dataInizio || dataFine;
 
+    // ── Paginazione ───────────────────────────────────────────────────────
+    const { paginaCorrente, totalePagine, elementiPagina, vaiAPagina } = usePaginazione(viaggiFiltrati, 10);
+
     // ── Stat mini ─────────────────────────────────────────────────────────
     const stats = useMemo(() => ({
         totali: trasferte.length,
@@ -430,7 +435,7 @@ export function ListaViaggi() {
                 </div>
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-                    {viaggiFiltrati.map(t => {
+                    {elementiPagina.map(t => {
                         const dipendente = utenti?.find(user => user.id === t.id_utente);
                         return (
                             <ViaggioCard
@@ -443,6 +448,13 @@ export function ListaViaggi() {
                     })}
                 </div>
             )}
+            <ControlliPaginazione
+                paginaCorrente={paginaCorrente}
+                totalePagine={totalePagine}
+                vaiAPagina={vaiAPagina}
+                totaleElementi={viaggiFiltrati.length}
+                righePerPagina={10}
+            />
             {/* ── Pannello dettaglio ───────────────────────────────────── */}
             <PannelloDettaglio
                 trasferta={selezionato}

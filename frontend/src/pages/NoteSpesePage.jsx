@@ -8,11 +8,13 @@ import {
     Check, Eye, X, ShieldAlert, CheckCircle2, XCircle, Trash2
 } from 'lucide-react';
 import { useStore } from '../store/store';
+import { usePaginazione } from '../hooks/usePaginazione';
+import { ControlliPaginazione } from '../components/ControlliPaginazione';
 
 export function NoteSpesePage() {
     const {
-        trasferte, spese, utenti,
-        fetchTrasferte, fetchSpeseByTrasferta, fetchUtenti,
+        trasferte, spese, utenti, policies,
+        fetchTrasferte, fetchSpeseByTrasferta, fetchUtenti, fetchPolicies,
         addSpesa, valutaSpesa, deleteSpesa, isLoading
     } = useStore();
 
@@ -28,10 +30,15 @@ export function NoteSpesePage() {
     const [fileScontrino, setFileScontrino] = useState(null);
     const [messaggio, setMessaggio] = useState({ testo: '', tipo: '' });
 
+    // Filtri tabella spese
+    const [filtroCategoria, setFiltroCategoria] = useState('tutti');
+    const [filtroStatoSpesa, setFiltroStatoSpesa] = useState('tutti');
+
     useEffect(() => {
         fetchTrasferte();
+        fetchPolicies();
         if (isAdmin) fetchUtenti();
-    }, [fetchTrasferte, fetchUtenti, isAdmin]);
+    }, [fetchTrasferte, fetchUtenti, fetchPolicies, isAdmin]);
 
     const handleTrasfertaChange = (id) => {
         setSelectedTrasfertaId(id);
@@ -78,6 +85,16 @@ export function NoteSpesePage() {
     // Calcolo totale spese caricate per questa trasferta
     const totaleSpeso = spese ? spese.reduce((acc, s) => acc + parseFloat(s.importo), 0) : 0;
 
+    // Filtraggio spese
+    const speseFiltrate = (spese || []).filter(s => {
+        const matchCat = filtroCategoria === 'tutti' || s.categoria === filtroCategoria;
+        const matchStato = filtroStatoSpesa === 'tutti' || s.stato_approvazione === filtroStatoSpesa;
+        return matchCat && matchStato;
+    });
+
+    // Paginazione spese
+    const { paginaCorrente: pagSpese, totalePagine: totPagSpese, elementiPagina: speseInPagina, vaiAPagina: vaiASpesa } = usePaginazione(speseFiltrate, 10);
+
     return (
         <div className="flex-1 p-4 sm:p-6 lg:p-8 min-h-screen bg-[var(--colore-sfondo-pagina)] font-[var(--font-principale)]">
 
@@ -123,10 +140,38 @@ export function NoteSpesePage() {
 
                     {/* TABELLA DELLE SPESE (2 Colonne) */}
                     <div className="xl:col-span-2 flex flex-col gap-4">
-                        <div className="flex justify-between items-center">
+                        <div className="flex justify-between items-center flex-wrap gap-3">
                             <h2 className="text-lg font-bold text-[var(--colore-testo-principale)]">Ricevute presentate</h2>
-                            <div className="text-sm font-bold p-2 px-4 rounded-xl bg-teal-50 text-teal-700 border border-teal-200">
-                                Totale Rendicontato: €{totaleSpeso.toFixed(2)}
+                            <div className="flex items-center gap-2 flex-wrap">
+                                <div className="text-sm font-bold p-2 px-4 rounded-xl bg-teal-50 text-teal-700 border border-teal-200">
+                                    Totale: €{totaleSpeso.toFixed(2)}
+                                </div>
+                                {/* Filtro categoria */}
+                                <select value={filtroCategoria} onChange={e => setFiltroCategoria(e.target.value)}
+                                    className="px-3 py-2 rounded-xl border text-xs outline-none"
+                                    style={{ borderColor: 'var(--colore-bordo)', background: 'var(--colore-sfondo-alt)', color: 'var(--colore-testo-principale)' }}>
+                                    <option value="tutti">Tutte le categorie</option>
+                                    <option value="vitto">Vitto</option>
+                                    <option value="alloggio">Alloggio</option>
+                                    <option value="trasporto">Trasporto</option>
+                                    <option value="altro">Altro</option>
+                                </select>
+                                {/* Filtro stato */}
+                                <select value={filtroStatoSpesa} onChange={e => setFiltroStatoSpesa(e.target.value)}
+                                    className="px-3 py-2 rounded-xl border text-xs outline-none"
+                                    style={{ borderColor: 'var(--colore-bordo)', background: 'var(--colore-sfondo-alt)', color: 'var(--colore-testo-principale)' }}>
+                                    <option value="tutti">Tutti gli stati</option>
+                                    <option value="in_attesa">In attesa</option>
+                                    <option value="approvata">Approvata</option>
+                                    <option value="respinta">Respinta</option>
+                                </select>
+                                {(filtroCategoria !== 'tutti' || filtroStatoSpesa !== 'tutti') && (
+                                    <button onClick={() => { setFiltroCategoria('tutti'); setFiltroStatoSpesa('tutti'); }}
+                                        className="flex items-center gap-1 px-2 py-1.5 rounded-xl border text-xs font-medium"
+                                        style={{ borderColor: 'var(--colore-bordo)', color: 'var(--colore-pericolo)', background: 'var(--colore-pericolo-sfondo)' }}>
+                                        <X size={12} /> Reset
+                                    </button>
+                                )}
                             </div>
                         </div>
 
@@ -140,7 +185,7 @@ export function NoteSpesePage() {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {spese && spese.map((spesa) => (
+                                    {speseInPagina.map((spesa) => (
                                         <TableRow
                                             key={spesa.id}
                                             hover
@@ -181,17 +226,12 @@ export function NoteSpesePage() {
                                                 ) : (
                                                     <div className="flex items-center gap-4">
                                                         {spesa.url_scontrino ? (
-                                                            <a
-                                                                href={spesa.url_scontrino.startsWith('http') ? spesa.url_scontrino : `http://localhost:5000${spesa.url_scontrino}`}
-                                                                target="_blank"
-                                                                rel="noopener noreferrer"
-                                                                className="text-xs text-teal-600 font-semibold hover:text-teal-800 transition-colors"
-                                                            >
+                                                            <a href={spesa.url_scontrino.startsWith('http') ? spesa.url_scontrino : `http://localhost:5000${spesa.url_scontrino}`}
+                                                                target="_blank" rel="noopener noreferrer"
+                                                                className="text-xs text-teal-600 font-semibold hover:text-teal-800 transition-colors">
                                                                 Vedi File
                                                             </a>
                                                         ) : <span className="text-gray-400 text-xs">Nessun file</span>}
-
-                                                        {/* 🔥 BOTTONE ELIMINA PER L'UTENTE */}
                                                         {spesa.stato_approvazione !== 'approvata' && (
                                                             <button
                                                                 onClick={(e) => {
@@ -200,8 +240,7 @@ export function NoteSpesePage() {
                                                                         deleteSpesa(spesa.id);
                                                                     }
                                                                 }}
-                                                                className="text-xs text-red-500 font-semibold hover:text-red-700 flex items-center gap-1 transition-colors"
-                                                            >
+                                                                className="text-xs text-red-500 font-semibold hover:text-red-700 flex items-center gap-1 transition-colors">
                                                                 <Trash2 size={14} /> Elimina
                                                             </button>
                                                         )}
@@ -210,16 +249,23 @@ export function NoteSpesePage() {
                                             </TableCell>
                                         </TableRow>
                                     ))}
-                                    {(!spese || spese.length === 0) && (
+                                    {speseFiltrate.length === 0 && (
                                         <TableRow>
                                             <TableCell colSpan={5} className="text-center p-8 text-[var(--colore-testo-mutato)] italic text-sm">
-                                                Nessuno scontrino caricato per questa trasferta.
+                                                {(!spese || spese.length === 0) ? 'Nessuno scontrino caricato per questa trasferta.' : 'Nessun risultato per i filtri selezionati.'}
                                             </TableCell>
                                         </TableRow>
                                     )}
                                 </TableBody>
                             </Table>
                         </TableContainer>
+                        <ControlliPaginazione
+                            paginaCorrente={pagSpese}
+                            totalePagine={totPagSpese}
+                            vaiAPagina={vaiASpesa}
+                            totaleElementi={speseFiltrate.length}
+                            righePerPagina={10}
+                        />
                     </div>
 
                     {/* COLONNA DESTRA (Form per Utente / Split-Screen per Admin) */}
@@ -293,6 +339,11 @@ export function NoteSpesePage() {
                                     <div className="flex flex-col gap-1.5">
                                         <label className="text-xs font-semibold uppercase text-[var(--colore-testo-mutato)]">Importo (€)</label>
                                         <input type="number" step="0.01" value={importo} onChange={(e) => setImporto(e.target.value)} placeholder="0.00" className="w-full p-2.5 border rounded-xl text-sm bg-[var(--colore-sfondo-pagina)] border-[var(--colore-bordo)] text-[var(--colore-testo-principale)] focus:outline-none" />
+                                        {importo && policies && policies[categoria] && parseFloat(importo) > parseFloat(policies[categoria]) && (
+                                            <span className="text-xs font-semibold text-red-500 flex items-center gap-1 mt-1">
+                                                <AlertTriangle size={14} /> Ehi, il limite per questa categoria è {policies[categoria]}€, stai per sforare!
+                                            </span>
+                                        )}
                                     </div>
 
                                     <div className="flex flex-col gap-1.5">

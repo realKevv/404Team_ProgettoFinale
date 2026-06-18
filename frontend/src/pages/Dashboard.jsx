@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Plane, TrendingUp, Clock, CheckCircle, Info, X, Calendar, FileText, MapPin } from 'lucide-react';
+import { Plane, Clock, CheckCircle, Info, X, Calendar, FileText, MapPin } from 'lucide-react';
 import { TrasferteTable } from '../components/trasferte/TrasferteTable';
 import { TrasferteForm } from '../components/trasferte/TrasferteForm';
 import { ColleaguesTracker } from '../components/trasferte/ColleaguesTracker';
@@ -10,10 +10,10 @@ const statCardsBase = [
     { label: "Trasferte Totali", icon: Plane, color: "var(--colore-primario-luce)", bg: "#3b82f620" },
     { label: "In Approvazione", icon: Clock, color: "var(--colore-avviso)", bg: "#f59e0b20" },
     { label: "Approvate", icon: CheckCircle, color: "var(--colore-successo)", bg: "#10b98120" },
-    { label: "Spese Totali", icon: TrendingUp, color: "var(--colore-secondario)", bg: "#0d948820" },
 ];
 
 export function Dashboard() {
+    // 🧹 NOTA: Abbiamo rimosso cambiaStatoTrasferta, qui non si approva più nulla!
     const { trasferte, utenti, isLoading, error, fetchTrasferte, fetchUtenti, addTrasferta } = useStore();
 
     // 🔑 Leggiamo l'utente loggato per filtrare i dati
@@ -35,16 +35,15 @@ export function Dashboard() {
         }
     };
 
-    // Filtriamo le trasferte in base al ruolo: Admin vede tutto, Utente normale vede solo le sue
-    const trasferteFiltrate = isAdmin 
-        ? trasferte 
+    // 🛡️ Filtriamo le trasferte in base al ruolo: Admin vede tutto, Utente normale vede solo le sue
+    const trasferteFiltrate = isAdmin
+        ? trasferte
         : trasferte.filter(t => t.id_utente === utenteCorrente.id);
 
     const statsDinamiche = [
         { ...statCardsBase[0], value: trasferteFiltrate.length.toString() },
         { ...statCardsBase[1], value: trasferteFiltrate.filter(t => t.stato === 'in_attesa').length.toString() },
-        { ...statCardsBase[2], value: trasferteFiltrate.filter(t => t.stato === 'approvata').length.toString() },
-        { ...statCardsBase[3], value: "€..." }
+        { ...statCardsBase[2], value: trasferteFiltrate.filter(t => t.stato === 'approvata').length.toString() }
     ];
 
     if (isLoading) return <div className="p-8 text-center text-[var(--colore-testo-secondario)]">Caricamento dati dal server... ⏳</div>;
@@ -59,13 +58,13 @@ export function Dashboard() {
                     <Plane size={22} className="text-[var(--colore-primario)]" />
                 </div>
                 <div>
-                    <h1 className="text-2xl sm:text-3xl font-bold text-[var(--colore-testo-principale)]">Dashboard Trasferte</h1>
-                    <p className="text-sm text-[var(--colore-testo-mutato)]">Dati reali sincronizzati in tempo reale</p>
+                    <h1 className="text-2xl sm:text-3xl font-bold text-[var(--colore-testo-principale)]">Dashboard Operativa</h1>
+                    <p className="text-sm text-[var(--colore-testo-mutato)]">Panoramica viaggi e statistiche in tempo reale</p>
                 </div>
             </div>
 
             {/* Stat Cards */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
                 {statsDinamiche.map((card, i) => (
                     <div key={i} className="p-4 sm:p-5 rounded-2xl border bg-[var(--colore-sfondo-card)] border-[var(--colore-bordo)] transition-all hover:shadow-lg">
                         <div className="flex items-center justify-between mb-3">
@@ -86,15 +85,14 @@ export function Dashboard() {
                 <div className="xl:col-span-2">
                     <TrasferteTable
                         trasferte={trasferteFiltrate}
-                        onRowClick={(row) => setSelectedTrasferta(row)} // 🔥 Passiamo la funzione!
-                        selectedId={selectedTrasferta?.id} // 🔥 Passiamo l'ID per l'evidenziazione
+                        onRowClick={(row) => setSelectedTrasferta(row)}
+                        selectedId={selectedTrasferta?.id}
                     />
                 </div>
 
                 {/* DESTRA: DETTAGLI (se cliccato) OPPURE FORM (di default) + TRACKER */}
                 <div className="xl:col-span-1 flex flex-col gap-6">
 
-                    {/* 🔥 LA MAGIA: Mostra i Dettagli se c'è una riga selezionata, altrimenti mostra il Form */}
                     {selectedTrasferta ? (
                         <div className="p-6 rounded-2xl border bg-[var(--colore-sfondo-card)] border-[var(--colore-bordo)] shadow-md flex flex-col gap-5 animate-fade-in">
 
@@ -137,8 +135,8 @@ export function Dashboard() {
                                     <Calendar size={14} /> Periodo
                                 </span>
                                 <div className="text-sm font-medium text-slate-700 flex justify-between">
-                                    <span>Dal: <b>{selectedTrasferta.data_inizio.substring(0, 10)}</b></span>
-                                    <span>Al: <b>{selectedTrasferta.data_fine.substring(0, 10)}</b></span>
+                                    <span>Dal: <b>{selectedTrasferta.data_inizio?.substring(0, 10)}</b></span>
+                                    <span>Al: <b>{selectedTrasferta.data_fine?.substring(0, 10)}</b></span>
                                 </div>
                             </div>
 
@@ -152,12 +150,14 @@ export function Dashboard() {
                                 </p>
                             </div>
 
+                            {/* Tasto di chiusura generico */}
                             <button onClick={() => setSelectedTrasferta(null)} className="mt-2 text-sm text-[var(--colore-primario)] font-semibold hover:underline text-center w-full">
                                 Chiudi dettagli e torna a "Nuova Trasferta"
                             </button>
                         </div>
                     ) : (
-                        <TrasferteForm onAddTrasferta={handleFormSubmit} />
+                        // 🔥 IL FORM ORA LO VEDONO TUTTI! Passiamo i dati necessari per la tendina Admin
+                        <TrasferteForm onAddTrasferta={handleFormSubmit} isAdmin={isAdmin} utenti={utenti} />
                     )}
 
                     <ColleaguesTracker trasferte={trasferte} utenti={utenti} />

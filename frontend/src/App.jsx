@@ -14,7 +14,11 @@ import { Dashboard } from './pages/Dashboard';
 import { DipendentiPage } from './pages/DipendentiPage';
 import { NoteSpesePage } from './pages/NoteSpesePage';
 import { ProfiloUtente } from './pages/ProfiloUtente';
-import { ListaViaggi } from './pages/ListaViaggi';
+import { ListaViaggi } from './pages/Listaviaggi'; // (Assicurati che l'iniziale del file coincida, es: Listaviaggi o ListaViaggi)
+import { ApprovazioniTrasfertePage } from './pages/ApprovazioniTrasfertePage';
+import { TravelPoliciesPage } from './pages/TravelPoliciesPage';
+import { StoricoViaggiPage } from './pages/StoricoViaggiPage';
+import { MieiViaggiPage } from './pages/MieiViaggiPage';
 
 // Helper: legge in sicurezza dal localStorage
 function readToken() {
@@ -90,23 +94,17 @@ function App() {
             <Route path="/dipendenti" element={<DipendentiPage />} />
 
             {/* Rotte User */}
-            <Route path="/viaggi" element={<Dashboard />} />
+            <Route path="/viaggi" element={<MieiViaggiPage />} />
             <Route path="/rimborsi" element={<NoteSpesePage />} />
             <Route path="/viaggi/nuovo" element={<Dashboard />} />
-
-            {/* 🔥 MODIFICATA QUESTA RIGA: Ora punta al componente corretto */}
             <Route path="/profilo" element={<ProfiloUtente />} />
 
             {/* Rotte Admin */}
-            <Route path="/admin/approvazioni" element={<Dashboard />} />
+            <Route path="/admin/approvazioni" element={<ApprovazioniTrasfertePage />} />
+
             <Route path="/admin/trasferte" element={<ListaViaggi />} />
-            <Route path="/admin/policies" element={
-              <div className="p-8 text-center">
-                <h1 className="text-2xl font-bold" style={{ color: 'var(--colore-testo-principale)' }}>
-                  🛡️ Travel Policies
-                </h1>
-              </div>
-            } />
+            <Route path="/viaggi/storico" element={<StoricoViaggiPage />} />
+            <Route path="/admin/policies" element={<TravelPoliciesPage />} />
 
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>

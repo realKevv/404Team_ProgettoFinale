@@ -9,7 +9,8 @@ import {
     LogOut,
     X,
     Users,
-    Shield
+    Shield,
+    History
 } from "lucide-react";
 
 export function Sidebar({ utente, onLogout, isOpen, onClose }) {
@@ -71,9 +72,9 @@ export function Sidebar({ utente, onLogout, isOpen, onClose }) {
                                     <Receipt size={18} />
                                     <span>Note Spese</span>
                                 </NavLink>
-                                <NavLink to="/viaggi/nuovo" className={baseLinkClass} style={renderLinkStyle} onClick={onClose}>
-                                    <PlusCircle size={18} />
-                                    <span>Nuova Trasferta</span>
+                                <NavLink to="/viaggi/storico" className={baseLinkClass} style={renderLinkStyle} onClick={onClose}>
+                                    <History size={18} />
+                                    <span>Storico Viaggi</span>
                                 </NavLink>
                             </>
                         )}

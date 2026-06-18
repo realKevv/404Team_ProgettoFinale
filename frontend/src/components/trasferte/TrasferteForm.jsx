@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { PlusCircle, Send } from 'lucide-react';
 
-export function TrasferteForm({ onAddTrasferta }) {
+export function TrasferteForm({ onAddTrasferta, isAdmin, utenti }) {
     const [form, setForm] = useState({
         destinazione: '',
         data_inizio: '',
         data_fine: '',
-        motivo: ''
+        motivo: '',
+        id_utente: '' // 🔥 Aggiunto per salvare l'utente scelto dall'admin
     });
 
-    // 🔥 1. AGGIUNTO: Genera la data di oggi nel formato perfetto (YYYY-MM-DD)
     const oggi = new Date().toLocaleDateString('sv-SE');
 
     const handleChange = (e) => {
@@ -18,9 +18,16 @@ export function TrasferteForm({ onAddTrasferta }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        // Controllo validazione (se è admin deve aver scelto un utente)
         if (!form.destinazione || !form.data_inizio || !form.data_fine || !form.motivo) return;
+        if (isAdmin && !form.id_utente) {
+            alert("Seleziona il dipendente che andrà in trasferta.");
+            return;
+        }
+
         onAddTrasferta(form);
-        setForm({ destinazione: '', data_inizio: '', data_fine: '', motivo: '' });
+        setForm({ destinazione: '', data_inizio: '', data_fine: '', motivo: '', id_utente: '' });
     };
 
     const inputStile = "w-full p-2.5 border rounded-xl text-sm transition-all duration-200 focus:outline-none focus:ring-2";
@@ -45,6 +52,26 @@ export function TrasferteForm({ onAddTrasferta }) {
             </div>
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-1">
+
+                {/* 🔥 IL MENU A TENDINA: APPARE SOLO SE SEI ADMIN */}
+                {isAdmin && (
+                    <div className="flex flex-col gap-1.5">
+                        <label className="text-xs font-semibold uppercase tracking-wide text-[var(--colore-secondario)]">Dipendente in trasferta</label>
+                        <select
+                            name="id_utente"
+                            value={form.id_utente}
+                            onChange={handleChange}
+                            className={inputStile}
+                            style={inputStyle}
+                        >
+                            <option value="">-- Seleziona chi viaggia --</option>
+                            {utenti?.map(u => (
+                                <option key={u.id} value={u.id}>{u.nome_completo}</option>
+                            ))}
+                        </select>
+                    </div>
+                )}
+
                 <div className="flex flex-col gap-1.5">
                     <label className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--colore-testo-mutato)" }}>Destinazione</label>
                     <input type="text" name="destinazione" value={form.destinazione} onChange={handleChange}
@@ -54,12 +81,10 @@ export function TrasferteForm({ onAddTrasferta }) {
                 <div className="form-date-grid grid grid-cols-2 gap-3">
                     <div className="flex flex-col gap-1.5">
                         <label className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--colore-testo-mutato)" }}>Data Inizio</label>
-                        {/* 🔥 2. AGGIUNTO: min={oggi} blocca le date passate nel calendario */}
                         <input type="date" name="data_inizio" value={form.data_inizio} min={oggi} onChange={handleChange} className={inputStile} style={inputStyle} />
                     </div>
                     <div className="flex flex-col gap-1.5">
                         <label className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--colore-testo-mutato)" }}>Data Fine</label>
-                        {/* 🔥 3. AGGIUNTO: min={form.data_inizio || oggi} blocca le date precedenti all'inizio */}
                         <input type="date" name="data_fine" value={form.data_fine} min={form.data_inizio || oggi} onChange={handleChange} className={inputStile} style={inputStyle} />
                     </div>
                 </div>

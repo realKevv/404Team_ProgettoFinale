@@ -60,6 +60,18 @@ export const useStore = create((set, get) => ({
         }
     },
 
+    deleteTrasferta: async (id_trasferta) => {
+        try {
+            await axios.delete(`${API_URL}/trasferte/${id_trasferta}`, { headers: getAuthHeaders() });
+            set((state) => ({
+                trasferte: state.trasferte.filter(t => t.id !== id_trasferta)
+            }));
+        } catch (error) {
+            console.error("Errore eliminazione trasferta:", error);
+            throw error;
+        }
+    },
+
     // ==========================================
     // 3. AZIONI: SPESE / SCONTRINI
     // ==========================================
@@ -138,11 +150,20 @@ export const useStore = create((set, get) => ({
     // 4. AZIONI: TRAVEL POLICIES
     // ==========================================
     fetchPolicies: async () => {
+        set({ isLoading: true });
         try {
             const response = await axios.get(`${API_URL}/policies`, { headers: getAuthHeaders() });
-            set({ policies: response.data });
+            
+            // Trasformiamo l'array [{categoria: 'vitto', massimale_giornaliero: 50}] in un oggetto { vitto: 50 }
+            const policiesObj = {};
+            response.data.forEach(p => {
+                policiesObj[p.categoria] = p.massimale_giornaliero;
+            });
+            
+            set({ policies: policiesObj, isLoading: false });
         } catch (error) {
             console.error("Errore caricamento policies:", error);
+            set({ error: "Errore nel caricamento policy", isLoading: false });
         }
     },
 
@@ -192,5 +213,20 @@ export const useStore = create((set, get) => ({
         localStorage.removeItem('utente');
         // Svuotiamo i dati sensibili dallo stato globale per sicurezza
         set({ trasferte: [], spese: [], utenti: [], policies: [], error: null });
+    },
+
+
+
+    updatePolicy: async (categoria, nuovoMassimale) => {
+        try {
+            await axios.put(`${API_URL}/policies/${categoria}`, 
+                { massimale_giornaliero: nuovoMassimale },
+                { headers: getAuthHeaders() }
+            );
+        } catch (err) {
+            console.error("Errore aggiornamento policy:", err);
+            throw new Error("Aggiornamento fallito");
+        }
     }
+
 }));

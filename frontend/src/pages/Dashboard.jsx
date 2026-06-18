@@ -13,13 +13,9 @@ const statCardsBase = [
 ];
 
 export function Dashboard() {
-    // 🧹 NOTA: Abbiamo rimosso cambiaStatoTrasferta, qui non si approva più nulla!
     const { trasferte, utenti, isLoading, error, fetchTrasferte, fetchUtenti, addTrasferta } = useStore();
-
-    // 🔑 Leggiamo l'utente loggato per filtrare i dati
     const utenteCorrente = JSON.parse(localStorage.getItem('utente') || '{}');
     const isAdmin = utenteCorrente?.ruolo === 'admin';
-
     const [selectedTrasferta, setSelectedTrasferta] = useState(null);
 
     useEffect(() => {
@@ -28,14 +24,11 @@ export function Dashboard() {
     }, [fetchTrasferte, fetchUtenti]);
 
     const handleFormSubmit = async (nuoviDati) => {
-        try {
-            await addTrasferta(nuoviDati);
-        } catch (err) {
-            alert("Errore durante il salvataggio della trasferta.");
-        }
+        // 🔥 Il try/catch se ne occupa TrasferteForm.jsx per poter mostrare 
+        // l'errore senza resettare il form. Qui passiamo solo la promessa.
+        await addTrasferta(nuoviDati);
     };
 
-    // 🛡️ Filtriamo le trasferte in base al ruolo: Admin vede tutto, Utente normale vede solo le sue
     const trasferteFiltrate = isAdmin
         ? trasferte
         : trasferte.filter(t => t.id_utente === utenteCorrente.id);
@@ -46,13 +39,12 @@ export function Dashboard() {
         { ...statCardsBase[2], value: trasferteFiltrate.filter(t => t.stato === 'approvata').length.toString() }
     ];
 
-    if (isLoading) return <div className="p-8 text-center text-[var(--colore-testo-secondario)]">Caricamento dati dal server... ⏳</div>;
-    if (error) return <div className="p-8 text-center text-[var(--colore-pericolo)]">❌ {error}</div>;
+    if (isLoading && trasferte.length === 0) return <div className="p-8 text-center text-[var(--colore-testo-secondario)]">Caricamento dati dal server... ⏳</div>;
+    // Togliamo l'if (error) bloccante globale, altrimenti tutta la dashboard sparisce se c'è un errore!
 
     return (
         <div className="dashboard-page flex-1 p-4 sm:p-6 lg:p-8 min-h-screen font-[var(--font-principale)] bg-[var(--colore-sfondo-pagina)]">
 
-            {/* Header */}
             <div className="dashboard-header flex items-center gap-3 mb-8">
                 <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-[#1e3a8a15]">
                     <Plane size={22} className="text-[var(--colore-primario)]" />
@@ -63,7 +55,6 @@ export function Dashboard() {
                 </div>
             </div>
 
-            {/* Stat Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
                 {statsDinamiche.map((card, i) => (
                     <div key={i} className="p-4 sm:p-5 rounded-2xl border bg-[var(--colore-sfondo-card)] border-[var(--colore-bordo)] transition-all hover:shadow-lg">
@@ -78,10 +69,7 @@ export function Dashboard() {
                 ))}
             </div>
 
-            {/* Main Grid: Tabella (sinistra) + Form/Dettagli & Tracker (destra) */}
             <div className="dashboard-grid grid grid-cols-1 xl:grid-cols-3 gap-6 lg:gap-8 items-start">
-
-                {/* SINISTRA: TABELLA */}
                 <div className="xl:col-span-2">
                     <TrasferteTable
                         trasferte={trasferteFiltrate}
@@ -90,13 +78,9 @@ export function Dashboard() {
                     />
                 </div>
 
-                {/* DESTRA: DETTAGLI (se cliccato) OPPURE FORM (di default) + TRACKER */}
                 <div className="xl:col-span-1 flex flex-col gap-6">
-
                     {selectedTrasferta ? (
                         <div className="p-6 rounded-2xl border bg-[var(--colore-sfondo-card)] border-[var(--colore-bordo)] shadow-md flex flex-col gap-5 animate-fade-in">
-
-                            {/* Header Dettagli */}
                             <div className="flex justify-between items-start border-b pb-4" style={{ borderColor: "var(--colore-bordo)" }}>
                                 <div className="flex items-center gap-2">
                                     <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-[#1e3a8a10]">
@@ -104,15 +88,11 @@ export function Dashboard() {
                                     </div>
                                     <h2 className="text-lg font-bold text-[var(--colore-testo-principale)]">Dettagli Trasferta</h2>
                                 </div>
-                                <button
-                                    onClick={() => setSelectedTrasferta(null)}
-                                    className="p-1 rounded-lg hover:bg-gray-100 text-[var(--colore-testo-mutato)] transition-colors"
-                                >
+                                <button onClick={() => setSelectedTrasferta(null)} className="p-1 rounded-lg hover:bg-gray-100 text-[var(--colore-testo-mutato)] transition-colors">
                                     <X size={18} />
                                 </button>
                             </div>
 
-                            {/* Info Principali */}
                             <div>
                                 <h3 className="text-xl font-bold text-[var(--colore-testo-principale)] flex items-center gap-2">
                                     <MapPin size={20} className="text-[var(--colore-secondario)]" />
@@ -129,7 +109,6 @@ export function Dashboard() {
                                 </div>
                             </div>
 
-                            {/* Date */}
                             <div className="p-3.5 rounded-xl bg-blue-50/50 border border-blue-100 flex flex-col gap-2">
                                 <span className="text-xs font-bold uppercase tracking-wide text-blue-700 flex items-center gap-1">
                                     <Calendar size={14} /> Periodo
@@ -140,7 +119,6 @@ export function Dashboard() {
                                 </div>
                             </div>
 
-                            {/* Motivo Completo */}
                             <div className="p-3.5 rounded-xl bg-gray-50 border border-[var(--colore-bordo)] flex flex-col gap-2">
                                 <span className="text-xs font-bold uppercase tracking-wide text-[var(--colore-testo-mutato)] flex items-center gap-1">
                                     <FileText size={14} /> Motivo completo
@@ -150,13 +128,11 @@ export function Dashboard() {
                                 </p>
                             </div>
 
-                            {/* Tasto di chiusura generico */}
                             <button onClick={() => setSelectedTrasferta(null)} className="mt-2 text-sm text-[var(--colore-primario)] font-semibold hover:underline text-center w-full">
                                 Chiudi dettagli e torna a "Nuova Trasferta"
                             </button>
                         </div>
                     ) : (
-                        // 🔥 IL FORM ORA LO VEDONO TUTTI! Passiamo i dati necessari per la tendina Admin
                         <TrasferteForm onAddTrasferta={handleFormSubmit} isAdmin={isAdmin} utenti={utenti} />
                     )}
 

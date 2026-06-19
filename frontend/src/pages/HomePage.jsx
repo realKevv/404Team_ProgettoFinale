@@ -9,7 +9,7 @@ import {
   Bot,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import video from "../assets/img/video.mp4";
+import video from "../assets/video/video.mp4";
 import dashboardImg from "../assets/img/Dashboard.png";
 import Footer from "../components/Footer";
 
@@ -17,7 +17,7 @@ export default function Homepage() {
   // Inizializzazione della funzione per reindirizzare l'utente
   const navigate = useNavigate();
   // Recuperiamo il token di sessione salvato nel browser al momento del login
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   // Trasformiamo il token in un valore booleano (true/false).
   // Controlliamo anche che la stringa non sia "undefined"
   const isLoggedIn = !!token && token !== "undefined";

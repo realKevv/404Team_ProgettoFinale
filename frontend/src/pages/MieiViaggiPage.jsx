@@ -37,7 +37,7 @@ function SortIcon({ col, sortBy, sortDir }) {
 
 export function MieiViaggiPage() {
     const { trasferte, isLoading, error, fetchTrasferte, deleteTrasferta } = useStore();
-    const utenteCorrente = JSON.parse(localStorage.getItem('utente') || '{}');
+    const utenteCorrente = JSON.parse(sessionStorage.getItem('utente') || '{}');
 
     // ─── Filtri ─────────────────────────────────────────────────────────────
     const [search, setSearch] = useState('');
@@ -260,7 +260,7 @@ export function MieiViaggiPage() {
                 <>
                     <TableContainer component={Paper} className="rounded-2xl overflow-hidden border"
                         elevation={0} style={{ background: 'var(--colore-sfondo-card)', borderColor: 'var(--colore-bordo)', boxShadow: 'none' }}>
-                        <Table>
+                        <Table sx={{ minWidth: 800 }}>
                             <TableHead>
                                 <TableRow style={{ backgroundColor: 'var(--colore-sfondo-alt)' }}>
                                     {colonne.map((col, i) => (

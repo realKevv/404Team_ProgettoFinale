@@ -23,15 +23,15 @@ import { AggiungiUtente } from './pages/AggiungiUtente';
 import { RimuoviUtente } from './pages/RimuoviUtente';
 import { ThemeProvider } from './context/ThemeContext';
 
-// Helper: legge in sicurezza dal localStorage
+// Helper: legge in sicurezza dal sessionStorage
 function readToken() {
-    const t = localStorage.getItem('token');
+    const t = sessionStorage.getItem('token');
     return t && t !== 'undefined' ? t : null;
 }
 
 function readUtente() {
     try {
-        const raw = localStorage.getItem('utente');
+        const raw = sessionStorage.getItem('utente');
         if (raw && raw !== 'undefined') return JSON.parse(raw);
     } catch (_) { }
     return null;
@@ -49,8 +49,8 @@ function App() {
     }, []);
 
     const handleLogout = useCallback(() => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('utente');
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('utente');
         setToken(null);
         setUtenteLoggato(null);
     }, []);

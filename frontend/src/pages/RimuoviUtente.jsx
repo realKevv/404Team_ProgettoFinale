@@ -23,7 +23,7 @@ export function RimuoviUtente() {
   const { utenti, fetchUtenti, deleteUtente } = useStore();
 
   // CONTROLLO SICUREZZA LATO CLIENT
-  const utenteCorrente = JSON.parse(localStorage.getItem("utente") || "{}");
+  const utenteCorrente = JSON.parse(sessionStorage.getItem("utente") || "{}");
   const isAdmin = utenteCorrente?.ruolo === "admin";
 
   // STATI LOCALI DEL COMPONENTE

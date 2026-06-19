@@ -10,7 +10,7 @@ import { ControlliPaginazione } from '../ControlliPaginazione';
 
 export function TrasferteTable({ trasferte, onRowClick, selectedId }) {
     const utenteCorrente = (() => {
-        try { return JSON.parse(localStorage.getItem('utente') || '{}'); }
+        try { return JSON.parse(sessionStorage.getItem('utente') || '{}'); }
         catch (_) { return {}; }
     })();
     const isAdmin = utenteCorrente?.ruolo === 'admin';
@@ -23,12 +23,12 @@ export function TrasferteTable({ trasferte, onRowClick, selectedId }) {
     //  Modifica della funzione handleDelete
     const handleDelete = async (e, id) => {
         e.stopPropagation();
-        setServerError(null); // Resetta errori precedenti
+        setServerError(null);
         if (window.confirm("Sei sicuro di voler eliminare questa trasferta?")) {
             try {
                 await deleteTrasferta(id);
             } catch (err) {
-                setServerError(err.message); // Salva il messaggio reale dal backend
+                setServerError(err.message);
             }
         }
     };
@@ -113,9 +113,13 @@ export function TrasferteTable({ trasferte, onRowClick, selectedId }) {
                 </div>
             </div>
 
-            <TableContainer component={Paper} className="rounded-2xl overflow-hidden border transition-all duration-300 hover:shadow-lg"
-                style={{ backgroundColor: 'var(--colore-sfondo-card)', borderColor: 'var(--colore-bordo)', boxShadow: 'none' }} elevation={0}>
-                <Table aria-label="tabella trasferte">
+            <TableContainer
+                component={Paper}
+                className="rounded-2xl overflow-x-auto w-full border transition-all duration-300 hover:shadow-lg"
+                style={{ backgroundColor: 'var(--colore-sfondo-card)', borderColor: 'var(--colore-bordo)', boxShadow: 'none' }}
+                elevation={0}
+            >
+                <Table aria-label="tabella trasferte" sx={{ minWidth: 800 }}>
                     <TableHead>
                         <TableRow style={{ backgroundColor: 'var(--colore-sfondo-alt)' }}>
                             {headers.map((h) => (

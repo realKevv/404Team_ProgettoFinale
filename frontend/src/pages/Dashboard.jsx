@@ -14,7 +14,7 @@ const statCardsBase = [
 
 export function Dashboard() {
     const { trasferte, utenti, isLoading, error, fetchTrasferte, fetchUtenti, addTrasferta } = useStore();
-    const utenteCorrente = JSON.parse(localStorage.getItem('utente') || '{}');
+    const utenteCorrente = JSON.parse(sessionStorage.getItem('utente') || '{}');
     const isAdmin = utenteCorrente?.ruolo === 'admin';
     const [selectedTrasferta, setSelectedTrasferta] = useState(null);
     const [showNuovaTrasferta, setShowNuovaTrasferta] = useState(false);
@@ -72,7 +72,7 @@ export function Dashboard() {
             </div>
 
             <div className="dashboard-grid grid grid-cols-1 xl:grid-cols-3 gap-6 lg:gap-8 items-start">
-                <div className="xl:col-span-2">
+                <div className="xl:col-span-2 min-w-0 w-full">
                     <TrasferteTable
                         trasferte={trasferteFiltrate}
                         onRowClick={(row) => setSelectedTrasferta(row)}

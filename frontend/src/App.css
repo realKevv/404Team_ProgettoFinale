@@ -3,10 +3,23 @@
    ========================================================================== */
 
 /* ---- App Layout (Sidebar + Main) ---- */
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* La homepage scolla normalmente (overflow del documento).
+   La dashboard usa .app-main-area con overflow-y: auto. */
+
 .app-layout {
   display: flex;
   width: 100%;
-  min-height: 100vh;
+  height: 100vh; /* Contenitore fisso: la dashboard non sconfina nel documento */
+  overflow: hidden;
   background-color: var(--colore-sfondo-pagina);
   color: var(--colore-testo-principale);
   font-family: var(--font-principale);
@@ -18,7 +31,8 @@
   flex-direction: column;
   min-width: 0;
   overflow-y: auto;
-  height: 100vh;
+  overflow-x: hidden;
+  height: 100%;
 }
 
 .app-content {

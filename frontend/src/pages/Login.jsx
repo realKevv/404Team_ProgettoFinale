@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Mail, Lock, LogIn, AlertCircle } from "lucide-react"; // 🔥 Aggiunto AlertCircle
+import { Mail, Lock, LogIn, AlertCircle, Eye, EyeOff } from "lucide-react"; // Aggiunto AlertCircle
 
 // IMPORTIAMO LO STORE ZUSTAND
 import { useStore } from "../store/store";
@@ -12,6 +12,9 @@ function Login({ onLoginSuccess }) {
 
     // NUOVO STATO LOCALE: Gestisce l'errore in modo isolato, senza sporcare lo store globale
     const [errorLogin, setErrorLogin] = useState(null);
+
+    // Gestisce la visibilità della password
+    const [showPassword, setShowPassword] = useState(false);
 
     // Tiriamo fuori dal magazzino Zustand solo la funzione login e il caricamento
     const { login, isLoading } = useStore();
@@ -185,7 +188,7 @@ function Login({ onLoginSuccess }) {
                             //ogni volta che si scrive qualcosa, aggiorna la variabile e-mail e nasconde l'errore
                             onChange={(e) => {
                                 setEmail(e.target.value);
-                                if (errorLogin) setErrorLogin(null); // 🔥 Nasconde l'errore se sto correggendo
+                                if (errorLogin) setErrorLogin(null); // Nasconde l'errore se sto correggendo
                             }}
                             placeholder="Email aziendale"
                             //w-full:la casella occupa tutta la larghezza;
@@ -217,16 +220,19 @@ function Login({ onLoginSuccess }) {
                             className="absolute left-3 top-3 text-slate-400"
                         />
                         <input
-                            type="password"
+                        // Se showPassword è true il tipo è "text", altrimenti "password"
+                            type={showPassword ? "text" : "password"}
                             value={password}
                             onChange={(e) => {
                                 setPassword(e.target.value);
-                                if (errorLogin) setErrorLogin(null); // 🔥 Nasconde l'errore se sto correggendo
+                                if (errorLogin) setErrorLogin(null); // Nasconde l'errore se sto correggendo
                             }}
                             placeholder="Password"
+                            /* Aggiunto pr-12 (padding-right) per non far accavallare il testo all'occhiolino */
                             className="
                                 w-full
                                 pl-10
+                                pr-12 
                                 py-3
                                 rounded-lg
                                 border
@@ -240,6 +246,16 @@ function Login({ onLoginSuccess }) {
                                 color: "var(--colore-testo-principale)"
                             }}
                         />
+                        {/* BOTTONE OCCHIOLINO */}
+                        {/* type="button" è fondamentale, altrimenti premendolo invierebbe il form per sbaglio */}
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-3 top-3 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none"
+                            title={showPassword ? "Nascondi password" : "Mostra password"}
+                        >
+                            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                        </button>
                     </div>
 
                     {/* Bottone */}

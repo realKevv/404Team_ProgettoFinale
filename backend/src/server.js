@@ -11,6 +11,7 @@
  */
 
 const express = require("express");
+const path = require("path");
 const cors = require("cors");
 require("dotenv").config();
 const cookieParser = require("cookie-parser");
@@ -40,7 +41,7 @@ app.use(
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(express.static("public")); // Per i file caricati (scontrini)
+app.use(express.static(path.join(__dirname, "..", "public"))); // ✅ Percorso assoluto, funziona su tutti i PC
 
 // ==========================================
 // 🗄️ TEST CONNESSIONE DATABASE

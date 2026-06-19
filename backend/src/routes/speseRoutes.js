@@ -13,15 +13,24 @@
 
 
 const express = require('express');
+const path = require('path');
+const fs = require('fs');
 const router = express.Router();
 const speseController = require('../controllers/speseController');
 const { verifyToken } = require('../middlewares/authMiddleware');
 
 // Multer prende i file inviati dagli utenti (es. foto o PDF) e li salva sul Node.js.
+// ✅ FIX: Usiamo un percorso ASSOLUTO calcolato a partire da __dirname,
+//    così funziona su qualsiasi PC indipendentemente dalla CWD del processo.
+//    Creiamo anche la cartella automaticamente se non esiste (es. primo avvio).
 const multer = require('multer');
+
+const UPLOADS_DIR = path.join(__dirname, '..', '..', 'public', 'uploads');
+fs.mkdirSync(UPLOADS_DIR, { recursive: true }); // Crea la cartella se non esiste
+
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'public/uploads/');
+        cb(null, UPLOADS_DIR); // ✅ Percorso assoluto, sempre corretto
     },
     filename: (req, file, cb) => {
         // Rinomina il file mettendo la data davanti, così non ci sono doppioni!

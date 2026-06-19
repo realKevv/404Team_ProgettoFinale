@@ -1,26 +1,54 @@
 import React, { useState } from 'react';
-import { PlusCircle, Send } from 'lucide-react';
+import { PlusCircle, Send, AlertCircle, Loader2 } from 'lucide-react';
 
-export function TrasferteForm({ onAddTrasferta }) {
+export function TrasferteForm({ onAddTrasferta, isAdmin, utenti }) {
     const [form, setForm] = useState({
         destinazione: '',
         data_inizio: '',
         data_fine: '',
-        motivo: ''
+        motivo: '',
+        id_utente: ''
     });
 
-    // 🔥 1. AGGIUNTO: Genera la data di oggi nel formato perfetto (YYYY-MM-DD)
+    // 🔥 STATI PER ERRORE SERVER E CARICAMENTO
+    const [serverError, setServerError] = useState(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const oggi = new Date().toLocaleDateString('sv-SE');
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
+        if (serverError) setServerError(null); // Nascondi l'errore se l'utente ricomincia a digitare
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!form.destinazione || !form.data_inizio || !form.data_fine || !form.motivo) return;
-        onAddTrasferta(form);
-        setForm({ destinazione: '', data_inizio: '', data_fine: '', motivo: '' });
+        setServerError(null); // Resetta eventuali errori precedenti
+
+        // Controllo frontend rapido
+        if (!form.destinazione || !form.data_inizio || !form.data_fine || !form.motivo) {
+            setServerError("Compila tutti i campi richiesti.");
+            return;
+        }
+        if (isAdmin && !form.id_utente) {
+            setServerError("Seleziona il dipendente che andrà in trasferta.");
+            return;
+        }
+
+        setIsSubmitting(true);
+        try {
+            await onAddTrasferta(form); // Lancia l'azione al server
+
+            // SE IL SERVER RISPONDE OK (201):
+            // Svuota i campi
+            setForm({ destinazione: '', data_inizio: '', data_fine: '', motivo: '', id_utente: '' });
+        } catch (err) {
+            // SE IL SERVER RIFIUTA (400, ecc):
+            // Catturiamo il messaggio di errore lanciato dal nuovo store.js
+            setServerError(err.message);
+        } finally {
+            setIsSubmitting(false); // Rilascia il bottone
+        }
     };
 
     const inputStile = "w-full p-2.5 border rounded-xl text-sm transition-all duration-200 focus:outline-none focus:ring-2";
@@ -44,7 +72,36 @@ export function TrasferteForm({ onAddTrasferta }) {
                 <h2 className="text-lg font-bold" style={{ color: "var(--colore-testo-principale)" }}>Nuova Trasferta</h2>
             </div>
 
+            {/* 🔥 SE C'È UN ERRORE, MOSTRA IL BANNER ROSSO */}
+            {serverError && (
+                <div className="p-3 bg-red-50 border border-red-200 rounded-xl flex items-start gap-2 animate-fade-in">
+                    <AlertCircle size={18} className="text-red-600 shrink-0 mt-0.5" />
+                    <p className="text-sm font-medium text-red-800 leading-tight">
+                        {serverError}
+                    </p>
+                </div>
+            )}
+
             <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-1">
+
+                {isAdmin && (
+                    <div className="flex flex-col gap-1.5">
+                        <label className="text-xs font-semibold uppercase tracking-wide text-[var(--colore-secondario)]">Dipendente in trasferta</label>
+                        <select
+                            name="id_utente"
+                            value={form.id_utente}
+                            onChange={handleChange}
+                            className={inputStile}
+                            style={inputStyle}
+                        >
+                            <option value="">-- Seleziona chi viaggia --</option>
+                            {utenti?.map(u => (
+                                <option key={u.id} value={u.id}>{u.nome_completo}</option>
+                            ))}
+                        </select>
+                    </div>
+                )}
+
                 <div className="flex flex-col gap-1.5">
                     <label className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--colore-testo-mutato)" }}>Destinazione</label>
                     <input type="text" name="destinazione" value={form.destinazione} onChange={handleChange}
@@ -54,12 +111,10 @@ export function TrasferteForm({ onAddTrasferta }) {
                 <div className="form-date-grid grid grid-cols-2 gap-3">
                     <div className="flex flex-col gap-1.5">
                         <label className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--colore-testo-mutato)" }}>Data Inizio</label>
-                        {/* 🔥 2. AGGIUNTO: min={oggi} blocca le date passate nel calendario */}
                         <input type="date" name="data_inizio" value={form.data_inizio} min={oggi} onChange={handleChange} className={inputStile} style={inputStyle} />
                     </div>
                     <div className="flex flex-col gap-1.5">
                         <label className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--colore-testo-mutato)" }}>Data Fine</label>
-                        {/* 🔥 3. AGGIUNTO: min={form.data_inizio || oggi} blocca le date precedenti all'inizio */}
                         <input type="date" name="data_fine" value={form.data_fine} min={form.data_inizio || oggi} onChange={handleChange} className={inputStile} style={inputStyle} />
                     </div>
                 </div>
@@ -71,15 +126,14 @@ export function TrasferteForm({ onAddTrasferta }) {
                 </div>
 
                 <button type="submit"
-                    className="mt-2 p-3 rounded-xl font-semibold text-sm text-white flex items-center justify-center gap-2 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
-                    style={{
-                        backgroundColor: "var(--colore-primario-luce)",
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "var(--colore-primario)"}
-                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "var(--colore-primario-luce)"}
+                    disabled={isSubmitting}
+                    className="mt-2 p-3 rounded-xl font-semibold text-sm text-white flex items-center justify-center gap-2 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                    style={{ backgroundColor: "var(--colore-primario-luce)" }}
+                    onMouseEnter={(e) => { if (!isSubmitting) e.currentTarget.style.backgroundColor = "var(--colore-primario)" }}
+                    onMouseLeave={(e) => { if (!isSubmitting) e.currentTarget.style.backgroundColor = "var(--colore-primario-luce)" }}
                 >
-                    <Send size={16} />
-                    Aggiungi Trasferta
+                    {isSubmitting ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
+                    {isSubmitting ? 'Salvataggio...' : 'Aggiungi Trasferta'}
                 </button>
             </form>
         </div>

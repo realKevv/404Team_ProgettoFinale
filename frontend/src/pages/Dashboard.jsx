@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Plane, TrendingUp, Clock, CheckCircle, Info, X, Calendar, FileText, MapPin } from 'lucide-react';
+import { Plane, Clock, CheckCircle, Info, X, Calendar, FileText, MapPin, Plus } from 'lucide-react';
 import { TrasferteTable } from '../components/trasferte/TrasferteTable';
 import { TrasferteForm } from '../components/trasferte/TrasferteForm';
 import { ColleaguesTracker } from '../components/trasferte/ColleaguesTracker';
@@ -10,14 +10,14 @@ const statCardsBase = [
     { label: "Trasferte Totali", icon: Plane, color: "var(--colore-primario-luce)", bg: "#3b82f620" },
     { label: "In Approvazione", icon: Clock, color: "var(--colore-avviso)", bg: "#f59e0b20" },
     { label: "Approvate", icon: CheckCircle, color: "var(--colore-successo)", bg: "#10b98120" },
-    { label: "Spese Totali", icon: TrendingUp, color: "var(--colore-secondario)", bg: "#0d948820" },
 ];
 
 export function Dashboard() {
     const { trasferte, utenti, isLoading, error, fetchTrasferte, fetchUtenti, addTrasferta } = useStore();
-
-    // 🔥 STATO PER LA TRASFERTA CLICCATA NELLA TABELLA
+    const utenteCorrente = JSON.parse(sessionStorage.getItem('utente') || '{}');
+    const isAdmin = utenteCorrente?.ruolo === 'admin';
     const [selectedTrasferta, setSelectedTrasferta] = useState(null);
+    const [showNuovaTrasferta, setShowNuovaTrasferta] = useState(false);
 
     useEffect(() => {
         fetchTrasferte();
@@ -25,39 +25,39 @@ export function Dashboard() {
     }, [fetchTrasferte, fetchUtenti]);
 
     const handleFormSubmit = async (nuoviDati) => {
-        try {
-            await addTrasferta(nuoviDati);
-        } catch (err) {
-            alert("Errore durante il salvataggio della trasferta.");
-        }
+        // 🔥 Il try/catch se ne occupa TrasferteForm.jsx per poter mostrare 
+        // l'errore senza resettare il form. Qui passiamo solo la promessa.
+        await addTrasferta(nuoviDati);
+        setShowNuovaTrasferta(false);
     };
 
+    const trasferteFiltrate = isAdmin
+        ? trasferte
+        : trasferte.filter(t => t.id_utente === utenteCorrente.id);
+
     const statsDinamiche = [
-        { ...statCardsBase[0], value: trasferte.length.toString() },
-        { ...statCardsBase[1], value: trasferte.filter(t => t.stato === 'in_attesa').length.toString() },
-        { ...statCardsBase[2], value: trasferte.filter(t => t.stato === 'approvata').length.toString() },
-        { ...statCardsBase[3], value: "€..." }
+        { ...statCardsBase[0], value: trasferteFiltrate.length.toString() },
+        { ...statCardsBase[1], value: trasferteFiltrate.filter(t => t.stato === 'in_attesa').length.toString() },
+        { ...statCardsBase[2], value: trasferteFiltrate.filter(t => t.stato === 'approvata').length.toString() }
     ];
 
-    if (isLoading) return <div className="p-8 text-center text-[var(--colore-testo-secondario)]">Caricamento dati dal server... ⏳</div>;
-    if (error) return <div className="p-8 text-center text-[var(--colore-pericolo)]">❌ {error}</div>;
+    if (isLoading && trasferte.length === 0) return <div className="p-8 text-center text-[var(--colore-testo-secondario)]">Caricamento dati dal server... ⏳</div>;
+    // Togliamo l'if (error) bloccante globale, altrimenti tutta la dashboard sparisce se c'è un errore!
 
     return (
         <div className="dashboard-page flex-1 p-4 sm:p-6 lg:p-8 min-h-screen font-[var(--font-principale)] bg-[var(--colore-sfondo-pagina)]">
 
-            {/* Header */}
             <div className="dashboard-header flex items-center gap-3 mb-8">
                 <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-[#1e3a8a15]">
                     <Plane size={22} className="text-[var(--colore-primario)]" />
                 </div>
                 <div>
-                    <h1 className="text-2xl sm:text-3xl font-bold text-[var(--colore-testo-principale)]">Dashboard Trasferte</h1>
-                    <p className="text-sm text-[var(--colore-testo-mutato)]">Dati reali sincronizzati in tempo reale</p>
+                    <h1 className="text-2xl sm:text-3xl font-bold text-[var(--colore-testo-principale)]">Dashboard Operativa</h1>
+                    <p className="text-sm text-[var(--colore-testo-mutato)]">Panoramica viaggi e statistiche in tempo reale</p>
                 </div>
             </div>
 
-            {/* Stat Cards */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
                 {statsDinamiche.map((card, i) => (
                     <div key={i} className="p-4 sm:p-5 rounded-2xl border bg-[var(--colore-sfondo-card)] border-[var(--colore-bordo)] transition-all hover:shadow-lg">
                         <div className="flex items-center justify-between mb-3">
@@ -71,26 +71,18 @@ export function Dashboard() {
                 ))}
             </div>
 
-            {/* Main Grid: Tabella (sinistra) + Form/Dettagli & Tracker (destra) */}
             <div className="dashboard-grid grid grid-cols-1 xl:grid-cols-3 gap-6 lg:gap-8 items-start">
-
-                {/* SINISTRA: TABELLA */}
-                <div className="xl:col-span-2">
+                <div className="xl:col-span-2 min-w-0 w-full">
                     <TrasferteTable
-                        trasferte={trasferte}
-                        onRowClick={(row) => setSelectedTrasferta(row)} // 🔥 Passiamo la funzione!
-                        selectedId={selectedTrasferta?.id} // 🔥 Passiamo l'ID per l'evidenziazione
+                        trasferte={trasferteFiltrate}
+                        onRowClick={(row) => setSelectedTrasferta(row)}
+                        selectedId={selectedTrasferta?.id}
                     />
                 </div>
 
-                {/* DESTRA: DETTAGLI (se cliccato) OPPURE FORM (di default) + TRACKER */}
                 <div className="xl:col-span-1 flex flex-col gap-6">
-
-                    {/* 🔥 LA MAGIA: Mostra i Dettagli se c'è una riga selezionata, altrimenti mostra il Form */}
                     {selectedTrasferta ? (
                         <div className="p-6 rounded-2xl border bg-[var(--colore-sfondo-card)] border-[var(--colore-bordo)] shadow-md flex flex-col gap-5 animate-fade-in">
-
-                            {/* Header Dettagli */}
                             <div className="flex justify-between items-start border-b pb-4" style={{ borderColor: "var(--colore-bordo)" }}>
                                 <div className="flex items-center gap-2">
                                     <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-[#1e3a8a10]">
@@ -98,15 +90,11 @@ export function Dashboard() {
                                     </div>
                                     <h2 className="text-lg font-bold text-[var(--colore-testo-principale)]">Dettagli Trasferta</h2>
                                 </div>
-                                <button
-                                    onClick={() => setSelectedTrasferta(null)}
-                                    className="p-1 rounded-lg hover:bg-gray-100 text-[var(--colore-testo-mutato)] transition-colors"
-                                >
+                                <button onClick={() => setSelectedTrasferta(null)} className="p-1 rounded-lg hover:bg-gray-100 text-[var(--colore-testo-mutato)] transition-colors">
                                     <X size={18} />
                                 </button>
                             </div>
 
-                            {/* Info Principali */}
                             <div>
                                 <h3 className="text-xl font-bold text-[var(--colore-testo-principale)] flex items-center gap-2">
                                     <MapPin size={20} className="text-[var(--colore-secondario)]" />
@@ -123,18 +111,16 @@ export function Dashboard() {
                                 </div>
                             </div>
 
-                            {/* Date */}
                             <div className="p-3.5 rounded-xl bg-blue-50/50 border border-blue-100 flex flex-col gap-2">
                                 <span className="text-xs font-bold uppercase tracking-wide text-blue-700 flex items-center gap-1">
                                     <Calendar size={14} /> Periodo
                                 </span>
                                 <div className="text-sm font-medium text-slate-700 flex justify-between">
-                                    <span>Dal: <b>{selectedTrasferta.data_inizio.substring(0, 10)}</b></span>
-                                    <span>Al: <b>{selectedTrasferta.data_fine.substring(0, 10)}</b></span>
+                                    <span>Dal: <b>{selectedTrasferta.data_inizio?.substring(0, 10)}</b></span>
+                                    <span>Al: <b>{selectedTrasferta.data_fine?.substring(0, 10)}</b></span>
                                 </div>
                             </div>
 
-                            {/* Motivo Completo */}
                             <div className="p-3.5 rounded-xl bg-gray-50 border border-[var(--colore-bordo)] flex flex-col gap-2">
                                 <span className="text-xs font-bold uppercase tracking-wide text-[var(--colore-testo-mutato)] flex items-center gap-1">
                                     <FileText size={14} /> Motivo completo
@@ -149,7 +135,26 @@ export function Dashboard() {
                             </button>
                         </div>
                     ) : (
-                        <TrasferteForm onAddTrasferta={handleFormSubmit} />
+                        showNuovaTrasferta ? (
+                            <div className="relative animate-fade-in">
+                                <button 
+                                    onClick={() => setShowNuovaTrasferta(false)} 
+                                    className="absolute top-6 right-6 p-1.5 rounded-lg hover:bg-gray-100 text-[var(--colore-testo-mutato)] transition-colors z-10"
+                                    title="Chiudi form"
+                                >
+                                    <X size={18} />
+                                </button>
+                                <TrasferteForm onAddTrasferta={handleFormSubmit} isAdmin={isAdmin} utenti={utenti} />
+                            </div>
+                        ) : (
+                            <button
+                                onClick={() => setShowNuovaTrasferta(true)}
+                                className="w-full py-3.5 px-4 rounded-xl border border-[var(--colore-bordo)] bg-[var(--colore-sfondo-card)] text-[var(--colore-testo-secondario)] text-sm font-medium flex items-center justify-center gap-2 hover:border-[var(--colore-primario)] hover:text-[var(--colore-primario)] hover:shadow-sm transition-all animate-fade-in"
+                            >
+                                <Plus size={16} />
+                                Nuova Trasferta
+                            </button>
+                        )
                     )}
 
                     <ColleaguesTracker trasferte={trasferte} utenti={utenti} />

@@ -4,6 +4,10 @@
    Stile: Moderno, Professionale, Accessibile
    ========================================================================== */
 
+/* --------------------------------------------------------------------------
+   TEMA CHIARO (Predefinito) - Variabili CSS per tutti i componenti
+   Tutte le variabili qui definite vengono usate nell'intera applicazione.
+   -------------------------------------------------------------------------- */
 :root {
     /* --- Tavolozza Colori Principale (Tema Modern Corporate) --- */
     --colore-primario: #1e3a8a;
@@ -70,7 +74,6 @@
     --peso-semibold: 600;
     --peso-bold: 700;
 
-
     --ombra-leggera: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
     --ombra-standard: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
     --ombra-profonda: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
@@ -78,5 +81,322 @@
     /* --- Animazioni --- */
     --transizione-rapida: all 0.2s ease-in-out;
     --transizione-normale: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
 }
+
+
+/* ==========================================================================
+   TEMA SCURO (Dark Mode)
+   Quando la classe "dark-mode" è presente sull'elemento <html>, queste
+   variabili sovrascrivono quelle del tema chiaro per tutti i componenti.
+   La classe viene aggiunta/rimossa da ThemeContext.jsx tramite JavaScript.
+   ========================================================================== */
+.dark-mode {
+    /* --- Colori Principali adattati al buio ---
+       Manteniamo i blu/ottanio ma li schiaramo leggermente per leggibilità
+       su sfondi scuri. */
+    --colore-primario: #3b82f6;
+    /* Blu brillante su sfondo scuro */
+    --colore-primario-luce: #60a5fa;
+    /* Blu ancora più chiaro per hover e link */
+    --colore-primario-scuro: #93c5fd;
+    /* Blu chiaro per titoli su sfondi scuri */
+
+    --colore-secondario: #14b8a6;
+    /* Ottanio brillante - rimane vivace nel buio */
+    --colore-secondario-luce: #5eead4;
+    /* Ottanio chiaro per hover */
+
+    --colore-accento: #fbbf24;
+    /* Ambra/Arancio - leggermente più chiaro per visibilità */
+
+    /* --- Stati e Feedback nel buio ---
+       Gli sfondi dei badge diventano semi-trasparenti scuri */
+    --colore-successo: #34d399;
+    /* Verde più chiaro e brillante */
+    --colore-successo-sfondo: rgba(16, 185, 129, 0.15);
+    /* Verde semi-trasparente scuro */
+
+    --colore-pericolo: #f87171;
+    /* Rosso più chiaro */
+    --colore-pericolo-sfondo: rgba(239, 68, 68, 0.15);
+    /* Rosso semi-trasparente scuro */
+
+    --colore-avviso: #fbbf24;
+    /* Ambra più chiara */
+    --colore-avviso-sfondo: rgba(245, 158, 11, 0.15);
+    /* Ambra semi-trasparente scuro */
+
+    --colore-info: #22d3ee;
+    /* Cyan brillante */
+    --colore-info-sfondo: rgba(6, 182, 212, 0.15);
+    /* Cyan semi-trasparente scuro */
+
+    /* --- Sfondi Scuri ---
+       Palette a "livelli": la pagina è il più scuro, le card sono
+       leggermente più chiare per creare profondità visiva */
+    --colore-sfondo-pagina: #0f172a;
+    /* Blu notte profondo - sfondo principale */
+    --colore-sfondo-card: #1e293b;
+    /* Grigio-blu scuro - box, tabelle, schede */
+    --colore-sfondo-alt: #334155;
+    /* Grigio medio - righe alternate, hover */
+
+    /* --- Testi Chiari su Sfondo Scuro --- */
+    --colore-testo-principale: #e2e8f0;
+    /* Quasi bianco - massima leggibilità */
+    --colore-testo-secondario: #94a3b8;
+    /* Grigio chiaro - sottotitoli, etichette */
+    --colore-testo-mutato: #64748b;
+    /* Grigio medio - testo disabilitato, secondario */
+
+    /* --- Bordi nel Buio --- */
+    --colore-bordo: #334155;
+    /* Grigio-blu scuro per linee di divisione */
+    --colore-bordo-focus: #3b82f6;
+    /* Blu brillante per focus accessibilità */
+
+    /* --- Ombre nel Buio ---
+       Le ombre diventano più intense perché il contrasto è invertito */
+    --ombra-leggera: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgba(0, 0, 0, 0.4);
+    --ombra-standard: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+    --ombra-profonda: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
+}
+.hover-tema:hover {
+  background-color: var(--colore-sfondo-alt);
+}
+
+/* --------------------------------------------------------------------------
+   TRANSIZIONE FLUIDA TRA TEMI
+   Aggiunge una transizione morbida su tutti gli elementi quando il tema cambia,
+   evitando un cambio brusco e istantaneo dei colori.
+   -------------------------------------------------------------------------- */
+*, *::before, *::after {
+    transition-property: background-color, border-color, color, fill, stroke;
+    transition-duration: 0.3s;
+    transition-timing-function: ease-in-out;
+}
+
+
+/* ==========================================================================
+   SWITCH ANIMATO DARK MODE - Stili per il componente toggle nella pagina profilo
+   ========================================================================== */
+
+/* --- Contenitore della sezione impostazioni tema nella pagina profilo --- */
+.tema-sezione {
+    /* Layout: icona + testo a sinistra, switch a destra */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    /* Sfondo e bordi uguali alle card della pagina */
+    background-color: var(--colore-sfondo-card);
+    border: 1px solid var(--colore-bordo);
+    border-radius: 1rem;           /* angoli arrotondati come le altre card */
+    padding: 1.25rem 1.5rem;
+    box-shadow: var(--ombra-standard);
+}
+
+/* --- Testo e icona a sinistra dello switch --- */
+.tema-sezione-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* Icona solare/lunare a sinistra */
+.tema-sezione-icona {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Cerchietto di sfondo leggermente colorato */
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.75rem;
+    background-color: var(--colore-sfondo-alt);
+    color: var(--colore-primario-luce);
+    /* Piccola animazione di rotazione al cambio icona */
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-size: 1.25rem;            /* dimensione dell'emoji/icona */
+}
+
+/* Testi descrittivi accanto all'icona */
+.tema-sezione-testi {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+}
+
+.tema-sezione-titolo {
+    font-size: 0.875rem;           /* 14px */
+    font-weight: var(--peso-semibold);
+    color: var(--colore-testo-principale);
+    margin: 0;
+}
+
+.tema-sezione-descrizione {
+    font-size: 0.75rem;            /* 12px */
+    color: var(--colore-testo-secondario);
+    margin: 0;
+}
+
+
+/* ==========================================================================
+   TOGGLE SWITCH ANIMATO
+   Il classico "pillola" che scorre da sinistra (chiaro) a destra (scuro).
+   Struttura HTML necessaria:
+     <label class="tema-switch">
+       <input type="checkbox" />
+       <span class="tema-switch-slider"></span>
+     </label>
+   ========================================================================== */
+
+/* --- Label esterna: l'area cliccabile --- */
+.tema-switch {
+    position: relative;            /* necessario per posizionare lo slider */
+    display: inline-block;
+    width: 3.5rem;                 /* 56px - larghezza della pillola */
+    height: 1.875rem;              /* 30px - altezza della pillola */
+    cursor: pointer;               /* cursore a manina */
+    flex-shrink: 0;               /* evita che si comprima su schermi piccoli */
+}
+
+/* --- Input checkbox nascosto (non vogliamo vederlo, ma lo usiamo logicamente) --- */
+.tema-switch input {
+    opacity: 0;                    /* invisibile */
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+/* --- Pillola/Barra dello switch (lo "sfondo" del toggle) --- */
+.tema-switch-slider {
+    position: absolute;
+    inset: 0;                      /* occupa tutto lo spazio della label */
+    border-radius: 9999px;         /* completamente arrotondato = forma pillola */
+    /* Colore predefinito = tema chiaro (grigio-blu) */
+    background-color: var(--colore-bordo);
+    border: 2px solid var(--colore-bordo);
+    /* Transizione fluida per tutto ciò che cambia (colore, cerchio) */
+    transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- Cerchio bianco che scivola dentro la pillola --- */
+.tema-switch-slider::before {
+    content: '';
+    position: absolute;
+    /* Dimensioni del cerchio */
+    width: 1.375rem;               /* 22px */
+    height: 1.375rem;              /* 22px */
+    border-radius: 50%;            /* forma circolare */
+    /* Posizione iniziale: a SINISTRA (tema chiaro) */
+    left: 2px;
+    top: 50%;
+    transform: translateY(-50%);  /* centrato verticalmente */
+    /* Aspetto del cerchio */
+    background-color: #ffffff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+    /* Animazione dello spostamento orizzontale */
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                background-color 0.4s ease;
+}
+
+/* --- STATO: Switch ATTIVATO (checkbox spuntata = dark mode ON) --- */
+/* Quando l'input è checked, cambia colore della pillola */
+.tema-switch input:checked + .tema-switch-slider {
+    /* Usa il colore primario (blu brillante) come sfondo attivo */
+    background-color: var(--colore-primario-luce);
+    border-color: var(--colore-primario-luce);
+    /* Piccolo alone luminoso per feedback visivo */
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+/* --- STATO: Cerchio spostato a DESTRA quando attivato --- */
+/* Il cerchio si sposta di 1.625rem verso destra (larghezza pillola - cerchio - margini) */
+.tema-switch input:checked + .tema-switch-slider::before {
+    transform: translateY(-50%) translateX(1.625rem);
+    /* In dark mode il cerchio diventa leggermente giallo/lunare come accento */
+    background-color: #f8fafc;
+}
+
+/* --- STATO: Focus accessibilità (navigazione da tastiera) --- */
+.tema-switch input:focus-visible + .tema-switch-slider {
+    outline: 2px solid var(--colore-bordo-focus);
+    outline-offset: 2px;
+}
+
+/* --- ANIMAZIONE SCALETTA al cambio tema (effetto "click" sul cerchio) --- */
+.tema-switch:active .tema-switch-slider::before {
+    /* Quando tieni premuto, il cerchio si allunga leggermente (effetto fisico) */
+    width: 1.75rem;
+}
+
+/* ==========================================================================
+   CLASSI UTILITY ADATTIVE E OVERRIDES PER TEMA OSCURO (MUI & BADGES)
+   ========================================================================== */
+
+/* --- Classi Badge Adattive --- */
+.badge-success {
+    background-color: var(--colore-successo-sfondo) !important;
+    color: var(--colore-successo) !important;
+    border: 1px solid var(--colore-successo) !important;
+}
+
+.badge-danger {
+    background-color: var(--colore-pericolo-sfondo) !important;
+    color: var(--colore-pericolo) !important;
+    border: 1px solid var(--colore-pericolo) !important;
+}
+
+.badge-warning {
+    background-color: var(--colore-avviso-sfondo) !important;
+    color: var(--colore-avviso) !important;
+    border: 1px solid var(--colore-avviso) !important;
+}
+
+.badge-info {
+    background-color: var(--colore-info-sfondo) !important;
+    color: var(--colore-info) !important;
+    border: 1px solid var(--colore-info) !important;
+}
+
+.badge-neutral {
+    background-color: var(--colore-sfondo-alt) !important;
+    color: var(--colore-testo-secondario) !important;
+    border: 1px solid var(--colore-bordo) !important;
+}
+
+/* --- Classe Hover Generica per Pulsanti/Link --- */
+.hover-tema:hover {
+    background-color: var(--colore-sfondo-alt) !important;
+}
+
+/* --- Material-UI Overrides per Dark Mode --- */
+.dark-mode .MuiPaper-root {
+    background-color: var(--colore-sfondo-card) !important;
+    color: var(--colore-testo-principale) !important;
+    border-color: var(--colore-bordo) !important;
+    background-image: none !important; /* Disabilita overlay bianco standard di MUI */
+}
+
+.dark-mode .MuiTableCell-root {
+    color: var(--colore-testo-secondario) !important;
+    border-bottom: 1px solid var(--colore-bordo) !important;
+}
+
+.dark-mode .MuiTableCell-head {
+    color: var(--colore-testo-mutato) !important;
+    background-color: var(--colore-sfondo-alt) !important;
+    font-weight: 600 !important;
+}
+
+.dark-mode .MuiTableRow-root:hover {
+    background-color: var(--colore-sfondo-alt) !important;
+}
+
+/* Quando l'header della tabella ha un colore di sfondo manuale, lo sovrascriviamo */
+.dark-mode .MuiTableHead-root .MuiTableRow-root {
+    background-color: var(--colore-sfondo-alt) !important;
+}
+

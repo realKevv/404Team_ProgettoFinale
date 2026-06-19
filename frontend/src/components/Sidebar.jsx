@@ -9,7 +9,10 @@ import {
     LogOut,
     X,
     Users,
-    Shield
+    Shield,
+    History,
+    UserPlus,
+    UserMinus
 } from "lucide-react";
 
 export function Sidebar({ utente, onLogout, isOpen, onClose }) {
@@ -71,9 +74,9 @@ export function Sidebar({ utente, onLogout, isOpen, onClose }) {
                                     <Receipt size={18} />
                                     <span>Note Spese</span>
                                 </NavLink>
-                                <NavLink to="/viaggi/nuovo" className={baseLinkClass} style={renderLinkStyle} onClick={onClose}>
-                                    <PlusCircle size={18} />
-                                    <span>Nuova Trasferta</span>
+                                <NavLink to="/viaggi/storico" className={baseLinkClass} style={renderLinkStyle} onClick={onClose}>
+                                    <History size={18} />
+                                    <span>Storico Viaggi</span>
                                 </NavLink>
                             </>
                         )}
@@ -87,6 +90,10 @@ export function Sidebar({ utente, onLogout, isOpen, onClose }) {
                                     <ClipboardCheck size={18} />
                                     <span>Approvazioni</span>
                                 </NavLink>
+                                <NavLink to="/rimborsi" className={baseLinkClass} style={renderLinkStyle} onClick={onClose}>
+                                    <Receipt size={18} />
+                                    <span>Approvazione Spese</span>
+                                </NavLink>
                                 <NavLink to="/admin/trasferte" className={baseLinkClass} style={renderLinkStyle} onClick={onClose}>
                                     <Plane size={18} />
                                     <span>Tutte le Trasferte</span>
@@ -94,6 +101,14 @@ export function Sidebar({ utente, onLogout, isOpen, onClose }) {
                                 <NavLink to="/admin/policies" className={baseLinkClass} style={renderLinkStyle} onClick={onClose}>
                                     <Shield size={18} />
                                     <span>Travel Policies</span>
+                                </NavLink>
+                                <NavLink to="/admin/nuovo-utente" className={baseLinkClass} style={renderLinkStyle} onClick={onClose}>
+                                    <UserPlus size={18} />
+                                    <span>Aggiungi Utente</span>
+                                </NavLink>
+                                <NavLink to="/admin/rimuovi-utente" className={baseLinkClass} style={renderLinkStyle} onClick={onClose}>
+                                    <UserMinus size={18} />
+                                    <span>Rimuovi Utente</span>
                                 </NavLink>
                             </>
                         )}

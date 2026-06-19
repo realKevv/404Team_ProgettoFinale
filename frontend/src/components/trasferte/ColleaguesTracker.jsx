@@ -12,7 +12,7 @@ export function ColleaguesTracker({ trasferte = [], utenti = [] }) {
                 Chi è fuori ufficio?
             </h2>
 
-            <div className="space-y-3">
+            <div className="space-y-3 max-h-[340px] overflow-y-auto pr-1">
                 {activeTrips.length === 0 && (
                     <p className="text-sm text-[var(--colore-testo-mutato)] italic">Tutti in ufficio oggi.</p>
                 )}
@@ -30,7 +30,7 @@ export function ColleaguesTracker({ trasferte = [], utenti = [] }) {
                                     <MapPin size={12} /> {trip.destinazione}
                                 </p>
                             </div>
-                            <div className="text-xs font-bold px-2 py-1 rounded bg-blue-100 text-blue-700">
+                            <div className="text-xs font-bold px-2 py-1 rounded badge-info">
                                 {trip.data_fine?.substring(5, 10) || ''}
                             </div>
                         </div>

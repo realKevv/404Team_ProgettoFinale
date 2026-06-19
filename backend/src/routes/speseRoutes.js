@@ -13,15 +13,24 @@
 
 
 const express = require('express');
+const path = require('path');
+const fs = require('fs');
 const router = express.Router();
 const speseController = require('../controllers/speseController');
 const { verifyToken } = require('../middlewares/authMiddleware');
 
 // Multer prende i file inviati dagli utenti (es. foto o PDF) e li salva sul Node.js.
+// ✅ FIX: Usiamo un percorso ASSOLUTO calcolato a partire da __dirname,
+//    così funziona su qualsiasi PC indipendentemente dalla CWD del processo.
+//    Creiamo anche la cartella automaticamente se non esiste (es. primo avvio).
 const multer = require('multer');
+
+const UPLOADS_DIR = path.join(__dirname, '..', '..', 'public', 'uploads');
+fs.mkdirSync(UPLOADS_DIR, { recursive: true }); // Crea la cartella se non esiste
+
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads/');
+        cb(null, UPLOADS_DIR); // ✅ Percorso assoluto, sempre corretto
     },
     filename: (req, file, cb) => {
         // Rinomina il file mettendo la data davanti, così non ci sono doppioni!
@@ -38,8 +47,6 @@ router.get('/trasferta/:idTrasferta', verifyToken, speseController.getSpeseByTra
 // Guarda la combo: prima entra il buttafuori, poi il multer prende il file, e il controller salva nel DB!
 router.post('/', verifyToken, upload.single('scontrino'), speseController.addSpesa);
 
-// 3. L'URL PROTETTO dello scontrino
-router.get('/scontrini/:nomeFile', verifyToken, speseController.getScontrinoFisico);
 
 // 4. Valutazione spesa da parte dell'Admin 🚀
 // Usiamo verifyToken così req.user viene popolato prima di entrare nel controller,

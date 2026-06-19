@@ -101,4 +101,27 @@ const cambiaStatoTrasferta = async (req, res) => {
   }
 };
 
-module.exports = { getAllTrasferte, getTrasferteById, createTrasferta, cambiaStatoTrasferta };
+const deleteTrasferta = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const utenteCorrente = req.user;
+
+    const [rows] = await db.query("SELECT * FROM trasferte WHERE id = ?", [id]);
+    if (rows.length === 0) {
+      return res.status(404).json({ error: "Trasferta non trovata." });
+    }
+
+    const trasferta = rows[0];
+
+    if (utenteCorrente.ruolo !== 'admin' && trasferta.id_utente !== utenteCorrente.id) {
+      return res.status(403).json({ error: "Non hai i permessi per eliminare questa trasferta." });
+    }
+
+    await db.query("DELETE FROM trasferte WHERE id = ?", [id]);
+    res.json({ message: "Trasferta eliminata con successo!" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+module.exports = { getAllTrasferte, getTrasferteById, createTrasferta, cambiaStatoTrasferta, deleteTrasferta };

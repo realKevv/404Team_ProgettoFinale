@@ -5,15 +5,17 @@ const {
   getAllTrasferte,
   getTrasferteById,
   createTrasferta,
-  cambiaStatoTrasferta
+  cambiaStatoTrasferta,
+  deleteTrasferta
 } = require("../controllers/trasferteController");
 
-const { verifyToken } = require('../middlewares/authMiddleware');
+
 
 router.get("/", verifyToken, getAllTrasferte);
 router.get("/:id", verifyToken, getTrasferteById);
 router.post("/", verifyToken, createTrasferta);
 
 router.put("/:id/stato", verifyToken, cambiaStatoTrasferta);
+router.delete("/:id", verifyToken, deleteTrasferta);
 
 module.exports = router;

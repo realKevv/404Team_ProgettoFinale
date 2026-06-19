@@ -1,0 +1,24 @@
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local environment variables
+.env
+.env.*
+
+# Git
+.git/
+.gitignore
+
+# IDE configurations
+.idea/
+.vscode/
+
+# Docker files
+Dockerfile
+.dockerignore

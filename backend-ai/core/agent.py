@@ -40,6 +40,10 @@ def genera_risposta_ia(messaggio_utente: str, user_id: int, ruolo: str) -> str:
     Legge il ruolo e costruisce l'agente perfetto (motore, tools e personalità) 
     per rispondere alla domanda in totale sicurezza e con un'ottima UX.
     """
+    import os
+    mistral_key = os.getenv("MISTRAL_API_KEY", "").strip()
+    if not mistral_key or mistral_key == "your_mistral_api_key_here":
+        return "⚠️ **Chiave API mancante**: La chiave API di Mistral (`MISTRAL_API_KEY`) non è configurata o è vuota nel file `.env` del microservizio `backend-ai`. Inserisci una chiave API valida per chattare con l'assistente!"
     
     # ------------------------------------------
     # 👤 LOGICA DIPENDENTE (USER)

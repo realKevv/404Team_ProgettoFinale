@@ -22,7 +22,7 @@ export default function Navbar({ onMenuClick }) {
 
     // La Navbar reagisce solo se cambiano gli elementi interni all'array 'trasferte' 
     const trasferte = useStore((state) => state.trasferte);
-    const utenteAutenticato = JSON.parse(localStorage.getItem('utente') || '{}');
+    const utenteAutenticato = JSON.parse(sessionStorage.getItem('utente') || '{}');
 
     // useMemo memorizza il risultato del filtro. Viene ricalcolato solo
     // quando cambiano i dati reali nel database (trasferte), l'utente loggato o l'elenco dei letti.

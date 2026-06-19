@@ -23,7 +23,7 @@ import { useTheme } from "../context/ThemeContext";
 // Esportiamo la pagina del Profilo Utente come Named Export per renderla importabile nel Router principale
 export function ProfiloUtente() {
   // Leggiamo l'utente reale loggato nella sessione attuale decodificando la stringa JSON salvata nel browser
-  const utente = JSON.parse(localStorage.getItem("utente") || "null");
+  const utente = JSON.parse(sessionStorage.getItem("utente") || "null");
 
   // Prendiamo lo stato delle trasferte, la funzione di scaricamento (fetch) e lo stato di caricamento dallo Store globale
   const { trasferte, fetchTrasferte, isLoading } = useStore();

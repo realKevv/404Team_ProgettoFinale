@@ -22,8 +22,8 @@ export function AggiungiUtente() {
   const { addUtente } = useStore();
   
   // CONTROLLO DI SICUREZZA LATO CLIENT
-  // Recuperiamo i dati dell'utente loggato dal localStorage per verificare se ha i permessi
-  const utenteCorrente = JSON.parse(localStorage.getItem("utente") || "{}");
+  // Recuperiamo i dati dell'utente loggato dal sessionStorage per verificare se ha i permessi
+  const utenteCorrente = JSON.parse(sessionStorage.getItem("utente") || "{}");
   // Verifichiamo se il ruolo è esplicitamente "admin"
   const isAdmin = utenteCorrente?.ruolo === "admin";
 

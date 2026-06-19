@@ -5,7 +5,7 @@ const API_URL = 'http://localhost:5000/api';
 
 // Funzioncina di supporto per prendere sempre il token fresco
 const getAuthHeaders = () => {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     return { Authorization: `Bearer ${token}` };
 };
 
@@ -48,7 +48,7 @@ export const useStore = create((set, get) => ({
     addTrasferta: async (nuoviDati) => {
         set({ isLoading: true, error: null }); // 🔥 Resetta errori precedenti e attiva il loading
         try {
-            const utenteLocale = JSON.parse(localStorage.getItem('utente') || '{}');
+            const utenteLocale = JSON.parse(sessionStorage.getItem('utente') || '{}');
 
             const payload = {
                 destinazione: nuoviDati.destinazione,
@@ -286,8 +286,8 @@ export const useStore = create((set, get) => ({
             const response = await axios.post(`${API_URL}/auth/login`, { email, password });
             const { token, utente } = response.data;
 
-            localStorage.setItem('token', token);
-            localStorage.setItem('utente', JSON.stringify(utente));
+            sessionStorage.setItem('token', token);
+            sessionStorage.setItem('utente', JSON.stringify(utente));
 
             set({ isLoading: false });
             return utente;
@@ -299,8 +299,8 @@ export const useStore = create((set, get) => ({
     },
 
     logout: () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('utente');
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('utente');
         set({ trasferte: [], spese: [], utenti: [], policies: [], error: null, isLoading: false });
     }
 }));

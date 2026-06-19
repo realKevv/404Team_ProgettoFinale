@@ -9,7 +9,7 @@ import {
   Bot,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import video from "../assets/img/video.mp4";
+import video from "../assets/video/video.mp4";
 import dashboardImg from "../assets/img/Dashboard.png";
 import Footer from "../components/Footer";
 

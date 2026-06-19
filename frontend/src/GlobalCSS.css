@@ -161,6 +161,9 @@
     --ombra-standard: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
     --ombra-profonda: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
 }
+.hover-tema:hover {
+  background-color: var(--colore-sfondo-alt);
+}
 
 /* --------------------------------------------------------------------------
    TRANSIZIONE FLUIDA TRA TEMI
@@ -328,3 +331,72 @@
     /* Quando tieni premuto, il cerchio si allunga leggermente (effetto fisico) */
     width: 1.75rem;
 }
+
+/* ==========================================================================
+   CLASSI UTILITY ADATTIVE E OVERRIDES PER TEMA OSCURO (MUI & BADGES)
+   ========================================================================== */
+
+/* --- Classi Badge Adattive --- */
+.badge-success {
+    background-color: var(--colore-successo-sfondo) !important;
+    color: var(--colore-successo) !important;
+    border: 1px solid var(--colore-successo) !important;
+}
+
+.badge-danger {
+    background-color: var(--colore-pericolo-sfondo) !important;
+    color: var(--colore-pericolo) !important;
+    border: 1px solid var(--colore-pericolo) !important;
+}
+
+.badge-warning {
+    background-color: var(--colore-avviso-sfondo) !important;
+    color: var(--colore-avviso) !important;
+    border: 1px solid var(--colore-avviso) !important;
+}
+
+.badge-info {
+    background-color: var(--colore-info-sfondo) !important;
+    color: var(--colore-info) !important;
+    border: 1px solid var(--colore-info) !important;
+}
+
+.badge-neutral {
+    background-color: var(--colore-sfondo-alt) !important;
+    color: var(--colore-testo-secondario) !important;
+    border: 1px solid var(--colore-bordo) !important;
+}
+
+/* --- Classe Hover Generica per Pulsanti/Link --- */
+.hover-tema:hover {
+    background-color: var(--colore-sfondo-alt) !important;
+}
+
+/* --- Material-UI Overrides per Dark Mode --- */
+.dark-mode .MuiPaper-root {
+    background-color: var(--colore-sfondo-card) !important;
+    color: var(--colore-testo-principale) !important;
+    border-color: var(--colore-bordo) !important;
+    background-image: none !important; /* Disabilita overlay bianco standard di MUI */
+}
+
+.dark-mode .MuiTableCell-root {
+    color: var(--colore-testo-secondario) !important;
+    border-bottom: 1px solid var(--colore-bordo) !important;
+}
+
+.dark-mode .MuiTableCell-head {
+    color: var(--colore-testo-mutato) !important;
+    background-color: var(--colore-sfondo-alt) !important;
+    font-weight: 600 !important;
+}
+
+.dark-mode .MuiTableRow-root:hover {
+    background-color: var(--colore-sfondo-alt) !important;
+}
+
+/* Quando l'header della tabella ha un colore di sfondo manuale, lo sovrascriviamo */
+.dark-mode .MuiTableHead-root .MuiTableRow-root {
+    background-color: var(--colore-sfondo-alt) !important;
+}
+

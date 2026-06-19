@@ -119,7 +119,7 @@ export function DipendentiPage() {
                                     const isSelected = selectedUser?.id === dipendente.id;
                                     return (
                                         <TableRow key={dipendente.id} hover onClick={() => setSelectedUser(dipendente)} className="cursor-pointer"
-                                            sx={{ '& td': { borderBottom: '1px solid var(--colore-bordo)' }, backgroundColor: isSelected ? 'rgba(30, 58, 138, 0.04) !important' : 'inherit' }}>
+                                            sx={{ '& td': { borderBottom: '1px solid var(--colore-bordo)' }, backgroundColor: isSelected ? 'color-mix(in srgb, var(--colore-primario) 15%, transparent) !important' : 'inherit' }}>
                                             <TableCell style={{ padding: '14px 16px' }}>
                                                 <div className="font-semibold text-[var(--colore-testo-principale)]">{dipendente.nome_completo}</div>
                                                 <div className="text-xs text-[var(--colore-testo-mutato)]">{dipendente.email}</div>
@@ -127,11 +127,11 @@ export function DipendentiPage() {
                                             <TableCell style={{ padding: '14px 16px', textTransform: 'capitalize', color: 'var(--colore-testo-secondario)' }}>{dipendente.ruolo}</TableCell>
                                             <TableCell style={{ padding: '14px 16px' }}>
                                                 {dipendente.inTrasferta ? (
-                                                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-600 border border-blue-200"><Plane size={12} /> In Trasferta</span>
+                                                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold badge-info"><Plane size={12} /> In Trasferta</span>
                                                 ) : dipendente.statoKey === 'futuroProgrammato' ? (
-                                                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-600 border border-amber-200"><Calendar size={12} /> {dipendente.statusMessaggio}</span>
+                                                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold badge-warning"><Calendar size={12} /> {dipendente.statusMessMessaggio || dipendente.statusMessaggio}</span>
                                                 ) : (
-                                                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 border border-gray-200"><Building2 size={12} /> In Ufficio</span>
+                                                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold badge-neutral"><Building2 size={12} /> In Ufficio</span>
                                                 )}
                                             </TableCell>
                                             <TableCell style={{ padding: '14px 16px', color: 'var(--colore-testo-principale)', fontWeight: 500 }}>{dipendente.destinazione}</TableCell>
@@ -160,7 +160,7 @@ export function DipendentiPage() {
                                 <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-[#1e3a8a10]"><Info size={18} className="text-[var(--colore-primario)]" /></div>
                                 <h2 className="text-lg font-bold text-[var(--colore-testo-principale)]">Dettagli Collega</h2>
                             </div>
-                            <button onClick={() => setSelectedUser(null)} className="p-1 rounded-lg hover:bg-gray-100 text-[var(--colore-testo-mutato)] transition-colors"><X size={18} /></button>
+                            <button onClick={() => setSelectedUser(null)} className="p-1 rounded-lg hover-tema text-[var(--colore-testo-mutato)] transition-colors"><X size={18} /></button>
                         </div>
                         <div>
                             <h3 className="text-xl font-bold text-[var(--colore-testo-principale)]">{selectedUser.nome_completo}</h3>
@@ -169,23 +169,23 @@ export function DipendentiPage() {
                         </div>
                         {selectedUser.inTrasferta || selectedUser.statoKey === 'futuroProgrammato' ? (
                             <>
-                                <div className={`p-3.5 rounded-xl border flex flex-col gap-2 ${selectedUser.inTrasferta ? 'bg-blue-50/50 border-blue-100' : 'bg-amber-50/50 border-amber-100'}`}>
-                                    <span className={`text-xs font-bold uppercase tracking-wide flex items-center gap-1 ${selectedUser.inTrasferta ? 'text-blue-700' : 'text-amber-700'}`}>
+                                <div className={`p-3.5 rounded-xl border flex flex-col gap-2 ${selectedUser.inTrasferta ? 'bg-[var(--colore-info-sfondo)] border-[var(--colore-info)]' : 'bg-[var(--colore-avviso-sfondo)] border-[var(--colore-avviso)]'}`}>
+                                    <span className={`text-xs font-bold uppercase tracking-wide flex items-center gap-1 ${selectedUser.inTrasferta ? 'text-[var(--colore-info)]' : 'text-[var(--colore-avviso)]'}`}>
                                         <Calendar size={14} /> {selectedUser.inTrasferta ? 'Periodo Viaggio' : 'Prossima Partenza'}
                                     </span>
-                                    <div className="text-sm font-medium text-slate-700 flex justify-between">
+                                    <div className="text-sm font-medium flex justify-between" style={{ color: "var(--colore-testo-secondario)" }}>
                                         <span>Partenza: <b>{selectedUser.inizio}</b></span>
                                         <span>Rientro: <b>{selectedUser.ritorno}</b></span>
                                     </div>
                                 </div>
-                                <div className="p-3.5 rounded-xl bg-gray-50 border border-[var(--colore-bordo)] flex flex-col gap-2">
+                                <div className="p-3.5 rounded-xl bg-[var(--colore-sfondo-alt)] border border-[var(--colore-bordo)] flex flex-col gap-2">
                                     <span className="text-xs font-bold uppercase tracking-wide text-[var(--colore-testo-mutato)] flex items-center gap-1"><FileText size={14} /> Motivo del viaggio</span>
                                     <p className="text-sm text-[var(--colore-testo-secondario)] leading-relaxed italic">"{selectedUser.motivo}"</p>
                                 </div>
                             </>
                         ) : (
-                            <div className="p-4 rounded-xl bg-gray-50 text-center border border-dashed border-[var(--colore-bordo)] text-[var(--colore-testo-mutato)] text-sm">
-                                <Building2 size={24} className="mx-auto mb-2 text-gray-400" />
+                            <div className="p-4 rounded-xl bg-[var(--colore-sfondo-alt)] text-center border border-dashed border-[var(--colore-bordo)] text-[var(--colore-testo-mutato)] text-sm">
+                                <Building2 size={24} className="mx-auto mb-2" style={{ color: "var(--colore-testo-mutato)" }} />
                                 Il dipendente non ha viaggi futuri programmati e si trova in Sede.
                             </div>
                         )}

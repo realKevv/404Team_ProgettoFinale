@@ -30,7 +30,7 @@ export function ColleaguesTracker({ trasferte = [], utenti = [] }) {
                                     <MapPin size={12} /> {trip.destinazione}
                                 </p>
                             </div>
-                            <div className="text-xs font-bold px-2 py-1 rounded bg-blue-100 text-blue-700">
+                            <div className="text-xs font-bold px-2 py-1 rounded badge-info">
                                 {trip.data_fine?.substring(5, 10) || ''}
                             </div>
                         </div>

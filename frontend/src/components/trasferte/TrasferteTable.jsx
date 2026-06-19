@@ -131,7 +131,7 @@ export function TrasferteTable({ trasferte, onRowClick, selectedId }) {
                             return (
                                 <TableRow key={row.id} hover onClick={() => onRowClick && onRowClick(row)}
                                     className={onRowClick ? 'cursor-pointer' : ''}
-                                    sx={{ '& td': { borderBottom: '1px solid var(--colore-bordo)' }, backgroundColor: isSelected ? 'rgba(30, 58, 138, 0.04) !important' : 'inherit' }}>
+                                    sx={{ '& td': { borderBottom: '1px solid var(--colore-bordo)' }, backgroundColor: isSelected ? 'color-mix(in srgb, var(--colore-primario) 15%, transparent) !important' : 'inherit' }}>
                                     {isAdmin && (
                                         <TableCell style={{ ...cellStyle, fontWeight: 600, color: 'var(--colore-testo-principale)' }}>
                                             {row.richiedente || '—'}

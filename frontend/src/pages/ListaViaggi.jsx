@@ -108,7 +108,7 @@ function PannelloDettaglio({ trasferta, nomeDipendente, onClose }) {
                         </h2>
                     </div>
                     <button onClick={onClose}
-                        className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                        className="p-2 rounded-lg hover-tema transition-colors"
                         style={{ color: 'var(--colore-testo-mutato)' }}>
                         <X size={20} />
                     </button>
@@ -122,12 +122,12 @@ function PannelloDettaglio({ trasferta, nomeDipendente, onClose }) {
                     <BadgeStato stato={trasferta.stato} />
                 </div>
                 {/* Date */}
-                <div className="p-4 rounded-xl border" style={{ background: '#eff6ff', borderColor: '#bfdbfe' }}>
+                <div className="p-4 rounded-xl border" style={{ background: 'var(--colore-sfondo-alt)', borderColor: 'var(--colore-bordo)' }}>
                     <p className="text-xs font-bold uppercase tracking-wide mb-2 flex items-center gap-1"
-                        style={{ color: '#1d4ed8' }}>
+                        style={{ color: 'var(--colore-primario)' }}>
                         <Calendar size={13} /> Periodo
                     </p>
-                    <div className="flex justify-between text-sm font-medium text-slate-700">
+                    <div className="flex justify-between text-sm font-medium" style={{ color: "var(--colore-testo-secondario)" }}>
                         <span>Dal: <b>{inizio}</b></span>
                         <span>Al: <b>{fine}</b></span>
                     </div>
@@ -325,7 +325,7 @@ export function ListaViaggi() {
                         className="flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-medium transition-all"
                         style={{
                             borderColor: showFiltri ? 'var(--colore-primario-luce)' : 'var(--colore-bordo)',
-                            background: showFiltri ? '#eff6ff' : 'var(--colore-sfondo-alt)',
+                            background: showFiltri ? 'color-mix(in srgb, var(--colore-primario) 15%, transparent)' : 'var(--colore-sfondo-alt)',
                             color: showFiltri ? 'var(--colore-primario-luce)' : 'var(--colore-testo-secondario)',
                         }}
                     >

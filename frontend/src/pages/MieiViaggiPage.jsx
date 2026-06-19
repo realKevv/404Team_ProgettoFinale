@@ -203,7 +203,7 @@ export function MieiViaggiPage() {
                         className="flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-medium transition-all"
                         style={{
                             borderColor: showFiltri ? 'var(--colore-primario-luce)' : 'var(--colore-bordo)',
-                            background: showFiltri ? '#eff6ff' : 'var(--colore-sfondo-alt)',
+                            background: showFiltri ? 'color-mix(in srgb, var(--colore-primario) 15%, transparent)' : 'var(--colore-sfondo-alt)',
                             color: showFiltri ? 'var(--colore-primario-luce)' : 'var(--colore-testo-secondario)',
                         }}>
                         <SlidersHorizontal size={15} /> Filtri

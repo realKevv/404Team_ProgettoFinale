@@ -29,7 +29,7 @@ export default function Homepage() {
       - font-[var(--font-principale)]: applica il font personalizzato definito nelle variabili CSS globali
       - bg-slate-50: imposta uno sfondo grigio chiarissimo di base
     */
-    <div className="relative min-h-screen overflow-y-auto font-[var(--font-principale)] bg-slate-50">
+    <div className="relative min-h-screen overflow-y-auto font-[var(--font-principale)] bg-[var(--colore-sfondo-pagina)] text-[var(--colore-testo-principale)]">
       {/* SEZIONE SUPERIORE CON VIDEO BACKGROUND */}
       {/* 
         - w-full: larghezza al 100% della pagina
@@ -265,7 +265,7 @@ export default function Homepage() {
 
       {/* SEZIONE INFERIORE 
        py-24: grande spazio bianco sopra e sotto per dividere le sezioni*/}
-      <div className="bg-slate-50 py-24 transition-colors duration-300">
+      <div className="bg-[var(--colore-sfondo-pagina)] py-24 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 w-full">
           {/* GRIGLIA 3 CARD */}
           {/* md:grid-cols-3: scatta a 3 colonne dai tablet in poi (md:) */}
@@ -274,15 +274,15 @@ export default function Homepage() {
             - bg-white: sfondo bianco 
               - hover:-translate-y-1: la card si solleva di 4px verso l'alto quando ci passi sopra il mouse
               - shadow-xl shadow-slate-200/50: ombra */}
-            <div className="bg-white p-8 rounded-2xl border border-slate-200/80 flex flex-col items-center text-center space-y-4 hover:-translate-y-1 transition-all duration-300 shadow-xl shadow-slate-200/50">
+            <div className="bg-[var(--colore-sfondo-card)] p-8 rounded-2xl border border-[var(--colore-bordo)] flex flex-col items-center text-center space-y-4 hover:-translate-y-1 transition-all duration-300 shadow-xl">
               {/* Cerchietto Icona Azzurro */}
-              <div className="p-4 bg-blue-50 text-blue-600 rounded-2xl border border-blue-100 shadow-sm">
+              <div className="p-4 bg-[var(--colore-sfondo-alt)] text-[var(--colore-primario)] rounded-2xl border border-[var(--colore-bordo)] shadow-sm">
                 <TrendingUp className="h-7 w-7" />
               </div>
-              <h3 className="text-xl font-bold text-slate-800 tracking-wide">
+              <h3 className="text-xl font-bold text-[var(--colore-testo-principale)] tracking-wide">
                 -25% Costi Operativi
               </h3>
-              <p className="text-slate-600 text-sm leading-relaxed">
+              <p className="text-[var(--colore-testo-secondario)] text-sm leading-relaxed">
                 Ottimizza il budget aziendale. Grazie al controllo automatizzato
                 delle policy eviti sforamenti e riduci le spese di trasferta fin
                 dal primo mese.
@@ -290,14 +290,14 @@ export default function Homepage() {
             </div>
 
             {/* Card 2 */}
-            <div className="bg-white p-8 rounded-2xl border border-slate-200/80 flex flex-col items-center text-center space-y-4 hover:-translate-y-1 transition-all duration-300 shadow-xl shadow-slate-200/50">
-              <div className="p-4 bg-indigo-50 text-indigo-600 rounded-2xl border border-indigo-100 shadow-sm">
+            <div className="bg-[var(--colore-sfondo-card)] p-8 rounded-2xl border border-[var(--colore-bordo)] flex flex-col items-center text-center space-y-4 hover:-translate-y-1 transition-all duration-300 shadow-xl">
+              <div className="p-4 bg-[var(--colore-sfondo-alt)] text-[var(--colore-primario-luce)] rounded-2xl border border-[var(--colore-bordo)] shadow-sm">
                 <Globe className="h-7 w-7" />
               </div>
-              <h3 className="text-xl font-bold text-slate-800 tracking-wide">
+              <h3 className="text-xl font-bold text-[var(--colore-testo-principale)] tracking-wide">
                 Tutto in un Unico Hub
               </h3>
-              <p className="text-slate-600 text-sm leading-relaxed">
+              <p className="text-[var(--colore-testo-secondario)] text-sm leading-relaxed">
                 Dì addio a fogli Excel e software frammentati. Gestisci
                 itinerari, approvazioni e rimborsi in un click, ovunque si trovi
                 il tuo team.
@@ -305,14 +305,14 @@ export default function Homepage() {
             </div>
 
             {/* Card 3 */}
-            <div className="bg-white p-8 rounded-2xl border border-slate-200/80 flex flex-col items-center text-center space-y-4 hover:-translate-y-1 transition-all duration-300 shadow-xl shadow-slate-200/50">
-              <div className="p-4 bg-emerald-50 text-emerald-600 rounded-2xl border border-emerald-100 shadow-sm">
+            <div className="bg-[var(--colore-sfondo-card)] p-8 rounded-2xl border border-[var(--colore-bordo)] flex flex-col items-center text-center space-y-4 hover:-translate-y-1 transition-all duration-300 shadow-xl">
+              <div className="p-4 bg-[var(--colore-sfondo-alt)] text-[var(--colore-secondario)] rounded-2xl border border-[var(--colore-bordo)] shadow-sm">
                 <Bot className="h-7 w-7" />
               </div>
-              <h3 className="text-xl font-bold text-slate-800 tracking-wide">
+              <h3 className="text-xl font-bold text-[var(--colore-testo-principale)] tracking-wide">
                 Zero Stress Burocratico
               </h3>
-              <p className="text-slate-600 text-sm leading-relaxed">
+              <p className="text-[var(--colore-testo-secondario)] text-sm leading-relaxed">
                 Rimborsi lampo con la digitalizzazione smart degli scontrini.
                 Riduci del 70% il carico di lavoro amministrativo per dipendenti
                 e contabilità.
@@ -322,15 +322,15 @@ export default function Homepage() {
 
           {/* SEZIONE CHI SIAMO + PARAGRAFI AZIENDALI */}
           {/* border-t border-slate-200 pt-16: linea divisoria grigia e distanzia di 64px */}
-          <div className="max-w-7xl mx-auto space-y-16 border-t border-slate-200 pt-16">
+          <div className="max-w-7xl mx-auto space-y-16 border-t border-[var(--colore-bordo)] pt-16">
             {/* max-w-3xl mx-auto: stringe il testo centralmente */}
             <div className="max-w-3xl mx-auto text-center space-y-6">
               {/* text-3xl sm:text-4xl font-extrabold: titolo grande e in grassetto */}
-              <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight sm:text-4xl">
+              <h2 className="text-3xl font-extrabold text-[var(--colore-testo-principale)] tracking-tight sm:text-4xl">
                 Chi siamo e cosa facciamo
               </h2>
               {/* text-base sm:text-lg leading-relaxed: aumenta l'interlinea */}
-              <p className="text-slate-600 text-base sm:text-lg leading-relaxed">
+              <p className="text-[var(--colore-testo-secondario)] text-base sm:text-lg leading-relaxed">
                 Siamo nati con l'obiettivo di trasformare la gestione della
                 mobilità aziendale da un labirinto burocratico a un processo
                 fluido, transparent e privo di attriti. Crediamo che il tempo
@@ -340,7 +340,7 @@ export default function Homepage() {
                 flussi e il monitoraggio dei budget in tempo reale, abbattendo
                 le distanze tra l'amministrazione e chi viaggia per business.
               </p>
-              <p className="text-slate-600 text-base sm:text-lg leading-relaxed">
+              <p className="text-[var(--colore-testo-secondario)] text-base sm:text-lg leading-relaxed">
                 Attraverso algoritmi di categorizzazione automatica e sistemi
                 avanzati per il controllo delle travel policy, aiutiamo le
                 imprese a digitalizzare integralmente la gestione delle note
@@ -353,10 +353,10 @@ export default function Homepage() {
             </div>
 
             {/* grid-cols-1 lg:grid-cols-2: griglia a due macro colonne (immagine a sinistra, spiegazione tecnica dei ruoli a destra) */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start pt-10 border-t border-slate-100">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start pt-10 border-t border-[var(--colore-bordo)]">
               {/* COLONNA DI SINISTRA: SCREENSHOT DEL SOFTWARE (CON EFFETTO STICKY) */}
               <div className="sticky top-6 group">
-                <div className="relative overflow-hidden rounded-2xl border border-slate-200 shadow-2xl bg-white p-2 transition-all duration-300 group-hover:shadow-slate-300 group-hover:-translate-y-1">
+                <div className="relative overflow-hidden rounded-2xl border border-[var(--colore-bordo)] shadow-2xl bg-[var(--colore-sfondo-card)] p-2 transition-all duration-300 group-hover:shadow-slate-800/10 group-hover:-translate-y-1">
                   <img
                     src={dashboardImg}
                     alt="Business Travel Dashboard Operativa"
@@ -370,19 +370,19 @@ export default function Homepage() {
               {/* Colonna Destra: Portal Overview e Funzionalità */}
               <div className="space-y-8">
                 {/* Overview */}
-                <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4">
-                  <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+                <div className="bg-[var(--colore-sfondo-card)] p-6 rounded-2xl border border-[var(--colore-bordo)] shadow-sm space-y-4">
+                  <h3 className="text-xl font-bold text-[var(--colore-testo-principale)] flex items-center gap-2">
                     {/* Linea verticale a sinistra del titolo */}
                     <div className="w-2 h-6 bg-blue-600 rounded-full" />
                     Portal Overview
                   </h3>
-                  <p className="text-slate-600 text-sm leading-relaxed font-medium">
+                  <p className="text-[var(--colore-testo-secondario)] text-sm leading-relaxed font-medium">
                     Questo applicativo è un gestionale aziendale di livello
                     Enterprise progettato per digitalizzare, ottimizzare e
                     monitorare l'intero ciclo di vita delle trasferte dei
                     dipendenti e la gestione delle relative note spese.
                   </p>
-                  <p className="text-slate-600 text-sm leading-relaxed">
+                  <p className="text-[var(--colore-testo-secondario)] text-sm leading-relaxed">
                     Il sistema offre due interfacce e flussi di lavoro distinti
                     in base al ruolo dell'utente loggato (User o Admin),
                     garantendo massima sicurezza dei dati e flussi di
@@ -391,17 +391,17 @@ export default function Homepage() {
                 </div>
 
                 {/*Funzionalità Principali */}
-                <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4">
-                  <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+                <div className="bg-[var(--colore-sfondo-card)] p-6 rounded-2xl border border-[var(--colore-bordo)] shadow-sm space-y-4">
+                  <h3 className="text-xl font-bold text-[var(--colore-testo-principale)] flex items-center gap-2">
                     <div className="w-2 h-6 bg-emerald-600 rounded-full" />
                     Funzionalità Principali
                   </h3>
-                  <p className="text-slate-600 text-sm leading-relaxed font-medium">
+                  <p className="text-[var(--colore-testo-secondario)] text-sm leading-relaxed font-medium">
                     La piattaforma centralizza le attività quotidiane con moduli
                     intelligenti e dashboard personalizzate per ogni tipo di
                     utente.
                   </p>
-                  <p className="text-slate-600 text-sm leading-relaxed">
+                  <p className="text-[var(--colore-testo-secondario)] text-sm leading-relaxed">
                     I <strong>dipendenti</strong> hanno un'area privata per
                     pianificare i viaggi, caricare le ricevute online e
                     controllare i rimborsi.

@@ -172,7 +172,7 @@ export function NoteSpesePage() {
                             <div className="flex justify-between items-center flex-wrap gap-3">
                                 <h2 className="text-lg font-bold text-[var(--colore-testo-principale)]">Ricevute presentate</h2>
                                 <div className="flex items-center gap-2 flex-wrap">
-                                    <div className="text-sm font-bold p-2 px-4 rounded-xl bg-teal-50 text-teal-700 border border-teal-200">
+                                    <div className="text-sm font-bold p-2 px-4 rounded-xl badge-success">
                                         Totale: €{totaleSpeso.toFixed(2)}
                                     </div>
                                     {/* Filtro categoria */}
@@ -222,31 +222,31 @@ export function NoteSpesePage() {
                                                 className={isAdmin ? "cursor-pointer" : ""}
                                                 sx={{
                                                     '& td': { borderBottom: '1px solid var(--colore-bordo)' },
-                                                    backgroundColor: selectedSpesa?.id === spesa.id ? 'rgba(30, 58, 138, 0.04) !important' : 'inherit'
+                                                    backgroundColor: selectedSpesa?.id === spesa.id ? 'color-mix(in srgb, var(--colore-primario) 15%, transparent) !important' : 'inherit'
                                                 }}
                                             >
                                                 <TableCell style={{ fontWeight: 600, textTransform: 'capitalize', color: "var(--colore-testo-principale)" }}>{spesa.categoria}</TableCell>
                                                 <TableCell style={{ fontWeight: 700, color: "var(--colore-testo-principale)" }}>€{parseFloat(spesa.importo).toFixed(2)}</TableCell>
                                                 <TableCell>
                                                     {spesa.stato_approvazione === 'approvata' ? (
-                                                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-green-50 text-green-600 border border-green-200">
+                                                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold badge-success">
                                                             <CheckCircle2 size={12} /> Approvata
                                                         </span>
                                                     ) : spesa.stato_approvazione === 'respinta' ? (
-                                                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-600 border border-red-200">
+                                                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold badge-danger">
                                                             <XCircle size={12} /> Rifiutata
                                                         </span>
                                                     ) : (
-                                                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-600 border border-amber-200">
+                                                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold badge-warning">
                                                             <AlertTriangle size={12} /> In attesa
                                                         </span>
                                                     )}
                                                 </TableCell>
                                                 <TableCell>
                                                     {spesa.fuori_policy ? (
-                                                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-600 border border-red-200"><ShieldAlert size={12} /> Fuori Policy</span>
+                                                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold badge-danger"><ShieldAlert size={12} /> Fuori Policy</span>
                                                     ) : (
-                                                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-green-50 text-green-600 border border-green-200"><Check size={12} /> Nei Limiti</span>
+                                                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold badge-success"><Check size={12} /> Nei Limiti</span>
                                                     )}
                                                 </TableCell>
                                                 <TableCell>
@@ -324,20 +324,20 @@ export function NoteSpesePage() {
                                     <div className="p-6 rounded-2xl border bg-[var(--colore-sfondo-card)] border-[var(--colore-bordo)] shadow-md flex flex-col gap-4 animate-fade-in">
                                         <div className="flex justify-between items-center border-b pb-3" style={{ borderColor: "var(--colore-bordo)" }}>
                                             <h3 className="font-bold text-md text-[var(--colore-testo-principale)]">Verifica Giustificativo</h3>
-                                            <button onClick={() => setSelectedSpesa(null)} className="p-1 rounded-lg hover:bg-gray-100"><X size={16} /></button>
+                                            <button onClick={() => setSelectedSpesa(null)} className="p-1 rounded-lg hover-tema text-[var(--colore-testo-mutato)] transition-colors"><X size={16} /></button>
                                         </div>
 
-                                        <div className="bg-gray-100 rounded-xl p-2 border border-gray-200 flex justify-center items-center h-48 overflow-hidden">
+                                        <div className="bg-[var(--colore-sfondo-alt)] rounded-xl p-2 border border-[var(--colore-bordo)] flex justify-center items-center h-48 overflow-hidden">
                                             {selectedSpesa.url_scontrino ? (
                                                 <img src={selectedSpesa.url_scontrino.startsWith('http') ? selectedSpesa.url_scontrino : `http://localhost:5000${selectedSpesa.url_scontrino}`} alt="Scontrino" className="max-h-full object-contain rounded-lg" />
                                             ) : (
-                                                <span className="text-sm text-gray-500 italic">Nessuna foto caricata</span>
+                                                <span className="text-sm text-[var(--colore-testo-mutato)] italic">Nessuna foto caricata</span>
                                             )}
                                         </div>
 
-                                        <div className="text-sm">
-                                            <p className="text-gray-500">Importo Richiesto: <b className="text-slate-800">€{selectedSpesa.importo}</b></p>
-                                            <p className="text-gray-500 capitalize">Categoria: <b className="text-slate-800">{selectedSpesa.categoria}</b></p>
+                                        <div className="text-sm flex flex-col gap-1">
+                                            <p className="text-[var(--colore-testo-secondario)]">Importo Richiesto: <b className="text-[var(--colore-testo-principale)]">€{selectedSpesa.importo}</b></p>
+                                            <p className="text-[var(--colore-testo-secondario)] capitalize">Categoria: <b className="text-[var(--colore-testo-principale)]">{selectedSpesa.categoria}</b></p>
                                         </div>
 
                                         <div className="grid grid-cols-2 gap-3 mt-2">
@@ -377,7 +377,7 @@ export function NoteSpesePage() {
                                     </div>
 
                                     {messaggio.testo && (
-                                        <div className={`p-3 mb-4 rounded-xl text-xs font-semibold text-center border ${messaggio.tipo === 'error' ? 'bg-red-50 text-red-600 border-red-200' : 'bg-green-50 text-green-600 border-green-200'}`}>
+                                        <div className={`p-3 mb-4 rounded-xl text-xs font-semibold text-center ${messaggio.tipo === 'error' ? 'badge-danger' : 'badge-success'}`}>
                                             {messaggio.testo}
                                         </div>
                                     )}

@@ -86,19 +86,19 @@ export function ApprovazioniTrasfertePage() {
                         <X size={12} /> Reset
                     </button>
                 )}
-                <span className="ml-auto text-xs font-medium px-3 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
+                <span className="ml-auto text-xs font-medium px-3 py-1 rounded-full badge-warning">
                     {richiestePendenti.length} in attesa
                 </span>
             </div>
 
             {/* 🔥 BANNER ERRORE SERVER: Appare sopra la lista se fallisce un'approvazione */}
             {serverError && (
-                <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-xl flex items-start gap-2 animate-fade-in max-w-4xl">
-                    <AlertCircle size={18} className="text-red-600 shrink-0 mt-0.5" />
-                    <p className="text-sm font-medium text-red-800 leading-tight">
+                <div className="mb-6 p-3 rounded-xl flex items-start gap-2 animate-fade-in max-w-4xl badge-danger">
+                    <AlertCircle size={18} className="shrink-0 mt-0.5" style={{ color: "var(--colore-pericolo)" }} />
+                    <p className="text-sm font-medium leading-tight">
                         {serverError}
                     </p>
-                    <button onClick={() => setServerError(null)} className="ml-auto text-red-400 hover:text-red-700">
+                    <button onClick={() => setServerError(null)} className="ml-auto hover:opacity-80">
                         <X size={16} />
                     </button>
                 </div>

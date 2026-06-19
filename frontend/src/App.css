@@ -10,13 +10,15 @@ body,
   padding: 0;
   width: 100%;
   height: 100%;
-  overflow: hidden;
 }
+
+/* La homepage scolla normalmente (overflow del documento).
+   La dashboard usa .app-main-area con overflow-y: auto. */
 
 .app-layout {
   display: flex;
   width: 100%;
-  height: 100%;
+  height: 100vh; /* Contenitore fisso: la dashboard non sconfina nel documento */
   overflow: hidden;
   background-color: var(--colore-sfondo-pagina);
   color: var(--colore-testo-principale);

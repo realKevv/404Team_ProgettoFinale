@@ -103,10 +103,10 @@ export function DipendentiPage() {
 
             {/* GRIGLIA DINAMICA */}
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 lg:gap-8 items-start">
-                <div className={selectedUser ? 'xl:col-span-2 transition-all duration-300' : 'xl:col-span-3 transition-all duration-300'}>
+                <div className={(selectedUser ? 'xl:col-span-2' : 'xl:col-span-3') + ' min-w-0 w-full transition-all duration-300'}>
                     <TableContainer component={Paper} className="rounded-2xl overflow-hidden border bg-[var(--colore-sfondo-card)]"
                         elevation={0} style={{ borderColor: 'var(--colore-bordo)', boxShadow: 'none' }}>
-                        <Table>
+                        <Table sx={{ minWidth: 800 }}>
                             <TableHead>
                                 <TableRow style={{ backgroundColor: 'var(--colore-sfondo-alt)' }}>
                                     {['Dipendente', 'Ruolo', 'Status', 'Posizione corrente'].map((header, i) => (

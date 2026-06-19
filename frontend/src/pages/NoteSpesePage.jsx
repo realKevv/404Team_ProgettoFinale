@@ -19,7 +19,7 @@ export function NoteSpesePage() {
     } = useStore();
 
     // 🔑 Leggiamo chi è l'utente loggato
-    const utenteCorrente = JSON.parse(localStorage.getItem('utente') || '{}');
+    const utenteCorrente = JSON.parse(sessionStorage.getItem('utente') || '{}');
     const isAdmin = utenteCorrente?.ruolo === 'admin';
 
     // Stati locali
@@ -168,7 +168,7 @@ export function NoteSpesePage() {
                     <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 lg:gap-8 items-start">
 
                         {/* TABELLA DELLE SPESE (2 Colonne) */}
-                        <div className="xl:col-span-2 flex flex-col gap-4">
+                        <div className="xl:col-span-2 min-w-0 w-full flex flex-col gap-4">
                             <div className="flex justify-between items-center flex-wrap gap-3">
                                 <h2 className="text-lg font-bold text-[var(--colore-testo-principale)]">Ricevute presentate</h2>
                                 <div className="flex items-center gap-2 flex-wrap">

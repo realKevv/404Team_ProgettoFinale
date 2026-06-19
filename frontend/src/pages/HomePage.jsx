@@ -17,7 +17,7 @@ export default function Homepage() {
   // Inizializzazione della funzione per reindirizzare l'utente
   const navigate = useNavigate();
   // Recuperiamo il token di sessione salvato nel browser al momento del login
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   // Trasformiamo il token in un valore booleano (true/false).
   // Controlliamo anche che la stringa non sia "undefined"
   const isLoggedIn = !!token && token !== "undefined";

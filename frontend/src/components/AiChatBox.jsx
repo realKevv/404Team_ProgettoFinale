@@ -13,9 +13,9 @@ export default function AiChatBox() {
     ]);
     const [isLoading, setIsLoading] = useState(false);
 
-    // Leggiamo token e utente dal localStorage (come fa tutto il resto del progetto)
-    const token = localStorage.getItem('token');
-    const utente = JSON.parse(localStorage.getItem('utente') || '{}');
+    // Leggiamo token e utente dal sessionStorage (come fa tutto il resto del progetto)
+    const token = sessionStorage.getItem('token');
+    const utente = JSON.parse(sessionStorage.getItem('utente') || '{}');
     const ruoloUtente = utente?.ruolo || "user";
 
     const handleInviaMessaggio = async (e) => {

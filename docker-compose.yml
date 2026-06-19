@@ -40,6 +40,28 @@ services:
       - ./backend:/app
       - /app/node_modules
 
+  backend-ai:
+    build: ./backend-ai
+    container_name: business-travel-ai
+
+    ports:
+      - "8000:8000"
+
+    environment:
+      DB_HOST: mysql
+      DB_PORT: "3306"
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: businesstravel
+      JWT_SECRET: ${JWT_SECRET:-your_jwt_secret_key_here}
+      MISTRAL_API_KEY: ${MISTRAL_API_KEY}
+
+    depends_on:
+      - mysql
+
+    volumes:
+      - ./backend-ai:/app
+
   frontend:
     build: ./frontend
     container_name: business-travel-web
@@ -49,6 +71,7 @@ services:
 
     depends_on:
       - backend
+      - backend-ai
 
     volumes:
       - ./frontend:/app

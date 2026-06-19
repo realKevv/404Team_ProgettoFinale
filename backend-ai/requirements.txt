@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+langchain-mistralai
+langgraph
+pyjwt
+mysql-connector-python
+python-dotenv

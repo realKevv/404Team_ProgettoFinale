@@ -17,7 +17,8 @@
 
 ## Descrizione del Progetto
 
-Business Travel e' un'applicazione web completa progettata per digitalizzare e semplificare il ciclo di vita delle trasferte aziendali. Il sistema copre l'intero flusso: dalla richiesta del dipendente, all'approvazione da parte dell'amministratore, fino alla rendicontazione delle spese sostenute.
+Business Travel è una piattaforma web di nuova generazione progettata per digitalizzare, centralizzare e semplificare l'intero ciclo di vita delle trasferte aziendali. Automatizzando il flusso end-to-end, dalla richiesta iniziale del dipendente all'approvazione degli amministratori, fino alla rendicontazione finale delle note spese, il sistema elimina la burocrazia cartacea e riduce drasticamente il carico cognitivo degli utenti.
+La vera innovazione risiede nell'integrazione nativa di un Assistente Virtuale basato su IA Generativa, accessibile ovunque tramite una chat flottante. Più che un semplice chatbot, si tratta di un vero e proprio agente operativo che comprende il linguaggio naturale e naviga in sicurezza nel database aziendale. L'assistente adotta un approccio dinamico basato sul ruolo dell'utente: supporta i dipendenti nella gestione rapida dei propri viaggi e, al contempo, offre agli amministratori potenti strumenti di controllo del budget, analisi dei trend di spesa e reportistica avanzata.
 
 Il progetto e' composto da quattro servizi distinti orchestrati tramite Docker Compose:
 

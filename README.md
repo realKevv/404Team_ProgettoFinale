@@ -449,16 +449,29 @@ I file caricati tramite le note spese vengono salvati in `backend/public/uploads
 Il backend Express include una logica di retry con 10 tentativi e 3 secondi di attesa tra l'uno e l'altro. Questo garantisce l'avvio corretto in Docker anche quando il container MySQL impiega qualche secondo a essere pronto.
 
 ---
+## Sviluppi futuri
+Potenziare il sistema di IA con un agente esperto per analisi di bilancio aziendale e approvazione di trasferte.
 
-## Team di Sviluppo
+Quando l'utente carica la foto dello scontrino, l'IA "legge" l'immagine ed estrae in automatico data, importo, valuta e fornitore, precompilando il form ed eliminando l'inserimento manuale.
 
-Progetto sviluppato per il Progetto Finale WebAcademy 2026.
+Analisi Predittiva sui Budget: Sfruttare lo storico dei dati su MySQL per far prevedere all'IA i costi futuri delle trasferte in un determinato periodo dell'anno, aiutando l'amministrazione ad allocare il budget.
 
-**404Team**
+Applicazione Mobile Nativa: Sfruttare le conoscenze in React per migrare il frontend verso React Native. Questo permetterebbe di avere un'app iOS/Android con accesso nativo alla fotocamera per scattare foto agli scontrini in tempo reale.
 
-- [RealKevv](https://github.com/realKevv) - Backend IA (FastAPI, LangGraph, Mistral), Backend Express, Frontend React
+Funzionamento Offline: Implementare logiche Mobile-First per permettere ai dipendenti di salvare le spese sull'app anche senza connessione internet (es. in aereo o all'estero), sincronizzando automaticamente i dati con il database non appena torna il segnale
+
+Interfacciamento con Sistemi Esterni: Creare API dedicate per far dialogare il tuo gestionale direttamente con i software di contabilità aziendale (es. SAP, Zucchetti, Teamsystem). Quando una spesa viene approvata dall'Admin, l'importo finisce automaticamente in busta paga per il rimborso.
+
 
 ---
+## Team di Sviluppo
+Progetto sviluppato per il Progetto Finale WebAcademy 2026.
+**404Team**
+- [Kevin Napoli](https://www.linkedin.com/in/kevin-napoli-446b35314/ ) - Backend IA (FastAPI, LangGraph, Mistral), Backend Express, Frontend React
+- [Jose Alexander Yepez Mejia](https://www.linkedin.com/in/jose-alexander-yepez-mejia-960b263b2/) - Backend Express, Frontend React
+- [Bianca Andreea Ciocoiu](https://www.linkedin.com/in/bianca-andreea-ciocoiu-a630663bb/ ) - Frontend React
+- [Maria Carlotta Liberio](https://www.linkedin.com/in/maria-carlotta-liberio-11242b235/) - Frontend React
+
 
 <div align="center">
   <b>404Team - Progetto Finale WebAcademy 2026</b>

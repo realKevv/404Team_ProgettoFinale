@@ -234,4 +234,8 @@ Il frontend non richiede un file `.env` per il funzionamento base. Gli URL delle
 
 <div align="center">
   <b>Progetto sviluppato per il Progetto Finale 404Team - 2026</b>
+  - [Kevin Napoli](https://www.linkedin.com/in/kevin-napoli-446b35314/ ) - Backend IA (FastAPI, LangGraph, Mistral), Backend Express, Frontend React
+  - [Jose Alexander Yepez Mejia](https://www.linkedin.com/in/jose-alexander-yepez-mejia-960b263b2/) - Backend Express, Frontend React
+  - [Bianca Andreea Ciocoiu](https://www.linkedin.com/in/bianca-andreea-ciocoiu-a630663bb/ ) - Frontend React
+  - [Maria Carlotta Liberio](https://www.linkedin.com/in/maria-carlotta-liberio-11242b235/) - Frontend React
 </div>
